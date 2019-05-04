@@ -4,9 +4,9 @@ var gl;
 
 var now, frame_delta;
 
-var warp_min = 0.1;
-var warp_max = 0.7;
-var warp_delta = 0.0075;
+var warp_min = 0.05;
+var warp_max = 0.67;
+var warp_delta = 0.007;
 var warp = warp_min;
 var warp_increasing = false;
 

@@ -168,7 +168,7 @@ vec4 serialize(vec2 ab) {
 
 
 float fbm_max(vec4 point) {
-    return max(fbm(point), 0.67*fbm(point+1.0));
+    return max(fbm(point), 0.6*fbm(point+1.0+0.17*u_warp));
 }
 
 
@@ -186,7 +186,7 @@ void main() {
     float y2 = sin(pos.y) + u_t/2000.0;
     vec4 point = vec4(x1, y1, x2, y2);
 
-    float noise = fbm_max(point + u_warp*fbm(point));
+    float noise = fbm_max(point + u_warp*fbm(point + 0.1*u_warp));
     gl_FragColor = serialize(vec2(noise, 0.0));
     //gl_FragColor = vec4(noise*noise*0.2, noise*0.9, noise, 1);
 }
@@ -226,7 +226,7 @@ void main() {
     //if (ab.y == 0.0) gl_FragColor = vec4(1, 0, 0, 1);
     //else gl_FragColor = vec4(0, 1, 0, 1);
     float noise = ab.x;
-    gl_FragColor = vec4(1.3*noise*(1.0-noise)*(1.0-noise), noise*0.9, noise, 1);
+    gl_FragColor = vec4(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05, 1);
 }
 
 

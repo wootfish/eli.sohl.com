@@ -10,6 +10,9 @@ var warp_delta = 0.007;
 var warp = warp_min;
 var warp_increasing = false;
 
+var radius = 0;
+var expanding = false;
+
 var first_frame = Date.now();
 var last_frame = Date.now();
 

@@ -168,7 +168,7 @@ vec4 serialize(vec2 ab) {
 
 
 float fbm_max(vec4 point) {
-    return max(fbm(point), 0.6*fbm(point+1.0+0.17*u_warp));
+    return max(fbm(point), 0.4*fbm(point+1.0+0.34*u_warp));
 }
 
 
@@ -181,12 +181,12 @@ void main() {
     // two orthogonal 2D circles embedded in 4D space
 
     float x1 = cos(pos.x) - u_t/2000.0;
-    float y1 = sin(pos.x) + u_t/420.0;
-    float x2 = cos(pos.y) + u_t/420.0;
+    float y1 = sin(pos.x) + u_t/640.0;
+    float x2 = cos(pos.y) + u_t/640.0;
     float y2 = sin(pos.y) + u_t/2000.0;
     vec4 point = vec4(x1, y1, x2, y2);
 
-    float noise = fbm_max(point + u_warp*fbm(point + 0.1*u_warp));
+    float noise = fbm_max(point + u_warp*fbm(point + 0.34*u_warp));
     gl_FragColor = serialize(vec2(noise, 0.0));
     //gl_FragColor = vec4(noise*noise*0.2, noise*0.9, noise, 1);
 }
@@ -204,6 +204,8 @@ precision mediump float;
 uniform sampler2D u_grayscott;
 
 uniform vec2 u_resolution;
+
+uniform float radius;
 
 
 vec2 deserialize(vec4 v) {

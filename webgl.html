@@ -145,34 +145,7 @@ float snoise(vec4 v) {
 /********** 4D simplex noise implementation ends ***********/
 
 
-//float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-//vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-//vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
-//
-//float noise(vec3 p){
-//    vec3 a = floor(p);
-//    vec3 d = p - a;
-//    d = d * d * (3.0 - 2.0 * d);
-//
-//    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
-//    vec4 k1 = perm(b.xyxy);
-//    vec4 k2 = perm(k1.xyxy + b.zzww);
-//
-//    vec4 c = k2 + a.zzzz;
-//    vec4 k3 = perm(c);
-//    vec4 k4 = perm(c + 1.0);
-//
-//    vec4 o1 = fract(k3 * (1.0 / 41.0));
-//    vec4 o2 = fract(k4 * (1.0 / 41.0));
-//
-//    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
-//    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
-//
-//    return o4.y * d.y + o4.x * (1.0 - d.y);
-//}
-//
-
-#define OCTAVES 8
+#define OCTAVES 6
 float fbm (in vec4 point) {
     // Initial values
     float value = 0.0;
@@ -205,19 +178,19 @@ vec4 serialize(vec2 ab) {
 
 void main() {
     //vec2 pos = vec2(gl_FragCoord.xy/u_resolution.xy);
-    vec2 pos = vec2(6.28*gl_FragCoord.xy/128.0);
+    vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
 
-    float x1 = cos(pos.x);
-    float y1 = sin(pos.x);
-    float x2 = cos(pos.y) + t/240.0;
-    float y2 = sin(pos.y);
+    float x1 = cos(pos.x) - t/1000.0;
+    float y1 = sin(pos.x) + t/420.0;
+    float x2 = cos(pos.y) + t/420.0;
+    float y2 = sin(pos.y) + t/1000.0;
     vec4 point = vec4(x1, y1, x2, y2);
 
     float noise_1 = fbm(point);
     float noise_2 = fbm(point);
     float noise_3 = fbm(point);
     
-    gl_FragColor = vec4(noise_1*noise_1, noise_2*0.9, noise_3, 1);
+    gl_FragColor = vec4(noise_1*noise_1*0.6, noise_2*0.9, noise_3, 1);
     //gl_FragColor = serialize(vec2(fbm(point), 0));
     //gl_FragColor = vec4(vec3(fbm(point)), 1);
 }
@@ -248,6 +221,12 @@ void main() {
     //vec2 pos = abs(gl_FragCoord.xy - (u_resolution / vec2(2.0, 0.0)));
     //vec2 col = mod(pos, 64.0) / 64.0;
     //gl_FragColor = vec4(col, 0.5, 1);
+
+    vec2 offset = abs(gl_FragCoord.xy - (u_resolution * vec2(0.5, 1.0)));
+    if (offset.x > 420.0 || offset.y > 535.0 || offset.y < 23.0) {
+        gl_FragColor = vec4(0, 0, 0, 1);
+        return;
+    }
 
     //vec2 ab = deserialize(texture2D(u_grayscott, pos));
     vec2 pos = mod(gl_FragCoord.xy, 256.0)/256.0;

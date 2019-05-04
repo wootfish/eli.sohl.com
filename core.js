@@ -126,8 +126,8 @@ function main() {
 
     // set up a texture for the gray-scott data array, and a corresponding
     // framebuffer with the texture as its color buffer
-    const gs_width = 128;
-    const gs_height = 128;
+    const gs_width = 256;
+    const gs_height = 256;
     const gs_texture = gl.createTexture();
     const gs_framebuffer = gl.createFramebuffer();
     {

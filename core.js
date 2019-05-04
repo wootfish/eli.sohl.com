@@ -4,6 +4,12 @@ var gl;
 
 var now, frame_delta;
 
+var warp_min = 0.1;
+var warp_max = 0.7;
+var warp_delta = 0.0075;
+var warp = warp_min;
+var warp_increasing = false;
+
 var first_frame = Date.now();
 var last_frame = Date.now();
 
@@ -26,6 +32,16 @@ const positions = [
 
 
 main();
+
+
+$("#enter").mouseenter(function () {
+    warp_increasing = true;
+});
+
+$("#enter").mouseleave(function () {
+    warp_increasing = false;
+});
+
 
 function limitFrameRate() {
     now = Date.now();
@@ -112,7 +128,8 @@ function main() {
     const renderProgram = createProgram(gl, vertexShader, renderShader);
 
     // get the locations of the programs' uniforms
-    const tUniformLocation = gl.getUniformLocation(noiseProgram, "t");
+    const tUniformLocation = gl.getUniformLocation(noiseProgram, "u_t");
+    const warpUniformLocation = gl.getUniformLocation(noiseProgram, "u_warp");
     const grayscottUniformLocation = gl.getUniformLocation(renderProgram, "u_grayscott");
     const resolutionUniformNoiseLocation = gl.getUniformLocation(noiseProgram, "u_resolution");
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
@@ -167,6 +184,9 @@ function main() {
 
         t += 1;
 
+        if (warp_increasing) warp = Math.min(warp + warp_delta, warp_max);
+        else warp = Math.max(warp - warp_delta, warp_min);
+
         // draw noise pattern to gray-scott data texture
         gl.bindFramebuffer(gl.FRAMEBUFFER, gs_framebuffer);
         gl.useProgram(noiseProgram);
@@ -174,6 +194,7 @@ function main() {
         gl.disable(gl.BLEND);
         gl.viewport(0, 0, gs_width, gs_height);
         gl.uniform1f(tUniformLocation, t);
+        gl.uniform1f(warpUniformLocation, warp);
         gl.uniform2f(resolutionUniformNoiseLocation, gs_width, gs_height);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 

@@ -37,18 +37,9 @@ void main() {
 // random, noise, and fbm functions via https://thebookofshaders.com/
 precision mediump float;
 
-//uniform sampler2D u_grayscott;
 uniform vec2 u_resolution;
-uniform float t;
-
-//uniform float u_da;
-//uniform float u_db;
-//uniform float u_feed;
-//uniform float u_kill;
-
-
-//out vec4 fragmentColor;
-
+uniform float u_warp;
+uniform float u_t;
 
 
 /******* 4D simplex noise implementation begins *********/
@@ -145,7 +136,7 @@ float snoise(vec4 v) {
 /********** 4D simplex noise implementation ends ***********/
 
 
-#define OCTAVES 6
+#define OCTAVES 8
 float fbm (in vec4 point) {
     // Initial values
     float value = 0.0;
@@ -176,6 +167,11 @@ vec4 serialize(vec2 ab) {
 }
 
 
+float fbm_max(vec4 point) {
+    return max(fbm(point), 0.67*fbm(point+1.0));
+}
+
+
 void main() {
     //vec2 pos = vec2(gl_FragCoord.xy/u_resolution.xy);
     vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
@@ -184,13 +180,13 @@ void main() {
     // and without discontinuities by treating x and y as theta values for
     // two orthogonal 2D circles embedded in 4D space
 
-    float x1 = cos(pos.x) - t/1000.0;
-    float y1 = sin(pos.x) + t/420.0;
-    float x2 = cos(pos.y) + t/420.0;
-    float y2 = sin(pos.y) + t/1000.0;
+    float x1 = cos(pos.x) - u_t/2000.0;
+    float y1 = sin(pos.x) + u_t/420.0;
+    float x2 = cos(pos.y) + u_t/420.0;
+    float y2 = sin(pos.y) + u_t/2000.0;
     vec4 point = vec4(x1, y1, x2, y2);
 
-    float noise = max(fbm(point), 0.67*fbm(point+1.0));
+    float noise = fbm_max(point + u_warp*fbm(point));
     gl_FragColor = serialize(vec2(noise, 0.0));
     //gl_FragColor = vec4(noise*noise*0.2, noise*0.9, noise, 1);
 }
@@ -236,5 +232,7 @@ void main() {
 
 
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
     <script src="./core.js"></script>  <!-- Load WebGL and set up RD effect -->
 </html>

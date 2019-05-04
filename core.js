@@ -9,7 +9,7 @@ var last_frame = Date.now();
 
 var frame_interval = 1000/24;  // 24 fps
 var frame_count = 0;
-var t = 0;
+var t = Date.now() % 100000;
 
 var debug = true;
 

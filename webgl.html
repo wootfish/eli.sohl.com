@@ -40,6 +40,7 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform float u_warp;
 uniform float u_t;
+uniform float radius;
 
 
 /******* 4D simplex noise implementation begins *********/
@@ -180,10 +181,10 @@ void main() {
     // and without discontinuities by treating x and y as theta values for
     // two orthogonal 2D circles embedded in 4D space
 
-    float x1 = cos(pos.x) - u_t/2000.0;
-    float y1 = sin(pos.x) + u_t/640.0;
-    float x2 = cos(pos.y) + u_t/640.0;
-    float y2 = sin(pos.y) + u_t/2000.0;
+    float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
+    float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;
+    float x2 = (0.17+0.8*u_warp)*cos(pos.y) + u_t/640.0;
+    float y2 = (0.17+0.8*u_warp)*sin(pos.y) + u_t/2000.0;
     vec4 point = vec4(x1, y1, x2, y2);
 
     float noise = fbm_max(point + u_warp*fbm(point + 0.34*u_warp));

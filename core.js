@@ -6,7 +6,7 @@ var now, frame_delta;
 
 var warp_min = 0.05;
 var warp_max = 0.67;
-var warp_delta = 0.007;
+var warp_delta = 0.006;
 var warp = warp_min;
 var warp_increasing = false;
 
@@ -43,6 +43,10 @@ $("#enter").mouseenter(function () {
 
 $("#enter").mouseleave(function () {
     warp_increasing = false;
+});
+
+$("#enter").click(function () {
+    expanding = true;
 });
 
 
@@ -138,6 +142,8 @@ function main() {
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
     const positionAttributeNoiseLocation = gl.getAttribLocation(noiseProgram, "a_position");
     const positionAttributeRenderLocation = gl.getAttribLocation(renderProgram, "a_position");
+    const radiusUniformNoiseLocation = gl.getUniformLocation(noiseProgram, "u_radius");
+    const radiusUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_radius");
 
     // initialize the programs' (shared) position buffer
     const positionBuffer = gl.createBuffer();
@@ -187,8 +193,14 @@ function main() {
 
         t += 1;
 
-        if (warp_increasing) warp = Math.min(warp + warp_delta, warp_max);
-        else warp = Math.max(warp - warp_delta, warp_min);
+        warp = (warp_increasing ? warp_max : warp_min) * warp_delta + warp*(1-warp_delta)
+        //if (warp_increasing) warp = warp_max*warp_delta + warp*(1-warp_delta);
+        //if (warp_increasing) warp = Math.min(warp + warp_delta, warp_max);
+        //else warp = Math.max(warp - warp_delta, warp_min);
+
+        if (expanding) radius = (radius+1) * 1.05;
+        console.log(radius);
+        if (radius**2 > (gl.canvas.width/2)**2 + gl.canvas.height**2) expanding = false;
 
         // draw noise pattern to gray-scott data texture
         gl.bindFramebuffer(gl.FRAMEBUFFER, gs_framebuffer);
@@ -198,6 +210,7 @@ function main() {
         gl.viewport(0, 0, gs_width, gs_height);
         gl.uniform1f(tUniformLocation, t);
         gl.uniform1f(warpUniformLocation, warp);
+        gl.uniform1f(radiusUniformNoiseLocation, radius);
         gl.uniform2f(resolutionUniformNoiseLocation, gs_width, gs_height);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -207,6 +220,7 @@ function main() {
         resize(gl.canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.uniform2f(resolutionUniformRenderLocation, gl.canvas.width, gl.canvas.height);
+        gl.uniform1f(radiusUniformRenderLocation, radius);
         gl.bindTexture(gl.TEXTURE_2D, gs_texture);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }

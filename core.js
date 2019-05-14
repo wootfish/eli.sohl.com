@@ -19,7 +19,7 @@ var last_frame = Date.now();
 
 var frame_interval = 1000/30;  // cap frame rate for consistency (30 fps)
 var frame_count = 0;
-var t = Date.now() % 100000;
+var t;
 
 var debug = true;
 
@@ -50,6 +50,17 @@ $("#enter").mouseleave(function () {
         warp_increasing = false;
     }
 });
+
+
+function pageWasReloaded() {
+    if (!window.performance) return false;  // performance api not supported
+    if (!performance.getEntriesByType) return (performance.navigation.type == 1);  // api level 2 not supported
+    const entries = performance.getEntriesByType("navigation");  // the modern way
+    for (var i = 0; i < entries.length; i++) {
+        if (entries[i].type == "reload") return true;
+    }
+    return false;
+}
 
 
 function enterBegin() {
@@ -143,6 +154,15 @@ function main() {
     }
 
     resize(gl.canvas);
+
+
+    // load t from local storage if possible, else initialize it
+    // (this keeps the background from jumping whenever we click a link)
+    // also, reinitialize t if this is a page refresh
+    t = localStorage.getItem('t');
+    if (!t || pageWasReloaded()) {
+        t = (Date.now()**2) % 1000001;
+    } else t = parseInt(t);
 
     // compile and initialize shaders
     const vertexShaderSource = document.getElementById("2d-vertex-shader").text;
@@ -241,6 +261,9 @@ function main() {
         gl.uniform1f(fadeinUniformRenderLocation, fadein);
         gl.bindTexture(gl.TEXTURE_2D, gs_texture);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        // store latest t value in local storage
+        localStorage.setItem('t', t);
     }
 
     requestAnimationFrame(full_render);

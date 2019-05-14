@@ -10,9 +10,7 @@ var warp_delta = 0.011;
 var warp = warp_min;
 var warp_increasing = false;
 
-var radius_small = 30;
-var radius = 0;
-var fade_radius = 0;
+var fadein = 0;
 var entering = false;
 var entered = false;
 
@@ -44,13 +42,11 @@ $("#enter").click(enterBegin);
 
 
 $("#enter").mouseenter(function () {
-    if (radius === 0) {
-        warp_increasing = true;
-    }
+    warp_increasing = true;
 });
 
 $("#enter").mouseleave(function () {
-    if (radius === 0) {
+    if (!(entering || entered)) {
         warp_increasing = false;
     }
 });
@@ -65,11 +61,12 @@ function enterBegin() {
 
 
 function doEnterAnimation() {
-    if (radius > Math.min(gl.canvas.width, gl.canvas.height)) {
+    if (fadein >= 1) {
+        fadein = 1;
         entering = false;
         entered = true;
     } else {
-        radius = (radius+12)**1.0017;
+        fadein = (fadein+0.02)**1.034;
     }
 }
 
@@ -104,7 +101,7 @@ function resize(canvas) {
     //console.log(canvas.width, canvas.height);
 
     // update webgl effect variable
-    if (entered) radius = Math.min(displayWidth, displayHeight);
+    //if (entered) radius = Math.min(displayWidth, displayHeight);
 }
 
 
@@ -169,7 +166,7 @@ function main() {
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
     const positionAttributeNoiseLocation = gl.getAttribLocation(noiseProgram, "a_position");
     const positionAttributeRenderLocation = gl.getAttribLocation(renderProgram, "a_position");
-    const radiusUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_radius");
+    const fadeinUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_fadein");
 
     // initialize the programs' (shared) position buffer
     const positionBuffer = gl.createBuffer();
@@ -240,7 +237,7 @@ function main() {
         resize(gl.canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.uniform2f(resolutionUniformRenderLocation, gl.canvas.width, gl.canvas.height);
-        gl.uniform1f(radiusUniformRenderLocation, radius);
+        gl.uniform1f(fadeinUniformRenderLocation, fadein);
         gl.bindTexture(gl.TEXTURE_2D, gs_texture);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }

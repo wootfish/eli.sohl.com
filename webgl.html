@@ -203,7 +203,7 @@ uniform sampler2D u_grayscott;
 
 uniform vec2 u_resolution;
 
-uniform float u_radius;
+uniform float u_fadein;
 
 
 vec2 deserialize(vec4 v) {
@@ -215,12 +215,12 @@ vec2 deserialize(vec4 v) {
     //float dist = u_radius - length(offset-vec2(0.0, 367.0));
 
 void main() {
-    float fade = min(u_radius / min(u_resolution.x, u_resolution.y), 1.0);
+    float fade = u_fadein;
     vec2 offset = abs(gl_FragCoord.xy - (u_resolution * vec2(0.5, 1.0)));
 
-    float dist = (420.0 + 0.068 * u_radius) - offset.x;
-    dist = min(dist, (539.0 + 0.051 * u_radius) - offset.y);
-    dist = min(dist, (-27.0 + 0.051 * u_radius) + offset.y);
+    float dist = (420.0 + 68.0 * u_fadein) - offset.x;
+    dist = min(dist, (539.0 + 51.0 * u_fadein) - offset.y);
+    dist = min(dist, (-27.0 + 51.0 * u_fadein) + offset.y);
 
     if (dist > 0.0) {
         fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);

@@ -4,19 +4,22 @@ var gl;
 
 var now, frame_delta;
 
-var warp_min = 0.05;
-var warp_max = 0.67;
-var warp_delta = 0.006;
+var warp_min = 0.09;
+var warp_max = 0.40;
+var warp_delta = 0.011;
 var warp = warp_min;
 var warp_increasing = false;
 
+var radius_small = 30;
 var radius = 0;
-var expanding = false;
+var fade_radius = 0;
+var entering = false;
+var entered = false;
 
 var first_frame = Date.now();
 var last_frame = Date.now();
 
-var frame_interval = 1000/24;  // 24 fps
+var frame_interval = 1000/30;  // cap frame rate for consistency (30 fps)
 var frame_count = 0;
 var t = Date.now() % 100000;
 
@@ -37,17 +40,38 @@ const positions = [
 main();
 
 
+$("#enter").click(enterBegin);
+
+
 $("#enter").mouseenter(function () {
-    warp_increasing = true;
+    if (radius === 0) {
+        warp_increasing = true;
+    }
 });
 
 $("#enter").mouseleave(function () {
-    warp_increasing = false;
+    if (radius === 0) {
+        warp_increasing = false;
+    }
 });
 
-$("#enter").click(function () {
-    expanding = true;
-});
+
+function enterBegin() {
+    entering = true;
+    warp_increasing = true;
+    $("#greeting").fadeOut(1700);
+    $("#enter").fadeOut(1000);
+}
+
+
+function doEnterAnimation() {
+    if (radius > Math.min(gl.canvas.width, gl.canvas.height)) {
+        entering = false;
+        entered = true;
+    } else {
+        radius = (radius+12)**1.0017;
+    }
+}
 
 
 function limitFrameRate() {
@@ -62,7 +86,7 @@ function limitFrameRate() {
 function logFPS() {
     // log fps
     frame_count += 1;
-    if (debug && frame_count % 240 == 0) {
+    if (debug && frame_count % 24 == 0) {
         console.log("fps:", 1000*frame_count/(last_frame-first_frame), "frames:", frame_count);
     }
 }
@@ -78,6 +102,9 @@ function resize(canvas) {
         canvas.height = displayHeight;
     }
     //console.log(canvas.width, canvas.height);
+
+    // update webgl effect variable
+    if (entered) radius = Math.min(displayWidth, displayHeight);
 }
 
 
@@ -142,7 +169,6 @@ function main() {
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
     const positionAttributeNoiseLocation = gl.getAttribLocation(noiseProgram, "a_position");
     const positionAttributeRenderLocation = gl.getAttribLocation(renderProgram, "a_position");
-    const radiusUniformNoiseLocation = gl.getUniformLocation(noiseProgram, "u_radius");
     const radiusUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_radius");
 
     // initialize the programs' (shared) position buffer
@@ -193,14 +219,9 @@ function main() {
 
         t += 1;
 
-        warp = (warp_increasing ? warp_max : warp_min) * warp_delta + warp*(1-warp_delta)
-        //if (warp_increasing) warp = warp_max*warp_delta + warp*(1-warp_delta);
-        //if (warp_increasing) warp = Math.min(warp + warp_delta, warp_max);
-        //else warp = Math.max(warp - warp_delta, warp_min);
+        warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta);
 
-        if (expanding) radius = (radius+1) * 1.05;
-        console.log(radius);
-        if (radius**2 > (gl.canvas.width/2)**2 + gl.canvas.height**2) expanding = false;
+        if (entering) doEnterAnimation();
 
         // draw noise pattern to gray-scott data texture
         gl.bindFramebuffer(gl.FRAMEBUFFER, gs_framebuffer);
@@ -210,7 +231,6 @@ function main() {
         gl.viewport(0, 0, gs_width, gs_height);
         gl.uniform1f(tUniformLocation, t);
         gl.uniform1f(warpUniformLocation, warp);
-        gl.uniform1f(radiusUniformNoiseLocation, radius);
         gl.uniform2f(resolutionUniformNoiseLocation, gs_width, gs_height);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 

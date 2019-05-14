@@ -10,7 +10,7 @@
 
     <body>
         <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
-        <p id="content">you have arrived<br/>at eli dot sohl dot com</p>
+        <p id="greeting">you have arrived<br/>at eli dot sohl dot com</p>
         <p id="enter">enter</p>
     </body>
 
@@ -39,7 +39,6 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform float u_warp;
 uniform float u_t;
-uniform float radius;
 
 
 /******* 4D simplex noise implementation begins *********/
@@ -140,8 +139,8 @@ float snoise(vec4 v) {
 #define OCTAVES 8
 float fbm (in vec4 point) {
     // Initial values
-    float value = 0.34;
-    float amplitude = 1.17;
+    float value = 0.3;
+    float amplitude = 1.34;
     float frequency = 0.;
     // Loop of octaves
     for (int i = 0; i < OCTAVES; i++) {
@@ -166,14 +165,14 @@ vec4 serialize(vec2 ab) {
 
 
 float fbm_max(vec4 point) {
-    return max(fbm(point), 0.4*fbm(point+1.0+0.17*u_warp));
+    return max(fbm(point), 0.4*fbm(point+1.7+0.17*u_warp));
 }
 
 
 void main() {
     //vec2 pos = vec2(gl_FragCoord.xy/u_resolution.xy);
     vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
-
+    
     // cute lil trick: get the texture to tile in a visually interesting way
     // and without discontinuities by treating x and y as theta values for
     // two circles on orthogonal 2D planes embedded in 4D space
@@ -204,7 +203,7 @@ uniform sampler2D u_grayscott;
 
 uniform vec2 u_resolution;
 
-uniform float radius;
+uniform float u_radius;
 
 
 vec2 deserialize(vec4 v) {
@@ -213,12 +212,18 @@ vec2 deserialize(vec4 v) {
                 float(as_ints.b*0xFF + as_ints.a) / 65535.0);
 }
 
+    //float dist = u_radius - length(offset-vec2(0.0, 367.0));
 
 void main() {
+    float fade = min(u_radius / min(u_resolution.x, u_resolution.y), 1.0);
     vec2 offset = abs(gl_FragCoord.xy - (u_resolution * vec2(0.5, 1.0)));
-    if (offset.x > 420.0 || offset.y > 535.0 || offset.y < 23.0) {
-        gl_FragColor = vec4(0, 0, 0, 1);
-        return;
+
+    float dist = (420.0 + 0.068 * u_radius) - offset.x;
+    dist = min(dist, (539.0 + 0.051 * u_radius) - offset.y);
+    dist = min(dist, (-27.0 + 0.051 * u_radius) + offset.y);
+
+    if (dist > 0.0) {
+        fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);
     }
 
     //vec2 ab = deserialize(texture2D(u_grayscott, pos));
@@ -227,13 +232,16 @@ void main() {
     //if (ab.y == 0.0) gl_FragColor = vec4(1, 0, 0, 1);
     //else gl_FragColor = vec4(0, 1, 0, 1);
     float noise = ab.x;
-    gl_FragColor = vec4(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05, 1);
+    vec3 c;
+    if (noise < (1.0-fade)) c = vec3(0);
+    else c = vec3(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05) * fade;
+    gl_FragColor = vec4(c, 1);
 }
 
 
 
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
     <script src="./core.js"></script>  <!-- Load WebGL and set up RD effect -->
 </html>

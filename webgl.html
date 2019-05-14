@@ -10,7 +10,7 @@
 
     <body>
         <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
-        <p id="content">eli dot sohl dot com</p>
+        <p id="content">you have arrived<br/>at eli dot sohl dot com</p>
         <p id="enter">enter</p>
     </body>
 
@@ -34,7 +34,6 @@ void main() {
 
 
 // shader for initializing gray-scott data array from smooth noise
-// random, noise, and fbm functions via https://thebookofshaders.com/
 precision mediump float;
 
 uniform vec2 u_resolution;
@@ -137,11 +136,12 @@ float snoise(vec4 v) {
 /********** 4D simplex noise implementation ends ***********/
 
 
+// fbm function via https://thebookofshaders.com/
 #define OCTAVES 8
 float fbm (in vec4 point) {
     // Initial values
-    float value = 0.0;
-    float amplitude = .67;
+    float value = 0.34;
+    float amplitude = 1.17;
     float frequency = 0.;
     // Loop of octaves
     for (int i = 0; i < OCTAVES; i++) {
@@ -154,22 +154,19 @@ float fbm (in vec4 point) {
 
 
 vec4 serialize(vec2 ab) {
-    // maintaining compatibility with GLSL 2 means we don't get bitwise
-    // operators, so we have to do some ugly hacks in here to emulate them
+    // maintaining compatibility with GLSL 2 means we don't get to use bitwise
+    // operators, so we have to get a little hacky here to emulate them
     ivec2 as_ints = ivec2(ab * 65535.0);
-
     int a_big = as_ints.x / 0xFF;
     int a_lil = as_ints.x - a_big*0xFF;
-
     int b_big = as_ints.y / 0xFF;
     int b_lil = as_ints.y - b_big*0xFF;
-
     return vec4(a_big, a_lil, b_big, b_lil) / 255.0;
 }
 
 
 float fbm_max(vec4 point) {
-    return max(fbm(point), 0.4*fbm(point+1.0+0.34*u_warp));
+    return max(fbm(point), 0.4*fbm(point+1.0+0.17*u_warp));
 }
 
 
@@ -179,7 +176,8 @@ void main() {
 
     // cute lil trick: get the texture to tile in a visually interesting way
     // and without discontinuities by treating x and y as theta values for
-    // two orthogonal 2D circles embedded in 4D space
+    // two circles on orthogonal 2D planes embedded in 4D space
+    // (and translate these circles with time)
 
     float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
     float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;

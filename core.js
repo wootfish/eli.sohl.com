@@ -213,7 +213,9 @@ function main() {
         if (limitFrameRate()) return;
         logFPS();
 
-        t += 1;
+        if (entered) t += 0.3;
+        else if (entering) t += 0.3+(0.7*fadein);
+        else t += 1;
 
         warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta);
 

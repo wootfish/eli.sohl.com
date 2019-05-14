@@ -61,12 +61,11 @@ function enterBegin() {
 
 
 function doEnterAnimation() {
+    if (fadein < 1) fadein = (fadein+0.017)**1.034;
     if (fadein >= 1) {
         fadein = 1;
         entering = false;
         entered = true;
-    } else {
-        fadein = (fadein+0.02)**1.034;
     }
 }
 

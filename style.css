@@ -34,3 +34,14 @@ canvas {
     color: #FFBBBB;
     text-shadow: -1px -1px 0 #000;
 }
+
+#content {
+    position: relative;
+    z-index: 10;
+    margin-top: 240px;
+    font-size: 17px;
+    text-align: center;
+    font-family: Monospace;
+    color: #FFBBBB;
+    text-shadow: -1px -1px 0 #000;
+}

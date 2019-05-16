@@ -77,6 +77,7 @@ function doEnterAnimation() {
         fadein = 1;
         entering = false;
         entered = true;
+        window.location.href = "./home.html";
     }
 }
 
@@ -93,7 +94,7 @@ function limitFrameRate() {
 function logFPS() {
     // log fps
     frame_count += 1;
-    if (debug && frame_count % 24 == 0) {
+    if (debug && frame_count % 300 == 0) {
         console.log("fps:", 1000*frame_count/(last_frame-first_frame), "frames:", frame_count);
     }
 }
@@ -161,8 +162,10 @@ function main() {
     // also, reinitialize t if this is a page refresh
     t = localStorage.getItem('t');
     if (!t || pageWasReloaded()) {
+        console.log("reinitializing t", pageWasReloaded());
         t = (Date.now()**2) % 1000001;
     } else t = parseInt(t);
+    console.log(t);
 
     // compile and initialize shaders
     const vertexShaderSource = document.getElementById("2d-vertex-shader").text;

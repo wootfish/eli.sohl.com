@@ -13,14 +13,17 @@ canvas {
     left: 0;
 }
 
+p {
+    font-family: Monospace;
+    color: #FFBBBB;
+}
+
 #greeting {
     position: relative;
     z-index: 10;
     margin-top: 127px;
     font-size: 23px;
     text-align: center;
-    font-family: Monospace;
-    color: #FFBBBB;
     text-shadow: -1px -1px 0 #000;
 }
 
@@ -30,18 +33,16 @@ canvas {
     margin-top: 240px;
     font-size: 17px;
     text-align: center;
-    font-family: Monospace;
-    color: #FFBBBB;
     text-shadow: -1px -1px 0 #000;
 }
 
-#content {
-    position: relative;
+.contentbox {
     z-index: 10;
-    margin-top: 240px;
-    font-size: 17px;
-    text-align: center;
-    font-family: Monospace;
-    color: #FFBBBB;
-    text-shadow: -1px -1px 0 #000;
+    background-color: #000000;
+    border: 1px solid black;
+    opacity: 0.8;
+    margin: auto;
+    width: 50%;
+    height: 3000px;
+    display: none;
 }

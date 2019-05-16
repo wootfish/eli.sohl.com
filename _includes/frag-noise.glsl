@@ -139,14 +139,14 @@ void main() {
     vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
     
     // cute lil trick: get the texture to tile in a visually interesting way
-    // and without discontinuities by treating x and y as theta values for two
-    // circles on orthogonal 2D planes embedded in 4D space
-    // (and translate these circles with time)
+    // and without discontinuities by normalizing x and y to [0, TWO_PI) and
+    // treating them as theta values for two circles on orthogonal 2D planes
+    // embedded in 4D space. animate by translating these circles with time
     //
-    // like with almost all tiled textures, horizontal or vertical "lines"
-    // which appear to be contiguous across tiles will occasionally show up.
-    // anyone who came up playing games which relied on small tilesets will be
-    // intimately familiar with the look of these artifacts.
+    // as with almost all tiled textures, horizontal or vertical "lines" which
+    // appear to be contiguous across tiles will occasionally show up. anyone
+    // who came up playing games which relied on small tilesets will instantly
+    // recognize the look of these artifacts.
     //
     // fixed tilesets produce these artifacts at constant offsets from tile
     // borders. by highlighting the tile borders through juxtaposition, they

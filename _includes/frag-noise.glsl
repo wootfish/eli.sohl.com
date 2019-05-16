@@ -1,38 +1,3 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>eli dot sohl dot com</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-        <link rel="stylesheet" href="./style.css"></link>
-    </head>
-
-
-    <body>
-        <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
-        <p id="greeting">you have arrived<br/>at eli dot sohl dot com</p>
-        <p id="enter">enter</p>
-    </body>
-
-
-    <script id="2d-vertex-shader" type="notjs">
-
-
-
-// passthrough vertex shader for RD effect
-attribute vec2 a_position;
-
-void main() {
-    gl_Position = vec4(a_position, 0, 1);
-}
-
-
-
-    </script>
-    <script id="2d-fragment-noise-shader" type="notjs">
-
-
-
 // shader for initializing gray-scott data array from smooth noise
 precision mediump float;
 
@@ -135,7 +100,7 @@ float snoise(vec4 v) {
 /********** 4D simplex noise implementation ends ***********/
 
 
-// fbm function via https://thebookofshaders.com/
+// fbm function adapted from https://thebookofshaders.com/
 #define OCTAVES 8
 float fbm (in vec4 point) {
     // Initial values
@@ -188,61 +153,3 @@ void main() {
     gl_FragColor = serialize(vec2(noise, 0.0));
     //gl_FragColor = vec4(noise*noise*0.2, noise*0.9, noise, 1);
 }
-
-
-
-    </script>
-    <script id="2d-fragment-render-shader" type="notjs">
-
-
-
-// fragment shader for rendering RD effect
-precision mediump float;
-
-uniform sampler2D u_grayscott;
-
-uniform vec2 u_resolution;
-
-uniform float u_fadein;
-
-
-vec2 deserialize(vec4 v) {
-    ivec4 as_ints = ivec4(v * float(0xFF));
-    return vec2(float(as_ints.r*0xFF + as_ints.g) / 65535.0,
-                float(as_ints.b*0xFF + as_ints.a) / 65535.0);
-}
-
-    //float dist = u_radius - length(offset-vec2(0.0, 367.0));
-
-void main() {
-    float fade = u_fadein;
-    vec2 offset = abs(gl_FragCoord.xy - (u_resolution * vec2(0.5, 1.0)));
-
-    float dist = (420.0 + 102.0 * u_fadein) - offset.x;
-    dist = min(dist, (539.0 + 136.0 * u_fadein) - offset.y);
-    dist = min(dist, (-27.0 + 102.0 * u_fadein) + offset.y);
-
-    if (dist > 0.0) {
-        fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);
-    }
-
-    //vec2 ab = deserialize(texture2D(u_grayscott, pos));
-    vec2 pos = mod(gl_FragCoord.xy, 256.0)/256.0;
-    vec2 ab = deserialize(texture2D(u_grayscott, pos));
-    //if (ab.y == 0.0) gl_FragColor = vec4(1, 0, 0, 1);
-    //else gl_FragColor = vec4(0, 1, 0, 1);
-    float noise = ab.x;
-    vec3 c;
-    if (noise < (1.0-fade)) c = vec3(0);
-    else c = vec3(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05) * fade;
-    gl_FragColor = vec4(c, 1);
-}
-
-
-
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
-    <script src="./core.js"></script>  <!-- Load WebGL and set up RD effect -->
-    <link rel="prerender" href="//example.com/next-page.html">
-</html>

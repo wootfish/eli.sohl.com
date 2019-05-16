@@ -4,10 +4,10 @@ var gl;
 
 var now, frame_delta;
 
+var warp;
 var warp_min = 0.09;
 var warp_max = 0.40;
 var warp_delta = 0.011;
-var warp = warp_min;
 var warp_increasing = false;
 
 var fadein = 0;
@@ -35,7 +35,7 @@ const positions = [
 ];
 
 
-main();
+//main();
 
 
 $("#enter").click(enterBegin);
@@ -57,7 +57,9 @@ function pageWasReloaded() {
     if (!performance.getEntriesByType) return (performance.navigation.type == 1);  // api level 2 not supported
     const entries = performance.getEntriesByType("navigation");  // the modern way
     for (var i = 0; i < entries.length; i++) {
-        if (entries[i].type == "reload") return true;
+        if (entries[i].type == "reload") {
+            return true;
+        }
     }
     return false;
 }
@@ -72,7 +74,7 @@ function enterBegin() {
 
 
 function doEnterAnimation() {
-    if (fadein < 1) fadein = (fadein+0.017)**1.034;
+    if (fadein < 1) fadein = (fadein+0.017)**1.02;
     if (fadein >= 1) {
         fadein = 1;
         entering = false;
@@ -94,7 +96,7 @@ function limitFrameRate() {
 function logFPS() {
     // log fps
     frame_count += 1;
-    if (debug && frame_count % 300 == 0) {
+    if (debug && frame_count % 200 == 0) {
         console.log("fps:", 1000*frame_count/(last_frame-first_frame), "frames:", frame_count);
     }
 }
@@ -109,7 +111,6 @@ function resize(canvas) {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
     }
-    //console.log(canvas.width, canvas.height);
 
     // update webgl effect variable
     //if (entered) radius = Math.min(displayWidth, displayHeight);
@@ -160,12 +161,33 @@ function main() {
     // load t from local storage if possible, else initialize it
     // (this keeps the background from jumping whenever we click a link)
     // also, reinitialize t if this is a page refresh
-    t = localStorage.getItem('t');
-    if (!t || pageWasReloaded()) {
-        console.log("reinitializing t", pageWasReloaded());
+    if (!sessionStorage.getItem('t') || pageWasReloaded()) {
         t = (Date.now()**2) % 1000001;
-    } else t = parseInt(t);
-    console.log(t);
+        sessionStorage.setItem('t', t);
+    }
+
+    if (!sessionStorage.getItem('warp') || pageWasReloaded()) {
+        warp = (warp_min+warp_max)/2;
+        sessionStorage.setItem('warp', warp);
+    }
+
+
+    //t = sessionStorage.getItem('t');
+    //console.log("t value from local storage:", t);
+    //if (!t || pageWasReloaded()) {
+    //    console.log("reinitializing t", pageWasReloaded());
+    //    t = ;
+    //    console.log("seeded t to", t);
+    //} else {
+    //    t = parseInt(t);
+    //    console.log("parsed t value:", t);
+    //}
+
+    //console.log("warp value pre-init:", warp);
+    //if (warp == undefined) warp = sessionStorage.getItem('warp');
+    //if (!warp) warp = warp_min;
+    //else warp = parseFloat(warp);
+    //console.log("warp value post-init:", warp);
 
     // compile and initialize shaders
     const vertexShaderSource = document.getElementById("2d-vertex-shader").text;
@@ -236,8 +258,11 @@ function main() {
         if (limitFrameRate()) return;
         logFPS();
 
+        t = parseFloat(sessionStorage.getItem('t'));
+        warp = parseFloat(sessionStorage.getItem('warp'));
+
         if (entered) t += 0.3;
-        else if (entering) t += 0.3+(0.7*fadein);
+        else if (entering) t += 0.3 + 0.7*(1-fadein);
         else t += 1;
 
         warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta);
@@ -266,7 +291,8 @@ function main() {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         // store latest t value in local storage
-        localStorage.setItem('t', t);
+        sessionStorage.setItem('t', t);
+        sessionStorage.setItem('warp', warp);
     }
 
     requestAnimationFrame(full_render);

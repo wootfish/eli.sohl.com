@@ -68,8 +68,8 @@ function pageWasReloaded() {
 function enterBegin() {
     entering = true;
     warp_increasing = true;
-    $("#greeting").fadeOut(1700);
-    $("#enter").fadeOut(1000);
+    $("#greeting").fadeOut(2300);
+    $("#enter").fadeOut(1700);
 }
 
 
@@ -79,7 +79,8 @@ function doEnterAnimation() {
         fadein = 1;
         entering = false;
         entered = true;
-        window.location.href = "./home.html";
+        sessionStorage.setItem('fancyfade', true);
+        window.location.href = "./blog.html";
     }
 }
 

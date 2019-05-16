@@ -37,6 +37,11 @@ entered = true;
 warp_increasing = true;
 {% endif %}
 
+if (sessionStorage.getItem('fancyfade') == "true") {
+    $(".contentbox").fadeIn(5100);
+    sessionStorage.setItem('fancyfade', false);
+} else $(".contentbox").fadeIn();
+
 main();
     </script>
 

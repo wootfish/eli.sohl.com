@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="icon" href="data:,">
+    </head>   
+
+    <body>
+        <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
+        {{ content }}
+    </body>
+
+    <script id="2d-vertex-shader" type="notjs">{% include vertex-passthru.glsl %}</script>
+    <script id="2d-fragment-noise-shader" type="notjs">{% include frag-noise.glsl %}</script>
+    <script id="2d-fragment-render-shader" type="notjs">{% include frag-render.glsl %}</script>
+    <script src="/assets/js/preamble.js"></script>
+    <script src="/assets/js/gl-intro.js"></script>
+</html>

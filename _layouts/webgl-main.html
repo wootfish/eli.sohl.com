@@ -14,45 +14,18 @@
 
         <!-- custom styles -->
         <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="icon" href="data:,">
     </head>   
 
     <body>
         <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
-        <canvas id="tilecanvas">eeeee</canvas>
-
+        <canvas id="tilecanvas"></canvas>
         {{ content }}
-
     </body>
 
-
-    <script id="2d-vertex-shader" type="notjs">
-{% include vertex-passthru.glsl %}
-    </script>
-    <script id="2d-fragment-noise-shader" type="notjs">
-{% include frag-noise.glsl %}
-    </script>
-    <script id="2d-fragment-render-shader" type="notjs">
-{% include frag-render.glsl %}
-    </script>
-
-    <script src="/assets/js/core.js"></script>  <!-- Load WebGL and set up RD effect -->
-
-    <script>
-{% if page.landing %}
-//warp = warp_min;
-{% else %}
-fadein = 1;
-entering = false;
-entered = true;
-warp_increasing = true;
-{% endif %}
-
-if (sessionStorage.getItem('fancyfade') == "true") {
-    $(".contentbox").fadeIn(5100);
-    sessionStorage.setItem('fancyfade', false);
-} else $(".contentbox").fadeIn(1700);
-
-main();
-    </script>
-
+    <script id="2d-vertex-shader" type="notjs">{% include vertex-passthru.glsl %}</script>
+    <script id="2d-fragment-noise-shader" type="notjs">{% include frag-noise.glsl %}</script>
+    <script id="2d-fragment-render-shader" type="notjs">{% include frag-render.glsl %}</script>
+    <script src="/assets/js/preamble.js"></script>
+    <script src="/assets/js/gl-main.js"></script>
 </html>

@@ -118,8 +118,8 @@ float fbm (in vec4 point) {
 
 
 vec4 serialize(vec2 ab) {
-    // maintaining compatibility with GLSL 2 means we don't get to use bitwise
-    // operators, so we have to get a little hacky here to emulate them
+    // this is hacky b/c we don't get to use bitwise operators if we want to
+    // maintain compatibility w/ earlier versions than GLSL ES 3.00
     ivec2 as_ints = ivec2(ab * 65535.0);
     int a_big = as_ints.x / 0xFF;
     int a_lil = as_ints.x - a_big*0xFF;
@@ -139,9 +139,27 @@ void main() {
     vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
     
     // cute lil trick: get the texture to tile in a visually interesting way
-    // and without discontinuities by treating x and y as theta values for
-    // two circles on orthogonal 2D planes embedded in 4D space
+    // and without discontinuities by treating x and y as theta values for two
+    // circles on orthogonal 2D planes embedded in 4D space
     // (and translate these circles with time)
+    //
+    // like with almost all tiled textures, horizontal or vertical "lines"
+    // which appear to be contiguous across tiles will occasionally show up.
+    // anyone who came up playing games which relied on small tilesets will be
+    // intimately familiar with the look of these artifacts.
+    //
+    // fixed tilesets produce these artifacts at constant offsets from tile
+    // borders. by highlighting the tile borders through juxtaposition, they
+    // served as implicit reminders of the limitations of tiled graphics.
+    //
+    // here, however, these artifacts appear at random and slowly migrate
+    // across the image, thus simultaneously evoking a memory of things past
+    // and recontextualizing these past limitations as aesthetic celebrations.
+    //
+    // "Whatever you now find weird, ugly, uncomfortable and nasty about a new
+    // medium will surely become its signature. CD distortion, the jitteriness
+    // of digital video, the crap sound of 8-bit - all of these will be
+    // cherished and emulated as soon as they can be avoided." -Brian Eno
 
     float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
     float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;

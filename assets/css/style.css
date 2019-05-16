@@ -4,6 +4,7 @@ body {
     background-color: black;
 }
 
+
 canvas {
     width: 100vw;
     height: 100vh;
@@ -15,7 +16,16 @@ canvas {
 
 p {
     font-family: Monospace;
-    color: #FFBBBB;
+    color: #FFD6D6;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
 }
 
 #greeting {
@@ -25,6 +35,7 @@ p {
     font-size: 23px;
     text-align: center;
     text-shadow: -1px -1px 0 #000;
+    color: #FFBBBB;
 }
 
 #enter {
@@ -34,15 +45,19 @@ p {
     font-size: 17px;
     text-align: center;
     text-shadow: -1px -1px 0 #000;
+    color: #FFBBBB;
 }
 
 .contentbox {
     z-index: 10;
     background-color: #000000;
-    border: 1px solid black;
     opacity: 0.85;
-    margin: auto;
-    width: 50%;
-    height: 3000px;
     display: none;
+    padding-bottom: 1px;
+}
+
+.contents {
+    opacity: 1.0;
+    color: #FFD6D6;
+    font-family: Monospace;
 }

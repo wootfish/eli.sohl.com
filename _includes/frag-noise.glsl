@@ -133,6 +133,8 @@ vec4 serialize(vec2 ab) {
 
 
 float fbm_max(vec4 point) {
+    // this produces an extra bit of fun, muted self-similarity, and also helps
+    // keep the image's darkest regions from getting too big
     return max(fbm(point), 0.4*fbm(point+1.7+0.17*u_warp));
 }
 
@@ -164,11 +166,16 @@ void main() {
     // of digital video, the crap sound of 8-bit - all of these will be
     // cherished and emulated as soon as they can be avoided." -Brian Eno
 
-    float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
-    float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;
-    float x2 = (0.17+0.8*u_warp)*cos(pos.y) + u_t/640.0;
-    float y2 = (0.17+0.8*u_warp)*sin(pos.y) + u_t/2000.0;
-    vec4 point = vec4(x1, y1, x2, y2);
+    //float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
+    //float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;
+    //float x2 = (0.17+0.8*u_warp)*cos(pos.y) + u_t/640.0;
+    //float y2 = (0.17+0.8*u_warp)*sin(pos.y) + u_t/2000.0;
+    vec4 point = vec4(
+        (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0,
+        (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0,
+        (0.17+0.8*u_warp)*cos(pos.y) + u_t/640.0,
+        (0.17+0.8*u_warp)*sin(pos.y) + u_t/2000.0
+    );
 
     float noise = fbm_max(point + u_warp*fbm(point + 0.34*u_warp));
     gl_FragColor = serialize(vec2(noise, 0.0));

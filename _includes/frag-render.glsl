@@ -24,11 +24,8 @@ void main() {
         fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);
     }
 
-    //vec2 ab = deserialize(texture2D(u_grayscott, pos));
     vec2 pos = mod(gl_FragCoord.xy - mod(u_resolution*vec2(0.0, 1.0), 256.0), 256.0)/256.0;
     vec2 ab = deserialize(texture2D(u_grayscott, pos));
-    //if (ab.y == 0.0) gl_FragColor = vec4(1, 0, 0, 1);
-    //else gl_FragColor = vec4(0, 1, 0, 1);
     float noise = ab.x;
     vec3 c;
     if (noise < (1.0-fade)) c = vec3(0);

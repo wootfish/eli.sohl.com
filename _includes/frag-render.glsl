@@ -17,11 +17,11 @@ void main() {
     vec2 offset = abs(gl_FragCoord.xy - (u_resolution * vec2(0.5, 1.0)));
 
     // figure out which box border we're furthest from, and how far we are from it
-    float dist = (320.0 + 102.0 * u_fadein) - offset.x;
-    dist = min(dist, (539.0 + 136.0 * u_fadein) - offset.y);
-    dist = min(dist, (-27.0 + 102.0 * u_fadein) + offset.y);
+    float dist = (420.0 + 102.0 * u_fadein) - offset.x;  // side borders
+    dist = min(dist, (539.0 + 136.0 * u_fadein) - offset.y);  // lower border
+    dist = min(dist, (-27.0 + 102.0 * u_fadein) + offset.y);  // upper border
 
-    if (dist > 0.0) {
+    if (dist > fade) {
         // fade out near the edges of the box (margin width: 17 pixels)
         fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);
     }
@@ -30,8 +30,12 @@ void main() {
     vec2 ab = deserialize(texture2D(u_grayscott, pos));
     float noise = ab.x;
     vec3 c;
-    if (noise < (1.0-fade)) c = vec3(0);
-    //else c = vec3(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05) * fade;
-    else c = vec3(0.7-(0.3*noise)) * fade;
+    if (noise < (1.0-fade)) {
+        c = vec3(0);
+    } else {
+        vec3 c1 = vec3(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05);
+        vec3 c2 = vec3(0.6+(0.34*noise));
+        c = fade*(c1*(1.0-u_fadein) + c2*u_fadein);
+    }
     gl_FragColor = vec4(c, 1);
 }

@@ -144,7 +144,7 @@ function main() {
 main();
 
 if (sessionStorage.getItem('fancyfade') == 'true') {
-    $(".contentbox").fadeIn(4242);
+    $(".contentbox").fadeIn(5100);
     sessionStorage.setItem('fancyfade', false);
 } else {
     $(".contentbox").fadeIn(850);

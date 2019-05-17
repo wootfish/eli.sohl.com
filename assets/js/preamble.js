@@ -8,7 +8,7 @@ var frame_interval = 1000/30;  // cap frame rate for consistency (30 fps)
 var frame_count = 0;
 var t, warp;
 var warp_min = 0.09;
-var warp_max = 0.40;
+var warp_max = 0.34;
 var warp_delta = 0.011;
 var debug = false;
 

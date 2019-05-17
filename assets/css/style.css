@@ -10,6 +10,11 @@ a {
 }
 
 
+p>a {
+    text-decoration: underline;
+}
+
+
 a:hover {
     color: #777777;
 }

@@ -18,13 +18,14 @@ canvas {
 }
 
 #drawcanvas {
-    width: 256px;
-    height: 256px;
+    width: 320px;
+    height: 320px;
 }
 
 p {
-    font-family: Monospace;
-    color: #FFD6D6;
+    font-size: 17px;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #EEDDDD;
 }
 
 hr {
@@ -43,7 +44,7 @@ hr {
     font-size: 23px;
     text-align: center;
     text-shadow: -1px -1px 0 #000;
-    color: #FFBBBB;
+    color: #FFFFFF;
     display: none;
 }
 
@@ -54,8 +55,13 @@ hr {
     font-size: 17px;
     text-align: center;
     text-shadow: -1px -1px 0 #000;
-    color: #FFBBBB;
+    text-shadow: +1px +1px 0 #000;
+    color: #FFFFFF;
     display: none;
+}
+
+#enter:hover {
+    text-decoration: underline;
 }
 
 .contentbox {
@@ -68,6 +74,6 @@ hr {
 
 .contents {
     opacity: 1.0;
-    color: #FFD6D6;
+    color: #858585;
     font-family: Monospace;
 }

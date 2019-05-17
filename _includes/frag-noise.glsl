@@ -141,7 +141,7 @@ float fbm_max(vec4 point) {
 
 void main() {
     //vec2 pos = vec2(gl_FragCoord.xy/u_resolution.xy);
-    vec2 pos = vec2(TWO_PI*gl_FragCoord.xy/256.0);
+    vec2 pos = vec2(TWO_PI*gl_FragCoord.xy/320.0);
     
     // cute lil trick: get the texture to tile in a visually interesting way
     // and without discontinuities by normalizing x and y to [0, TWO_PI) and

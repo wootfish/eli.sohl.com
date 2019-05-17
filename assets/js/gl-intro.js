@@ -176,7 +176,7 @@ main();
 // identical to a fresh page load)
 
 window.onpageshow = function () {
-    // wire up dom elements to program logic
+    $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {
         entering = true;
         warp_increasing = true;
@@ -188,7 +188,5 @@ window.onpageshow = function () {
         if (!entering) {
             warp_increasing = false;
         }
-    }).fadeIn(100);
-    $("#greeting").fadeIn(100);
-
+    }).fadeIn(170, "linear");
 }

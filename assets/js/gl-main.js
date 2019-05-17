@@ -12,8 +12,9 @@ function updateState() {
 
 
 function main() {
-    const canvas = document.getElementById("glcanvas");
+    const canvas = document.getElementById("drawcanvas");
     gl = canvas.getContext("webgl");
+    const tiler = document.getElementById("tilecanvas").getContext("2d");
 
     if (!gl) {
         alert("fuck -- no webgl");  // TODO handle this better
@@ -21,6 +22,7 @@ function main() {
     }
 
     resize(gl.canvas);
+    resize(tiler.canvas);
 
 
     // load t from local storage if possible, else initialize it
@@ -106,6 +108,8 @@ function main() {
         if (limitFrameRate()) return;
         logFPS();
         updateState();
+        //resize(gl.canvas);
+        resize(tiler.canvas);
 
         {
             // draw noise pattern to gray-scott data texture
@@ -123,13 +127,15 @@ function main() {
             // render gray-scott data texture's contents to canvas
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.useProgram(renderProgram);
-            resize(gl.canvas);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             gl.uniform2f(resolutionUniformRenderLocation, gl.canvas.width, gl.canvas.height);
             gl.uniform1f(fadeinUniformRenderLocation, 1);
             gl.bindTexture(gl.TEXTURE_2D, gs_texture);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
+
+        tiler.fillStyle = tiler.createPattern(gl.canvas, 'repeat');
+        tiler.fillRect(0, 0, tiler.canvas.width, tiler.canvas.height);
     }
 
     requestAnimationFrame(full_render);

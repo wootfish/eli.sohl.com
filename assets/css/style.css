@@ -5,6 +5,16 @@ body {
 }
 
 
+a {
+    color: #BBBBBB;
+}
+
+
+a:hover {
+    color: #777777;
+}
+
+
 canvas {
     display: block;
     position: fixed;
@@ -25,7 +35,7 @@ canvas {
 p {
     font-size: 17px;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #EEDDDD;
+    color: #FFFFFF;
 }
 
 hr {
@@ -76,4 +86,12 @@ hr {
     opacity: 1.0;
     color: #858585;
     font-family: Monospace;
+}
+
+
+blockquote {
+    border-left:3px solid #858585;
+    margin:14px;
+    padding:0 0 0 8px;
+    font-style:italic;
 }

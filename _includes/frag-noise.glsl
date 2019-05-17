@@ -1,4 +1,7 @@
 // shader for initializing gray-scott data array from smooth noise
+
+#define TWO_PI 6.2831853
+
 precision mediump float;
 
 uniform vec2 u_resolution;
@@ -136,7 +139,7 @@ float fbm_max(vec4 point) {
 
 void main() {
     //vec2 pos = vec2(gl_FragCoord.xy/u_resolution.xy);
-    vec2 pos = vec2(6.28*gl_FragCoord.xy/256.0);
+    vec2 pos = vec2(TWO_PI*gl_FragCoord.xy/256.0);
     
     // cute lil trick: get the texture to tile in a visually interesting way
     // and without discontinuities by normalizing x and y to [0, TWO_PI) and
@@ -145,7 +148,7 @@ void main() {
     //
     // as with almost all tiled textures, horizontal or vertical "lines" which
     // appear to be contiguous across tiles will occasionally show up. anyone
-    // who came up playing games which relied on small tilesets will instantly
+    // who grew up playing games which relied on small tilesets will instantly
     // recognize the look of these artifacts.
     //
     // fixed tilesets produce these artifacts at constant offsets from tile

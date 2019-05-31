@@ -13,8 +13,11 @@ layout: main
         <h1>{{ page.title }}</h1>
         <small>{{ page.date | date: "%-d %B %Y" }}</small>
 
-        <hr>
+        <div class="blogpost my-4">
+            {{ content }}
+        </div>
 
-        {{ content }}
     </div>
+
 </div>
+

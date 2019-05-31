@@ -9,14 +9,18 @@ a {
     color: #BBBBBB;
 }
 
+.blogpost a {
+    color: #515151
+}
 
-p>a {
+
+.blogpost > p > a {
     text-decoration: underline;
 }
 
 
 a:hover {
-    color: #777777;
+    color: #343434;
 }
 
 
@@ -40,7 +44,6 @@ canvas {
 p {
     font-size: 17px;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #FFFFFF;
 }
 
 hr {
@@ -85,6 +88,7 @@ hr {
     opacity: 0.85;
     display: none;
     padding-bottom: 1px;
+    margin-bottom: 100vh;
 }
 
 .contents {
@@ -99,4 +103,16 @@ blockquote {
     margin:14px;
     padding:0 0 0 8px;
     font-style:italic;
+}
+
+
+.blogpost {
+    background-color: #E0E0E0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    box-shadow: 0 0 5px 5px #E0E0E0;
+    -webkit-box-shadow: 0 0 5px 5px #E0E0E0;
+    margin: 7px;
+    padding: 12px;
+    color: #171717;
 }

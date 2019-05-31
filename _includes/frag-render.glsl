@@ -28,14 +28,17 @@ void main() {
 
     vec2 pos = mod(gl_FragCoord.xy - mod(u_resolution*vec2(0.0, 1.0), 320.0), 320.0)/320.0;
     vec2 ab = deserialize(texture2D(u_grayscott, pos));
-    float noise = ab.x;
+    float noise = ab.x + u_fadein;
     vec3 c;
     if (noise < (1.0-fade)) {
         c = vec3(0);
     } else {
-        vec3 c1 = vec3(1.2*noise*(1.0-noise)*(1.0-noise), noise*0.85, noise*1.05);
-        vec3 c2 = vec3(0.6+(0.34*noise));
-        c = fade*(c1*(1.0-u_fadein) + c2*u_fadein);
+        float inv = 1.0-noise;
+        float inv2 = 1.0-u_fadein;
+        vec3 c1 = vec3(1.2*noise*inv*inv, noise*0.85, noise*1.05);
+        vec3 c2 = vec3((0.68-0.34*u_fadein)*noise);
+        float clerp = noise < inv2 ? 0.8*noise/inv2 : 1.0;
+        c = fade*(c1*(1.0-clerp) + c2*clerp);
     }
     gl_FragColor = vec4(c, 1);
 }

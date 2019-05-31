@@ -1,9 +1,12 @@
+// depends on preamble.js
+
+
 function updateState() {
     // load, update, and re-save state in sessionStorage
     t = parseFloat(sessionStorage.getItem('t'));
     warp = parseFloat(sessionStorage.getItem('warp'));
 
-    t += 0.3;
+    t += t_slow;
     warp = warp_max*warp_delta + warp*(1-warp_delta);
 
     sessionStorage.setItem('t', t);

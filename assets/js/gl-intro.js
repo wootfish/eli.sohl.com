@@ -5,17 +5,13 @@ var fadein = 0;
 var entering = false;
 
 
-{
-}
-
-
 function updateState() {
     // load, update, and re-save state in sessionStorage
     t = parseFloat(sessionStorage.getItem('t'));
     warp = parseFloat(sessionStorage.getItem('warp'));
 
-    if (entering) t += 0.3 + 0.7*(1-fadein);
-    else t += 1;
+    if (entering) t += t_slow + (t_fast-t_slow)*(1-fadein);
+    else t += 1+0.5*Math.cos(t/51);
     warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta);
 
     sessionStorage.setItem('t', t);

@@ -104,7 +104,7 @@ float snoise(vec4 v) {
 
 
 // fbm function adapted from https://thebookofshaders.com/
-#define OCTAVES 8
+#define OCTAVES 6
 float fbm (in vec4 point) {
     // Initial values
     float value = 0.3;
@@ -121,8 +121,8 @@ float fbm (in vec4 point) {
 
 
 vec4 serialize(vec2 ab) {
-    // this is hacky b/c we don't get to use bitwise operators if we want to
-    // maintain compatibility w/ earlier versions than GLSL ES 3.00
+    // this is hacky b/c we want bitwise operators but don't get to use them if
+    // we want compatibility w/ earlier versions than GLSL ES 3.00
     ivec2 as_ints = ivec2(ab * 65535.0);
     int a_big = as_ints.x / 0xFF;
     int a_lil = as_ints.x - a_big*0xFF;
@@ -166,10 +166,6 @@ void main() {
     // of digital video, the crap sound of 8-bit - all of these will be
     // cherished and emulated as soon as they can be avoided." -Brian Eno
 
-    //float x1 = (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0;
-    //float y1 = (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0;
-    //float x2 = (0.17+0.8*u_warp)*cos(pos.y) + u_t/640.0;
-    //float y2 = (0.17+0.8*u_warp)*sin(pos.y) + u_t/2000.0;
     vec4 point = vec4(
         (0.17+0.8*u_warp)*cos(pos.x) - u_t/2000.0,
         (0.17+0.8*u_warp)*sin(pos.x) + u_t/640.0,
@@ -179,5 +175,4 @@ void main() {
 
     float noise = fbm_max(point + u_warp*fbm(point + 0.34*u_warp));
     gl_FragColor = serialize(vec2(noise, 0.0));
-    //gl_FragColor = vec4(noise*noise*0.2, noise*0.9, noise, 1);
 }

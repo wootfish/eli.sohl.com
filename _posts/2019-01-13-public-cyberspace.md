@@ -147,4 +147,4 @@ Theseus DHT is also a natural fit for making introductions to peer swarms. The f
 
 What this means is that a system like Theseus DHT would be not only a powerful construct in its own right but also an ideal bootstrapping point for the next generation of peer-to-peer apps -- a layer on which they can build, a substrate, a common good commonly used and maintained, with common benefit. Of course, all this depends on developers recognizing the potential that exists here and deciding to help develop this corner of cyberspace. That's why I'm not necessarily saying this _is_ the future. What I'm saying is: We should be so lucky as for this to be the future.
 
-<hr>
+<hr class="bloghr">

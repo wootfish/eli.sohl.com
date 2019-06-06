@@ -176,8 +176,8 @@ window.onpageshow = function () {
     $("#enter").click(function () {
         entering = true;
         warp_increasing = true;
-        $("#greeting").fadeOut(2300);
-        $("#enter").fadeOut(1700);
+        $("#greeting").fadeOut(2600);
+        $("#enter").fadeOut(2300);
     }).mouseenter(function () {
         warp_increasing = true;
     }).mouseleave(function () {

@@ -96,7 +96,6 @@ hr {
 }
 
 .contents {
-    opacity: 1.0;
     color: #858585;
     font-family: Monospace;
 }
@@ -116,7 +115,7 @@ blockquote {
     padding-bottom: 15px;
     box-shadow: 0 0 7px 7px #E0E0E0;
     -webkit-box-shadow: 0 0 7px 7px #E0E0E0;
-    margin: 8px;
-    padding: 12px;
+    margin: 6px;
+    padding: 14px;
     color: #171717;
 }

@@ -8,6 +8,11 @@ title: Securely Finding Friends via DHT Dead Drops
 > [Resisting Sybil Attacks in Distributed Hash Tables]({{ site.baseurl }}{% post_url 2017-02-25-resisting-sybil-attacks-in-distributed_25 %})<br/>
 
 
+<br/>
+> Note (added 2019/06/06): This is a post I haven't had time to seriously revise, but I do have some misgivings about it. I think it gives an unnecessary level of specificity and overcomplicates things which could be simple. That said, I think the core idea -- that a shared secret can be established without direct communication, that this secret can be used to establish a rendezvous point, that this rendezvous point can be used to bootstrap an actual direct connection, and that all of this can be done in a way that is totally opaque to prying eyes -- is very good and valuable. Maybe someday I'll get the chance to write a better treatment of it.
+<br/>
+
+
 This won't be a long one -- I just wanted to take a few spare moments to jot down an idea. This post describes how friends in a Theseus-like network who know each other only by public key but don't have each other's network contact info could first get in touch.
 
 It's possible to do this without anyone else finding that contact info, deducing the social connection, or even necessarily knowing that either party is trying to get in touch with anyone. Those guarantees would be tricky to establish through naive use of public-key cryptography, but I believe this scheme can offer all that and more.

@@ -89,7 +89,7 @@ hr {
 .contentbox {
     z-index: 10;
     background-color: #000000;
-    opacity: 0.85;
+    opacity: 0.90;
     display: none;
     padding-bottom: 1px;
     margin-bottom: 100vh;

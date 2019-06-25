@@ -5,6 +5,11 @@ body {
 }
 
 
+breakword {
+    word-wrap: break-word;
+}
+
+
 a {
     color: #BBBBBB;
 }

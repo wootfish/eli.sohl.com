@@ -14,7 +14,7 @@ var t_fast = 1;
 var warp_min = 0.09;
 var warp_max = 0.34;
 var warp_delta = 0.011;
-var debug = true;
+var debug = false;
 
 // clipspace coordinates for two right triangles covering the whole screen
 const positions = [

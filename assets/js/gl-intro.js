@@ -10,9 +10,17 @@ function updateState() {
     t = parseFloat(sessionStorage.getItem('t'));
     warp = parseFloat(sessionStorage.getItem('warp'));
 
-    if (entering) t += t_slow + (t_fast-t_slow)*(1-fadein);
-    else t += 1+0.5*Math.cos(t/51);
-    warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta);
+    const scale_factor = frame_interval / default_frame_interval;
+
+    var delta_t;
+    var delta_warp;
+
+    if (entering) delta_t = t_slow + (t_fast-t_slow)*(1-fadein);
+    else delta_t = 1+0.5*Math.cos(t/51);
+    var delta_warp = (warp_increasing ? warp_max : warp_min)*warp_delta + warp*(1-warp_delta) - warp;
+
+    t += delta_t * scale_factor;
+    warp += delta_warp * scale_factor;
 
     sessionStorage.setItem('t', t);
     sessionStorage.setItem('warp', warp);

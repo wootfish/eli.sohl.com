@@ -6,8 +6,11 @@ function updateState() {
     t = parseFloat(sessionStorage.getItem('t'));
     warp = parseFloat(sessionStorage.getItem('warp'));
 
-    t += t_slow;
-    warp = warp_max*warp_delta + warp*(1-warp_delta);
+    const scale_factor = frame_interval / default_frame_interval;
+
+    t += t_slow * scale_factor;
+    var delta_warp = (warp_max*warp_delta + warp*(1-warp_delta)) - warp;
+    warp += delta_warp * scale_factor;
 
     sessionStorage.setItem('t', t);
     sessionStorage.setItem('warp', warp);

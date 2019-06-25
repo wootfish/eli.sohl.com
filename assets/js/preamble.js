@@ -4,7 +4,9 @@ var gl;
 var now;
 var first_frame = Date.now();
 var last_frame = Date.now();
-var frame_interval = 1000/30;  // cap frame rate for consistency (30 fps)
+var target_fps = 30;  // but make the cap adjustable
+var frame_interval = 1000/target_fps;
+var default_frame_interval = frame_interval;
 var frame_count = 0;
 var t, warp;
 var t_slow = 0.2;
@@ -12,7 +14,7 @@ var t_fast = 1;
 var warp_min = 0.09;
 var warp_max = 0.34;
 var warp_delta = 0.011;
-var debug = false;
+var debug = true;
 
 // clipspace coordinates for two right triangles covering the whole screen
 const positions = [
@@ -46,17 +48,30 @@ function limitFrameRate() {
     now = Date.now();
     delta = now - last_frame;
     if (delta <= frame_interval) return true;
+
     last_frame = now - (delta % frame_interval);
+    frame_count += 1;
+
+    const fps = 1000*frame_count/(last_frame-first_frame);
+    if (debug && frame_count % 20 == 0) {
+        console.log("fps:", fps, "target:", target_fps, "frames:", frame_count);
+    }
+    if (frame_count > 10 && fps <= target_fps - 0.3) {
+        target_fps = Math.max(target_fps-1, 1);  // scale back target by 1, but bottom out at 1 fps total
+        frame_interval = 1000/target_fps;
+    }
+    if (target_fps > 4 && target_fps < 10) {
+        // if the hardware can't even push 10 fps then let's just take pity
+        // and aim low (but still allow the auto-scaling to go lower)
+        target_fps = Math.max(target_fps-1, 4);
+        frame_interval = 1000/target_fps;
+    }
+
     return false;
 }
 
 
 function logFPS() {
-    // log fps
-    frame_count += 1;
-    if (debug && frame_count % 200 == 0) {
-        console.log("fps:", 1000*frame_count/(last_frame-first_frame), "frames:", frame_count);
-    }
 }
 
 

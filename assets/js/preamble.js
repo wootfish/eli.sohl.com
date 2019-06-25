@@ -56,7 +56,7 @@ function limitFrameRate() {
     if (debug && frame_count % 20 == 0) {
         console.log("fps:", fps, "target:", target_fps, "frames:", frame_count);
     }
-    if (frame_count > 10 && fps <= target_fps - 0.3) {
+    if (frame_count > 20 && fps <= target_fps - 1) {
         target_fps = Math.max(target_fps-1, 1);  // scale back target by 1, but bottom out at 1 fps total
         frame_interval = 1000/target_fps;
     }

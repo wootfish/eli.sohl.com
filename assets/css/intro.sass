@@ -1,0 +1,74 @@
+---
+---
+
+
+body
+  border: 0
+  margin: 0
+
+  &.nojs
+    .withjs
+      display: none
+    .withoutjs
+      display: block
+
+
+  &:not(.nojs)
+    background-color: black
+
+    .withjs
+      display: block
+    .withoutjs
+      display: none
+
+
+p
+  font-size: 17px
+  font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+
+
+canvas
+  display: block
+  position: fixed
+  top: 0
+  left: 0
+
+
+#glcanvas
+  width: 100vw
+  height: 100vh
+
+
+#intro-card
+  position: absolute
+  left: 0
+  right: 0
+  top: 34%
+  margin: auto
+  width: 170px
+
+
+#greeting
+  position: relative
+  z-index: 10
+  margin-top: 127px
+  font-size: 27px
+  text-align: center
+  text-shadow: -1px -1px 0 #000
+  color: #FFFFFF
+  display: none
+
+
+#enter
+  position: relative
+  z-index: 10
+  margin-top: 240px
+  font-size: 27px
+  text-align: center
+  text-shadow: -1px -1px 0 #000
+  text-shadow: +1px +1px 0 #000
+  color: #FFFFFF
+  display: none
+
+  &:hover
+    text-decoration: underline

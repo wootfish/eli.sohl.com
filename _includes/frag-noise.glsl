@@ -1,4 +1,4 @@
-// shader for initializing gray-scott data array from smooth noise
+// shader for initializing data array from smooth noise
 
 #define TWO_PI 6.2831853
 

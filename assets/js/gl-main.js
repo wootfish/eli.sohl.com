@@ -1,4 +1,9 @@
-// depends on preamble.js
+---
+---
+
+
+{% include checker.js %}
+{% include preamble.js %}
 
 
 function updateState() {
@@ -61,7 +66,7 @@ function main() {
     // get the locations of the programs' uniforms
     const tUniformLocation = gl.getUniformLocation(noiseProgram, "u_t");
     const warpUniformLocation = gl.getUniformLocation(noiseProgram, "u_warp");
-    const grayscottUniformLocation = gl.getUniformLocation(renderProgram, "u_grayscott");
+    const textureUniformLocation = gl.getUniformLocation(renderProgram, "u_texture");
     const resolutionUniformNoiseLocation = gl.getUniformLocation(noiseProgram, "u_resolution");
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
     const positionAttributeNoiseLocation = gl.getAttribLocation(noiseProgram, "a_position");
@@ -147,7 +152,9 @@ function main() {
     requestAnimationFrame(full_render);
 }
 
-main();
+
+if (checkJSEnabled()) main();
+
 
 if (sessionStorage.getItem('fancyfade') == 'true') {
     $(".contentbox").fadeIn(5100);

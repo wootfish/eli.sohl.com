@@ -2,12 +2,22 @@
 layout: main
 ---
 
-<div class="container contentbox">
-    <div class="contents">
-        <h1 class="display-1 breakword">projects</h1>
-        <hr>
-        <a href="/blog.html">blog</a> | projects | <a href="/contact.html">contact</a>
-        <hr>
-        <p>theseus, light show stuff, whatever else</p>
+
+<div class="withjs">
+    <canvas id="drawcanvas">Oh no, canvas not supported :(</canvas>
+    <canvas id="tilecanvas"></canvas>
+</div>
+
+
+<div class="contentbox contents">
+    <h1 class="display-1 breakword">projects</h1>
+    <hr>
+    <div class="overflow-hidden">
+        <span>
+            <a href="/blog.html">blog</a> | projects | <a href="/contact.html">contact</a>
+        </span>
+        {% include switcher.html %}
     </div>
+    <hr>
+    <p>theseus, light show stuff, whatever else</p>
 </div>

@@ -1,0 +1,160 @@
+---
+---
+
+
+body
+  border: 0
+  margin: 0
+
+  overflow-y: scroll
+
+  &.nojs
+    .withjs
+      display: none
+    .withoutjs
+      display: block
+
+
+  &:not(.nojs)
+    background-color: black
+
+    .withjs
+      display: block
+    .withoutjs
+      display: none
+
+    .contentbox
+      z-index: 10
+      background-color: #000000
+      opacity: 0.90
+      display: none
+      margin-bottom: 100vh
+
+    a
+      color: #BBBBBB
+
+      &:hover
+        color: #343434
+
+    .blogpost
+      margin: 6px
+      padding: 14px
+      background-color: #E0E0E0
+      padding-top: 15px
+      padding-bottom: 15px
+      box-shadow: 0 0 7px 7px #E0E0E0
+      -webkit-box-shadow: 0 0 7px 7px #E0E0E0
+
+      a
+        color: #515151
+
+        hr
+          border-top: 1px solid #A0A0A0
+
+        & > p > a
+          text-decoration: underline
+
+
+h2 a
+  color: #AAAAAA
+
+
+.blogpost
+  color: #171717
+
+
+.breakword
+  word-wrap: break-word
+
+
+img
+  vertical-align: middle
+  border-style: none
+
+
+.img-fluid
+  max-width: 100%
+  height: auto
+
+
+hr
+  display: block
+  height: 1px
+  border: 0
+  border-top: 1px solid #ccc
+  margin: 1em 0
+  padding: 0
+
+
+canvas
+  display: block
+  position: fixed
+  top: 0
+  left: 0
+
+
+#tilecanvas
+  width: 100vw
+  height: 100vh
+
+
+#drawcanvas
+  width: 320px
+  height: 320px
+
+
+p
+  font-size: 17px
+  font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+
+
+.contentbox
+  width: 100%
+  padding-bottom: 1px
+  padding-right: 15px
+  padding-left: 15px
+  margin-right: auto
+  margin-left: auto
+  max-width: 840px
+
+
+.contents
+  color: #858585
+  font-family: Monospace
+
+
+blockquote
+  border-left: 3px solid #858585
+  margin: 14px
+  padding: 0 0 0 8px
+  font-style: italic
+
+
+.overflow-hidden
+  overflow: hidden
+
+
+#greeting
+  position: relative
+  z-index: 10
+  margin-top: 127px
+  font-size: 27px
+  text-align: center
+  text-shadow: -1px -1px 0 #000
+  color: #FFFFFF
+  display: none
+
+
+#enter
+  position: relative
+  z-index: 10
+  margin-top: 240px
+  font-size: 27px
+  text-align: center
+  text-shadow: -1px -1px 0 #000
+  text-shadow: +1px +1px 0 #000
+  color: #FFFFFF
+  display: none
+
+  &:hover
+    text-decoration: underline

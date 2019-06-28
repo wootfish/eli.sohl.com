@@ -1,4 +1,10 @@
-// depends on preamble.js
+---
+---
+
+
+{% include checker.js %}
+{% include preamble.js %}
+
 
 var warp_increasing = false;
 var fadein = 0;
@@ -82,7 +88,7 @@ function main() {
     // get the locations of the programs' uniforms
     const tUniformLocation = gl.getUniformLocation(noiseProgram, "u_t");
     const warpUniformLocation = gl.getUniformLocation(noiseProgram, "u_warp");
-    const grayscottUniformLocation = gl.getUniformLocation(renderProgram, "u_grayscott");
+    const textureUniformLocation = gl.getUniformLocation(renderProgram, "u_texture");
     const resolutionUniformNoiseLocation = gl.getUniformLocation(noiseProgram, "u_resolution");
     const resolutionUniformRenderLocation = gl.getUniformLocation(renderProgram, "u_resolution");
     const positionAttributeNoiseLocation = gl.getAttribLocation(noiseProgram, "a_position");
@@ -169,17 +175,20 @@ function main() {
 }
 
 
-main();
+if (checkJSEnabled()) main();
 
 
-// wire up & show UI elements
+// wire up & display UI elements
 // (we don't want them to appear way before the background)
 
 // (doing this in window.onpageshow lets us reset the page after thaw from
-// firefox's bfcache, making "back" navigation faster than but otherwise
-// identical to a fresh page load)
+// firefox's bfcache, which is needed to make sure that "back" navigation
+// doesn't behave differently from a fresh page load)
 
 window.onpageshow = function () {
+    fadein = 0;
+    entering = false;
+
     $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {
         entering = true;

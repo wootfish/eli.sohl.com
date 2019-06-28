@@ -1,5 +1,6 @@
 // https://webglfundamentals.org/ is the shit
 
+
 var gl;
 var now;
 var first_frame = Date.now();

@@ -1,7 +1,7 @@
-// fragment shader for rendering RD effect
+// fragment shader for rendering fractal noise effect
 precision mediump float;
 
-uniform sampler2D u_grayscott;
+uniform sampler2D u_texture;
 uniform vec2 u_resolution;
 uniform float u_fadein;
 
@@ -22,12 +22,13 @@ void main() {
     dist = min(dist, (-27.0 + 102.0 * u_fadein) + offset.y);  // upper border
 
     if (dist > fade) {
-        // fade out near the edges of the box (margin width: 17 pixels)
-        fade = dist > 17.0 ? 1.0 : max(fade, dist / 17.0);
+        // fade out near the edges of the box
+        float margin_width = 17.0 + 51.0 * u_fadein;
+        fade = dist > margin_width ? 1.0 : max(fade, dist / margin_width);
     }
 
     vec2 pos = mod(gl_FragCoord.xy - mod(u_resolution*vec2(0.0, 1.0), 320.0), 320.0)/320.0;
-    vec2 ab = deserialize(texture2D(u_grayscott, pos));
+    vec2 ab = deserialize(texture2D(u_texture, pos));
     float noise = ab.x + u_fadein;
     vec3 c;
     if (noise < (1.0-fade)) {

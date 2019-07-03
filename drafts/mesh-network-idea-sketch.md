@@ -4,7 +4,7 @@ title: Mesh Protocol Idea Sketch
 ---
 
 
-Here's an idea for a mesh network protocol that could actually scale.
+Here's an idea for a mesh network protocol that could scale well.
 
 The core construct is pretty simple -- simple enough that I have to wonder if someone else has already come up with it. I hope so (it'd be especially nice if they've already taken care of implementing it, too) but just in case I'm the first, here's a sketch of what I have in mind. If there's prior art, I'd love to add a link to it.
 
@@ -132,7 +132,15 @@ Given enough time, this process should allow two peers to exhaustively identify 
 
 ### What is this?
 
-TODO
+This is a routing protocol for mesh networks. As long as peers agree on some global network parameters, no advance setup is required. In particular, nothing about the network topology needs to be known in advance.
+
+Peers can establish connections without sharing any identifying information, even a network address. This stands in contrast to the way things work on the current Internet, and suggests that this network could provide some superior privacy properties.[^6]
+
+[^6]: For instance, it is common for copyright holders (music labels, movie studios, etc) to monitor BitTorrent peer swarms and serve copyright infringement notices to the owners of all IPs observed. Whatever you might think of people who torrent copyrighted material, it is undeniable that this practice is designed to intimidate and take advantage of people who lack the means to stand up to legal threats, and for these copyright holders the fines associated with these notices serve as a way of profiting off artists' work without sharing _any_ of the profits with those artists. This exploitive practice would not be possible if connections could be established without sharing any personally identifying information.
+
+This sort of construct would be valuable in areas where internet service is not available or where it has been disrupted (e.g. in the aftermath of a natural disaster). In areas where internet service is broadly available, the value of a mesh network is less obvious but no less real: not only does it provide redundant infrastructure, it also would be free to join. People with Internet connections could perhaps establish crossover points between the networks. Since internet access is increasingly becoming a necessity, the possibility of providing it for free is very attractive and has the potential to have a concrete positive impact on many people's lives.
+
+This infrastructure could also provide entirely new categories of app architecture. More on that later, maybe.
 
 
 ### Questions
@@ -143,17 +151,19 @@ TODO
 
 * What sort of criteria should we adhere to with regard to setting Bloom filter parameters?
 
-* How can we model the routing system's bandwidth overhead? It appears to meet the requirement of being $$\mathcal{O}(1)$$ with regard to network size, and it seems intuitively likely that bandwidth would decrease as the network's average path length decreases[^6], but how can we formalize these intuitions?
+* How can we model the routing system's bandwidth overhead? It appears to meet the requirement of being $$\mathcal{O}(1)$$ with regard to network size, and it seems intuitively likely that bandwidth would decrease as the network's average path length decreases[^7], but how can we formalize these intuitions?
 
-[^6]: My reasoning here is that in networks where many addresses can be reached with a small number of hops, peers are likely to be sending fewer total filters since they will reach their saturation cutoff more quickly.
+[^7]: My reasoning here is that in networks where many addresses can be reached with a small number of hops, peers are likely to be sending fewer total filters since they will reach their saturation cutoff more quickly.
 
 * How much of this traffic can be encrypted?
 
-* How much would the network benefit from adding "shortcuts" (e.g. long-distance high-bandwidth radio links between distant endpoints, or nodes which also have internet connections and use these to knit physically distant regions of the mesh together)?
+* How much would the network benefit from adding "shortcuts" (e.g. long-distance high-bandwidth radio links between distant endpoints, or nodes which also have internet connections and use these to knit physically distant regions of the mesh together)? Intuitively it seems like past a certain size these would be key to scaling well. How can this intuition be formalized?
 
 * How should we manage public identities on the network? Should identities be long-lived or per-session?
 
 * How well does this algorithm handle peer churn? How fast should the update intervals for broadcasting Bloom filter changes be? Should they scale dynamically?
+
+* It would be trivial to extend this routing algorithm to include a distributed hash table construct resembling Kademlia or Theseus DHT. Would this be a good idea?
 
 As you can see, there's a lot more work to be done here to fill this idea out and get anything even resembling a full specification. That said, this routing construct feels very powerful, and I wonder if something useful could come of it.
 

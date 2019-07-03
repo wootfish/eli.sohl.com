@@ -1,27 +1,33 @@
 ---
 layout: post
-title: Idea Sketch for a Mesh Networking Protocol
+title: Mesh Protocol Idea Sketch
 ---
 
 
-Here's an idea for a mesh networking protocol that might actually scale well. The core construct is simple enough that I have to wonder if someone else has already come up with it. I hope so -- it'd be especially nice if they've already taken care of implementing it, too -- but just in case I'm the first, here's a sketch of what I have in mind. If you can point me to prior art, please do so I can add a link to it!
+Here's an idea for a mesh network protocol that could actually scale.
 
-This is not a full specification, just the sketch of an idea. It's light on details in some areas because I'm not an expert and I know my limits.
+The core construct is pretty simple -- simple enough that I have to wonder if someone else has already come up with it. I hope so (it'd be especially nice if they've already taken care of implementing it, too) but just in case I'm the first, here's a sketch of what I have in mind. If there's prior art, I'd love to add a link to it.
+
+This is just the sketch of an idea, not a full specification. It is light on details in some areas, because I'm not an expert and I know my limits. With that said, here we go.
 
 
 ### Addresses
 
-First off, do away with any concept of assigning globally unique identifiers to anyone. This just doesn't scale, so we'll figure out a way to get by without it.
+First off, let's do away with any idea of assigning globally unique identifiers to anyone. This just doesn't scale, so we'll figure out a way to get by without it.
 
-But how do we establish connections if we can't identify who we're connecting to? Well, in any mesh network, you're going to have two sorts of connections: first, via direct point-to-point radio between nearby peers; second, via messages relayed over a chain of such point-to-point radio links. The goal of a mesh network's routing protocol is to infer enough about the topography of those point-to-point links for us to establish efficient relay circuits over them.
+But how do we establish connections without specifying who we're connecting to?
 
-This is easier said than done. Each point-to-point radio link has finite bandwidth which we have to be careful to conserve. Ideally, the routing layer's bandwidth overhead should be $$\mathcal{O}(1)$$ with respect to network size. Any weaker bound than this places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
+Well, in any mesh network, you're going to have two sorts of connections: first, connections via direct point-to-point radio between nearby peers; second, connections via messages relayed over a chain of such radio links.
+
+Let's say we already have a way of establishing point-to-point radio connections with nearby peers.
+
+The goal of a mesh network's routing protocol is to infer enough about the topography of those radio links for us to establish efficient relay circuits over them.
+
+This is easier said than done. Each radio link has finite bandwidth which we have to be careful to conserve. Ideally, the routing layer's per-peer bandwidth overhead should be $$\mathcal{O}(1)$$ with respect to network size. Any weaker bound than this places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
 
 How do we meet this standard?
 
-Let's assume we already have a way of establishing point-to-point radio connections with nearby peers.
-
-Assign[^1] randomly distributed fixed-length addresses to peers, with no intimations at uniqueness. Each peer may have several addresses. These are less about _identifying_ peers and more about peers _claiming responsibility for_ certain regions of a shared, co-owned address space (somewhat like node IDs in Kademlia).
+Assign[^1] randomly distributed fixed-length addresses to peers, with no intimations at uniqueness. Each peer might even have several addresses. These are less about _identifying_ peers and more about peers _claiming responsibility for_ certain regions of a shared, co-owned address space (somewhat like node IDs in Kademlia).
 
 [^1]: Technically "assign" is a loaded word here. The implication of assignment coming from a central authority is not intended. Ideally peers' addresses would come from some sort of trapdoor proof-of-work function (possibly after hashing its output, if outputs are not already uniformly distributed). Peer addresses should somehow be made to expire after a fixed window of time, in order to complicate address squatting.
 
@@ -30,19 +36,19 @@ Define distance between addresses via the `xor` metric, and endow peers with res
 
 ### Bloom Filters
 
-Every peer should be keeping a running list of everyone they have a point-to-point connection with, and they should keep track of every address claimed by the peers on the other ends of those connections.
+Every peer should be keeping a running list of every peer they have a point-to-point connection with, and they should keep track of every address claimed by each of these peers.
 
 Each peer can then determine the set of all addresses they can reach in one hop. They can then expand this set to contain all the addresses and _address prefixes_ they can reach in one hop. (see footnote for example)[^2]
 
 [^2]: For example, say a peer has two active point-to-point connections. The first connected peer claims addresses `0000`, `0010`, and `0011`. The second peer claims `1111` and `1000`. The set of reachable addresses is then `{0000, 0010, 0011, 1111, 1000}` and the expanded set is `{0000, 0010, 0011, 1111, 1000, 000, 001, 111, 100, 00, 11, 10, 0, 1}`
 
-From there, peers can produce _Bloom filters_[^3] representing these expanded sets.
+From there, peers can produce _Bloom filters_[^3] representing their set of one-hop reachable addresses and address prefixes.
 
 [^3]: Using constant, globally fixed (and carefully determined) Bloom filter parameters.
 
-These Bloom filters can then be sent over point-to-point peer connections along with local address information.
+These Bloom filters can then be sent over point-to-point peer connections in sequence with local address information.
 
-Any peer, upon receiving one-hop Bloom filters from all their own one-hop point-to-point connections, can combine these filters with logical OR to produce the union of the sets each filter represents. This union is precisely the set of addresses and address prefixes that the local peer can reach in two hops.
+Any peer, upon receiving one-hop Bloom filters from all their own one-hop connections, can combine these filters via bitwise `OR` to produce the union of the sets each filter represents. This union is precisely the set of addresses and address prefixes that the local peer can reach in two hops.
 
 These two-hop filters can then be sent to adjacent peers as well. Doing this allows everyone to compute three-hop filters. Sending these yields four-hop filters, and so forth.
 
@@ -95,7 +101,7 @@ An interesting property of Bloom filters is that just like bitwise `OR` of two f
 
 In light of this observation, here's an idea: as soon as two peers connect to each other via an introduction point, they should send each other their routing Bloom filters. From these, a number of intersections can be computed.
 
-Of course, first we should check for the trivial case where either peer's local addresses are contained in the other's one-hop filter; this would indicate (somewhat embarrassingly) that the peers are already connected over point-to-point radio but somehow failed to notice this. This will, of course, almost never happen, and so a more involved strategy may be required.
+Of course, first we should check for the trivial case where either peer's local addresses are contained in the other's one-hop filter; this would indicate (somewhat embarrassingly) that the peers are already directly connected over radio but somehow failed to notice this. This will, of course, almost never happen, and in the majority of cases a more involved strategy may be required.
 
 Before getting into details, let's introduce some notation. Let's call our two peers $$a$$ and $$b$$ and denote $$a$$'s one-hop filter as $$a_1$$, their two-hop filter as $$a_2$$, and so on; likewise with $$b_1$$, $$b_2$$, etc. Denote bitwise `AND` and `OR` with $$\land$$ and $$\lor$$ respectively.
 
@@ -116,7 +122,7 @@ Given enough time, this process should allow two peers to exhaustively identify 
 
 * None of this says anything about optimizing routes based on available bandwidth on individual point-to-point connections. How could we handle that?
 
-* For that matter, what would it take to set up these point-to-point connections in the first place?
+* For that matter, what will it take to set up these point-to-point connections in the first place?
 
 * What sort of criteria should we adhere to with regard to setting Bloom filter parameters?
 

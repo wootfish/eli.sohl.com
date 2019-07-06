@@ -19,7 +19,7 @@ At first, no one really knew what the internet was for. We knew what it _was_, a
 
 As a metaphor, _cyberspace_ was popular because it captured the sheer breadth of possibilities that exist with networked technology. By analogy to physical space, which of course is the venue for all analog human experience, _cyberspace_ seemed to suggest a limitless new domain: new experiences, new possibilities, new potentialities. It's an exciting thought. Fast-forward to 2019, and we've fallen a bit short of expectations. Many people's experience of the modern internet consists of four social media sites, each of which is largely comprised of screenshots from the other three.
 
-OK, maybe that's a bit much. But grant me that bit of hyperbole and in return I'll let you in on a secret: cyberspace hasn't gone away. We're still in it, we're just spending our time in all the wrong parts of it.
+OK, maybe that's a bit much. But grant me that bit of hyperbole and, in return, I'll let you in on a secret: cyberspace hasn't gone away. We're still in it, we're just spending our time in all the wrong parts of it.
 
 More specifically: we're spending our time in (cyber-)spaces that are privately owned. They're private property, controlled and run by large companies who stay in business by treating their userbase as a product. Their business models are fundamentally abusive: their goal is to try and take advantage of you as much as they can without you leaving. In fact, so much of the modern internet consists of these spaces that their downsides have come to appear as downsides of the internet itself. This is an easy mindset to fall into, but it is nonetheless mistaken.
 
@@ -27,9 +27,9 @@ The issues of private ownership can be avoided by building _public_ spaces on th
 
 Previous attempts at building such spaces (albeit under different names) have encountered seemingly insurmountable challenges. However, recent research[^2] has offered new hope for overcoming these. If successful, the benefits of the resulting public cyberspace over our current systems would be significant. Let me explain.
 
-[^2]: Some of which has been carried out by myself through the Theseus project, which you'll hear more about later.
+[^2]: Some of which has been carried out through the Theseus project, which you'll hear more about later.
 
-Architecturally, the modern web is built around a client-server model: data requesters (like you, loading up Twitter) and data providers (like Twitter, sending you fresh tweets). This data lives on servers; the servers live in some large air-conditioned room with armed guards; these servers dole out data to clients like yourself at-will.
+Architecturally, the modern web is built around a client-server model: data requesters (like you, loading up Twitter) and data providers (like Twitter, sending you fresh tweets). This data lives on servers; the servers live in large air-conditioned rooms with armed guards; these servers dole out data to clients like yourself at-will.
 
 What sort of cyberspace have we architected here? Who, if anyone, owns it? Does the service's owner have power over you? Certainly they do, and certainly they own the space -- though most companies go to great pains to hide this fact.
 

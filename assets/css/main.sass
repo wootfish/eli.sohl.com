@@ -2,6 +2,28 @@
 ---
 
 
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
+
++keyframes(fade-b-to-w)
+  0%
+    background-color: #000000
+    opacity: 0.0
+  10%
+    opacity: 0.0
+  100%
+    background-color: #FFFFFF
+    opacity: 1
+
+
 body
   border: 0
   margin: 0
@@ -9,6 +31,9 @@ body
   overflow-y: scroll
 
   &.nojs
+    animation-duration: 2s
+    animation-name: fade-b-to-w
+
     .withjs
       display: none
     .withoutjs
@@ -32,7 +57,6 @@ body
 
     a
       color: #BBBBBB
-
       &:hover
         color: #343434
 

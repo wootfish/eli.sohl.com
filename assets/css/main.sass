@@ -13,14 +13,12 @@
     @content
 
 
-+keyframes(fade-b-to-w)
++keyframes(fade-opacity-in)
   0%
-    background-color: #333333
     opacity: 0.0
-  10%
+  15%
     opacity: 0.0
   100%
-    background-color: #FFFFFF
     opacity: 1
 
 
@@ -31,8 +29,8 @@ body
   overflow-y: scroll
 
   &.nojs
-    animation-duration: 2s
-    animation-name: fade-b-to-w
+    animation-duration: 0.7s
+    animation-name: fade-opacity-in
 
     .withjs
       display: none

@@ -2,11 +2,34 @@
 ---
 
 
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
+
++keyframes(fade-opacity-in)
+  0%
+    opacity: 0.0
+  15%
+    opacity: 0.0
+  100%
+    opacity: 1
+
+
 body
   border: 0
   margin: 0
 
   &.nojs
+    animation-duration: 3.4s
+    animation-name: fade-opacity-in
+
     .withjs
       display: none
     .withoutjs

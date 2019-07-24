@@ -1,50 +1,58 @@
 ---
 layout: post
-title: Mesh Protocol Idea Sketch
+title: Idea Sketch for Mesh Routing in Ad-Hoc Networks
 ---
 
 
-Here's an idea for a mesh network protocol that could scale well.
+Here's an idea that I've been turning over for a few weeks now. It's a way of discovering routes through [ad-hoc, peer-to-peer mesh networks](https://en.wikipedia.org/wiki/Wireless_ad_hoc_network), and it comes with some interesting properties. In particular, it seems like it would scale very well.
 
-The core construct is pretty simple -- simple enough that I have to wonder if someone else has already come up with it. I hope so (it'd be especially nice if they've already taken care of implementing it, too) but just in case I'm the first, here's a sketch of what I have in mind. If there's prior art, I'd love to add a link to it.
+The core construct is simple enough that I wonder whether I'm the first to get to it. I hope I'm not -- it'd be especially nice if someone else has already taken care of implementing it, too -- but just in case, here's an outline of what I have in mind. If there's prior art, I'd love to add a link to it.
 
-This is just the sketch of an idea, not a full specification. It is light on details in some areas, because I'm not an expert and I know my limits. With that said, here we go.
+This is just the sketch of an idea, not a full specification. It is light on details in some areas because I'm not a subject matter expert. With that said, here we go.
 
 
-### Addresses
+## Transports
 
-First off, let's do away with any idea of assigning globally unique identifiers to anyone. This just doesn't scale, so we'll figure out a way to get by without it.
+This idea depends on an underlying physical-layer transport, probably established through 802.11 in ad-hoc mode (or something similar). It also depends on a protocol to allow for relaying messages along predetermined routes, probably with a design resembling onion network message delivery. I'm not interested in specifying either of these protocols here; to keep things simple, we will just assume their existence and assume they work well.
 
-But how do we establish connections without specifying who we're connecting to?
 
-Well, in any mesh network, you're going to have two sorts of connections: first, connections via direct point-to-point radio between nearby peers; second, connections via messages relayed over a chain of such radio links.
+## Goals
 
-Let's say we already have a way of establishing point-to-point radio connections with nearby peers.
+As mentioned above, we have two sorts of connections: first, connections via direct point-to-point radio between nearby peers; second, connections via messages relayed over a chain of such radio links.
 
 The goal of a mesh network's routing protocol is to infer enough about the topography of those radio links for us to establish efficient relay circuits over them.
 
-This is easier said than done. Each radio link has finite bandwidth which we have to be careful to conserve. Ideally, the routing layer's per-peer bandwidth overhead should be $$\mathcal{O}(1)$$ with respect to network size. Any weaker bound than this places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
+This is easier said than done. Each radio link has finite bandwidth, so we have to be careful to minimize overhead. Ideally, the routing layer's per-peer bandwidth overhead should be $$\mathcal{O}(1)$$ with respect to network size. Any weaker bound than this places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
 
 How do we meet this standard?
+
+
+## Addresses
+
+Let's start by doing away with any idea of assigning globally unique identifiers to anyone. Those just don't scale, so we'll get by without them. Same goes for letting people pick their own arbitrary addresses. Not gonna happen.
+
+But how do we establish connections without specifying who we're connecting to?
 
 Assign[^1] randomly distributed fixed-length addresses to peers, with no intimations at uniqueness. Each peer might even have several addresses. These are less about _identifying_ peers and more about peers _claiming responsibility_ for certain regions of a shared, co-owned address space (somewhat like node IDs in Kademlia).
 
 [^1]: Technically "assign" is a loaded word here. The implication of assignment coming from a central authority is not intended. Ideally peers' addresses would come from some sort of trapdoor proof-of-work function (possibly after hashing its output, if outputs are not already uniformly distributed). Peer addresses should somehow be made to expire after a fixed window of time, in order to complicate address squatting.
 
-Define distance between addresses via the `xor` metric, and endow peers with responsibility for the addresses closest to their own IDs by this metric. Every peer serves as an introduction point for any target address which is close to their own address. Observe that for a target address $$a_t$$ with $$d_1 = a_1 \oplus a_t$$ and $$d_2 = a_2 \oplus a_t$$, the inequality $$d_1 < d_2$$ holds if and only if $$a_1$$ has more leading bits in common with $$a_t$$ than $$a_2$$ does.
+Define distance between addresses via the `xor` metric, and endow peers with responsibility for the addresses closest to their own local addresses by this metric. Every peer serves as an introduction point for any target address close to their own address.
+
+Note that for a target address $$a_t$$ with $$d_1 = a_1 \oplus a_t$$ and $$d_2 = a_2 \oplus a_t$$, the inequality $$d_1 < d_2$$ holds if and only if $$a_1$$ has more leading bits in common with $$a_t$$ than $$a_2$$ does.
 
 
-### Bloom Filters
+## Bloom Filters
 
-Let's start with a quick refresher on [Bloom filters](https://en.wikipedia.org/wiki/Bloom_filter). They are data structures which let us represent a set of hashable elements in finite space. Membership queries never return false negatives, but they may return false positives. The false positive rate can be tightly controlled and quantified.
+Let's start with a quick refresher on [Bloom filters](https://en.wikipedia.org/wiki/Bloom_filter). These are data structures which let us represent a set of hashable elements. Unlike most representations of sets, a Bloom filter's total storage overhead is _fixed_. Further, membership queries never return false negatives, though they may return false positives. The false positive rate for any filter increases monotonically with the size of the represented set in a way that is straightforward to model.
 
 One curious property of Bloom filters is that for any two filters, the union and intersection of the sets represented by the filters can be trivially computed using bitwise `OR` and `AND`, respectively.
 
-The purpose of this refresher will become clear shortly, but first, some preliminaries:
+The purpose of this refresher will become clear shortly. First, some preliminaries:
 
 Every peer should be keeping a running list of every peer they have a point-to-point connection with, and they should keep track of every address claimed by each of these peers.
 
-Each peer can then determine the set of all addresses they can reach in one hop. They can then expand this set to contain all the addresses and _address prefixes_ they can reach in one hop.[^2] (see footnote for example)
+Given this information, each peer can determine the set of all addresses they can reach in one hop, and can expand this set to contain all the addresses and _address prefixes_ they can reach in one hop.[^2] (see footnote for example)
 
 [^2]: For example, say a peer has two active point-to-point connections. The first connected peer claims addresses `0000`, `0010`, and `0011`. The second peer claims `1111` and `1000`. The set of reachable addresses is then `{0000, 0010, 0011, 1111, 1000}` and the expanded set is `{0000, 0010, 0011, 1111, 1000, 000, 001, 111, 100, 00, 11, 10, 0, 1}`
 
@@ -52,37 +60,39 @@ From there, peers can produce _Bloom filters_[^3] representing their set of one-
 
 [^3]: Using constant, globally fixed (and carefully determined) Bloom filter parameters.
 
-These Bloom filters can then be broadcast over radio to peers' immediate neighbors in the network.
+Peers can then broadcast these Bloom filters to their immediate neighbors in the network.
 
-Any peer, upon receiving one-hop Bloom filters from some or all of their own one-hop connections, can combine these filters via bitwise `OR` to compute the union of the sets these filters represent. This union is precisely the set of addresses and address prefixes that the local peer can reach in two hops.
+Any peer, upon receiving one-hop Bloom filters from some or all of their own one-hop connections, can combine these filters via bitwise `OR` to compute the union of the sets these filters represent. This union of one-hop filters is precisely the set of addresses and address prefixes that the local peer can reach in _two_ hops.
 
 These two-hop filters can then be sent to adjacent peers as well. Doing this allows everyone to compute three-hop filters. Sending these yields four-hop filters, and so on.
 
 Of course, this process can't continue indefinitely. Eventually these filters reach a saturation point and their false positive probability skyrockets. The point at which this happens is straightforward to model for any given tolerance. Regardless of how the saturation point is determined, this iterative process of computing progressively broader Bloom filters should continue until this point is reached.
 
-Rather than broadcasting an update whenever any of these filters changes -- which would take significant bandwidth -- peers could just broadcast these updates at regular intervals. We can even standardize an interval duration, although it's a given that not everyone will adhere to it. Regardless, we can check the effectiveness of this strategy heuristically: If most peers' interval durations are under, say, $$t$$ seconds, then even if peers' intervals are out of phase (as they inevitably would be), a peer's updated routing info would propagate at peers $$n$$ hops away after no more than $$n t$$ seconds. With each interval the number of peers to which this info has propogated can be expected to grow exponentially.
+Rather than broadcasting an update whenever any of these filters changes -- which would take significant bandwidth, since any change is likely to prompt changes in adjacent peers' filters, leading to instant exponential blowup -- peers could just broadcast these updates at regular intervals. We can even standardize an interval duration, although it's a given that not everyone will adhere to it. Regardless, we can check the effectiveness of this strategy heuristically: If most peers' interval durations are under, say, $$t$$ seconds, then even if peers' intervals are out of phase, a peer's updated routing info would propagate at peers $$n$$ hops away after no more than $$n t$$ seconds. With each interval the number of peers to which this info has propogated can be expected to grow exponentially.
+
+The overhead of these updates can be further reduced several ways. To begin with, sparse filters (as e.g. one- or two-hop filters likely would be) are very amenable to compression. Dense filters would be less easily compressed, but rather than broadcasting these directly on every update, a compressed version of the `xor` of a dense filter's old and new values -- which is likely to be much sparser -- could be broadcast instead. The filter's new value is then trivial to compute as long as the recipient has the old value stored.
 
 
-### Routing
+## Routing
 
 Now, say we have an arbitrary target address and we want to figure out which peers, out of everyone whose addresses are in our Bloom filters, have the closest addresses to our target. Recall that this is equivalent to figuring out whose address shares the longest prefixes with our target.
 
-To get started, we can simply consult our Bloom filters. Start with the full address, and query each local Bloom filter for it, starting with the one-hop filter and working outwards. If we get a hit, check for a false positive by querying for every smaller prefix as well -- if any are missing, we've hit a false positive (this does not eliminate false positives but does allow us to filter some out).
+To get started, we can simply consult our Bloom filters. Start with the full address and query each local Bloom filter for it, starting with the one-hop filter and working outwards. If we get a hit, check for a false positive by querying for every smaller prefix as well -- if any are missing, we've hit a false positive (this won't _always_ detect false positives, but allows us to filter some out).
 
 If no hits are found for the full address, repeat the process for the address's longest prefix; if no hits are found, repeat for the next-longest. Repeat until a hit is found, and note which filter it was found in.
 
-If this process determines that a given prefix is reachable in $$n$$ hops, the next step is to take our neighbors' $$n-1$$-hop filters and query these for the same prefix. If none turn up a hit, then our local hit was a false positive and we need to backtrack in the search of our local filters. If any of these $$n-1$$-hop filters does hit, however, then we've determined that (barring a false positive) the associated peer is the next hop in a minimal-length path to the peer whose address is closest to our target.
+If this process determines that a given prefix is reachable in $$n$$ hops, the next step is to take our neighbors' $$n-1$$-hop filters and query these for the same prefix. If none turn up a hit, then our local hit was a false positive and we need to backtrack in the search of our local filters. If any of these $$n-1$$-hop filters _does_ hit, however, then we've determined (barring a false positive) that the associated peer is the next hop in a minimal-length path to the peer whose address is closest to our target.
 
-Once we've figured this out, we might contact the peer(s) whose filter(s) contained the hit and ask them to forward routing queries on our behalf. Then through them we can query their neighbors' $$n-2$$-hop filters to identify the next step(s) in the path to our target. Repeat this process and we'll eventually get where we're going.
+Once we've figured this out, we might contact the peer(s) whose filter(s) contained the hit and ask them to forward routing queries on our behalf. Then through them we can query _their_ neighbors' $$n-2$$-hop filters to identify the next step(s) in the path to our target. Repeat this process and we'll eventually get where we're going.
 
-The precise forwarding/proxying mechanism here is left intentionally vague -- I'm imagining it resembling the protocol for establishing Tor circuits, but the specifics could go any number of ways, and I'm trying to avoid getting bogged down in details in this post.
+The precise forwarding/proxying mechanism here is left intentionally vague -- I'm imagining it resembling the process for establishing Tor circuits, but the specifics could go any number of ways and I'm trying to avoid getting bogged down in details in this post.
 
-Note that the iterative routing process is going to need to be able to handle Bloom filter false positives gracefully. This will involve some degree of backtracking. It might even be a good idea to try and preempt this by running parallel disjoint lookups, sort of like in S/Kademlia[^4].
+Note that the iterative routing process is going to need to be able to handle Bloom filter false positives gracefully. This will involve some degree of backtracking. It might even be a good idea to try and preempt this by running parallel disjoint lookups, sort of like in S/Kademlia.[^4]
 
-[^4]: The analogue to S/Kademlia is limited, since that algorithm's underlying protocol stack is obviously very different, but their core idea applies. Carrying out a lookup over multiple disjoint paths in parallel increases the chance of following at least one path which does not contain malicious nodes; the same logic (and possibly even the same mathematical analysis) applies in the case of non-malicious interference, e.g. misleading routing info due to false positives from a Bloom filter.
+[^4]: The analogue to S/Kademlia is limited, since that algorithm's underlying protocol stack is obviously very different, but their core idea applies. Carrying out a lookup over multiple disjoint paths in parallel increases the chance of following at least one path which does not contain malicious nodes; the same logic (and possibly even the same or similar mathematical analysis) applies in the case of non-malicious interference, e.g. misleading routing info due to false positives from a Bloom filter.
 
 
-### Connecting
+## Connecting
 
 What we have so far is a way of looking up an arbitrary target address and identifying, within the neighborhood of the network that we know about, the peers who have claimed responsibility for the closest addresses to this target.
 
@@ -92,7 +102,7 @@ However, we are _almost_ there. The idea of peers serving as _introduction point
 
 [^5]: e.g. by taking current Unix time as an integer, shifting it right by some number of bits to limit resolution, and using this as the key for a hash of the shared secret -- or by taking, say, two or three such hashes for consecutive timestamps and attempting introductions at _all_ the resulting addresses in parallel. This second method, while higher-overhead, would increase the chances of a successful rendezvous, and would be more fault-tolerant in edge cases (e.g. when the two friends start their lookups at different times, or when their clocks are out of sync, etc etc).
 
-If the address lookup bears a passing resemblance to Tor circuit negotiation, then this process could (if properly designed) end up resembling the process of connecting to an onion service. This is (obviously) not a guarantee of privacy or security by itself, but it _does_ seem to suggest that we could be headed in a promising direction.
+If the address lookup algorithm bears a passing resemblance to Tor circuit negotiation, then this process could (if properly designed) end up resembling the process of connecting to an onion service. This is (obviously) not a guarantee of privacy or security by itself, but it _does_ seem to suggest that we could be headed in an interesting direction.
 
 This construct can support both anonymous and authenticated introductions.
 
@@ -100,20 +110,20 @@ The anonymous case vaguely resembles e.g. Mainline DHT, where peers wishing to j
 
 The authenticated case could work any number of ways. It might look like this: suppose you and your friend each have an encrypted messenger app, and the app has (say) an Ed448 public key associated with your identity. Say you exchange public keys (e.g. by scanning QR codes on each other's phones). You can now use ECDH to obtain a shared secret. Now, whenever you want to attempt a connection over the network, derive an ephemeral _rendezvous address_ from your shared secret (or maybe even derive _several_ such addresses)[^5], then look up these addresses, establish circuits over the network to the peers identified by this lookup process, and ask each peer to introduce us to anyone else who shows up asking about the same address.
 
-Since the rendezvous address is known only to you, your friend, and any peers you've shared it with during the lookup process (e.g. the peer serving as your introduction point, at minimum), it is likely but not guaranteed that the first and only connection you will see will be from your friend. Once this connection is established, you can guard against interference by mutually authenticating using your public keys and establishing an encrypted channel (e.g. via Noise), and then you're good to go.
+Since the rendezvous address is known only to you, your friend, and any peers you've shared it with during the lookup process (e.g. the peer serving as your introduction point, at minimum), it is likely but not guaranteed that the first and only connection you will see will be from your friend. Once a connection is established, you can guard against interference by mutually authenticating using your public keys and establishing an encrypted channel (e.g. via the Noise framework), and then you're good to go.
 
 
-### Rerouting
+## Rerouting
 
-So far, we have a way of making end-to-end connections between arbitrary peers as long as they know what address to look up to find each other. However, the routes they take to find each other might be wildly inefficient.
+So far we have a way of making end-to-end connections between arbitrary peers as long as they know what address to look up to find each other. However, the routes they take to find each other might be wildly inefficient.
 
-For instance, suppose you and your friend are two hops away from each other, but you're both five hops away from your rendezvous point. Then you'll end up establishing a ten-hop circuit when you could have a two-hop one. Not only will this impact the quality of your connection, it'll result in said connection consuming five times more of the network's total bandwidth than necessary. This is obviously less than ideal.
+Suppose you and your friend are two hops away from each other, but you're both five hops away from your rendezvous point. Then you'll end up establishing a ten-hop circuit when you could have a two-hop one. Not only will this impact the quality of your connection, it'll result in said connection consuming five times more of the network's total bandwidth than necessary. This is obviously not ideal.
 
-An interesting property of Bloom filters is that just like bitwise `OR` of two filters produces a new filter representing the union of the original filters' sets, the bitwise `AND` of these filters produces a filter representing the _intersection_ of the filters' sets. Delightfully, the false positive probability in this new Bloom filter is bounded above by the false positive probabilities of the originals.
+Recall that just like how the bitwise `OR` of two Bloom filters produces a new filter representing the union of the original filters' sets, bitwise `AND` produces a filter representing the _intersection_ of the filters' sets. Conveniently, the false positive probability in this new Bloom filter is bounded above by the false positive probabilities of the originals, ensuring that any tolerance established in the filter generation step is adhered to here as well.
 
 In light of this, here's an idea: as soon as two peers connect to each other via an introduction point, they should send each other their routing Bloom filters. From these, a number of set intersections can be computed.
 
-Of course, first we should check for the trivial case where either peer's local addresses are contained in the other's one-hop filter; this would indicate (somewhat embarrassingly) that the peers are already directly connected over radio but they somehow failed to notice this. This will, of course, almost never happen, and in the majority of cases a more involved strategy may be required.
+Of course, we should first check for the trivial case where either peer's local addresses are contained in the other's one-hop filter; this would indicate (somewhat embarrassingly) that the peers are already directly connected over radio but they somehow failed to notice this. This probably will not happen very often, and so in the majority of cases a more involved strategy will be required.
 
 Before getting into details, let's introduce some notation. Let's call our two peers $$a$$ and $$b$$ and denote $$a$$'s one-hop filter as $$a_1$$, their two-hop filter as $$a_2$$, and so on; likewise with $$b_1$$, $$b_2$$, etc. Denote bitwise `AND` and `OR` with $$\land$$ and $$\lor$$ respectively.
 
@@ -129,37 +139,57 @@ This process can be run until we identify enough circuits or run out of Bloom fi
 
 Given enough time, this process should allow two peers to exhaustively identify all the addresses they can both reach and to determine the minimum number of hops required to set up a circuit through any such address.
 
+Note that any two peers who are able to open a connection through a rendezvous point in the first place trivially must have at least _one_ address that they both can reach: the rendezvous address. As such, this process can be expected to turn up at least one result.
 
-### What is this?
 
-This is a routing protocol for mesh networks. As long as peers agree on some global network parameters, no advance setup is required. In particular, nothing about the network topology needs to be known in advance.
+## Security
 
-Peers can establish connections without sharing any identifying information, even a network address. This stands in contrast to the way things work on the current Internet, and suggests that this network could provide some superior privacy properties.[^6]
+Allusions have been made throughout this post to similarities between this design and the architecture of onion networks. Of course, direct parallels can't be drawn without a full specification, but if I were to write a full spec, I would make it a primary goal to try to carry over as many of onion networks' proven security properties as possible. Nodes in the network would have personal public/private keypairs, and would broadcast their public keys along with all other relevant data. These keys would be used by the message transport layer to hide every aspect of a message except for the next hop in its route.
 
-[^6]: For instance, it is common for copyright holders (music labels, movie studios, etc) to monitor BitTorrent peer swarms and serve copyright infringement notices to the owners of all IPs observed. Whatever you might think of people who torrent copyrighted material, it is undeniable that this practice is designed to intimidate and take advantage of people who lack the means to stand up to legal threats, and for these copyright holders the fines associated with these notices serve as a way of profiting off artists' work without sharing _any_ of the profits with those artists. This exploitive practice would not be possible if connections could be established without sharing any personally identifying information.
+Of course, a slightly greater level of trust in the network is required here than in Tor, since we rely on remote nodes to self-report their neighbors, as well as those neighbors public keys (and addresses, filters, etc). There is room for more research here as far as minimizing risk here. Disjoint lookups, already mentioned above, might help significantly.
 
-This sort of construct would be valuable in areas where internet service is not available or where it has been disrupted (e.g. in the aftermath of a natural disaster). In areas where internet service is broadly available, the value of a mesh network is less obvious but no less real: not only does it provide redundant infrastructure, it also would be free to join. People with Internet connections could perhaps establish crossover points between the networks. Since internet access is increasingly becoming a necessity, the possibility of providing it for free is very attractive and has the potential to have a concrete positive impact on many people's lives.
+An efficient, low-overhead ad-hoc mesh network protocol stack would be a powerful tool for resisting pervasive corporate and governmental surveillance, moreso because the network would lack any barrier to entry whatsoever and because peers could remain effectively anonymous (aside from the location data leaked by their radio txns) whenever desired.
 
-This infrastructure could also provide entirely new categories of app architecture. More on that later, maybe.
+
+## Prior Work
+
+The idea of limiting any individual node's knowledge of an ad-hoc network's overall layout is not new; this has been discussed as far back as '99 ([PDF link](http://www.ee.oulu.fi/~carlos/papers/routing/IW99.pdf)), and the advantages of this strategy for building scalable networks have been noted for just as long. However, the chosen strategy for the linked paper was to limit how often peers send routing information past their immediate neighbors, rather than to find a routing protocol whose baseline maintenance only ever requires peers to exchange routing info with said neighbors.
+
+I am not aware of prior work on using Bloom filters in this context. If you are, please reach out -- you would absolutely make my day.
+
+
+## Applications
+
+Relative to current networks, it appears that this protocol could form a core part of networks which provide greatly preferably privacy properties.[^6]
+
+[^6]: For instance, it is common for copyright holders (music labels, movie studios, etc) to monitor BitTorrent peer swarms operating over the internet, and to serve copyright infringement notices to the owners of any IPs observed in the swarm. Whatever you might think of people who torrent copyrighted material, it is undeniable that this practice on the part of the copyright holders is designed to intimidate and take advantage of people who lack the means to stand up to legal threats, and for these copyright holders the fines associated with these notices serve as a way of profiting off artists' work without having to share any of the profit with said artists. This is just one example of an exploitive practice which would not be possible if network connections could be established without sharing any personally identifying information.
+
+This sort of construct would be valuable in areas where internet service is not available or where it has been disrupted (e.g. in the aftermath of a natural or artificial disaster). In areas where internet service is broadly available, the value of a mesh network is less obvious (to some) but no less real: not only does it provide redundant infrastructure, it would also be free to join. People with Internet connections could perhaps even establish crossover points between the internet and their local ad-hoc network, serving as a bridge to allow their peers in the mesh network to get online for free.[^7] Since internet access is increasingly becoming a necessity, the possibility of providing it for free is very attractive and has the potential to have a concrete positive impact on many people's lives.
+
+[^7]: Though doing this would, of course, almost certainly violate their contract with the ISP -- unless (say) the service is provided via a direct line in to an internet exchange, in which case the ISP issue would be bypassed completely.
+
+It would be trivial to build a DHT on top of this construct, as well, though this may or may not be a good idea as it would raise the memory overhead of maintaining a presence on the network.
+
+This infrastructure could also lay the groundwork for entirely new categories of app architecture. More on that later, maybe.
 
 
 ### Questions
 
-* None of this says anything about optimizing routes based on available bandwidth on individual point-to-point connections. How could we handle that?
+* What would be the best method for generating local addresses?
 
-* For that matter, what will it take to set up these point-to-point connections in the first place?
+* The elephant in the room: how would a message transport layer go about optimizing routes based on individual point-to-point connections' individual bandwidth? Is this possible? Is it necessary?
 
-* What sort of criteria should we adhere to with regard to setting Bloom filter parameters?
+* What sort of criteria should we use in setting Bloom filter parameters?
 
-* How can we model the routing system's bandwidth overhead? It appears to meet the requirement of being $$\mathcal{O}(1)$$ with regard to network size, and it seems intuitively likely that bandwidth would decrease as the network's average path length decreases[^7], but how can we formalize these intuitions?
+* How can we model the routing protocol's overhead? It appears to meet the requirement of being $$\mathcal{O}(1)$$ with regard to network size, and it seems intuitively likely that bandwidth would decrease as the network's average path length decreases[^8], but how can we formalize these intuitions, and what other patterns can we find?
 
-[^7]: My reasoning here is that in networks where many addresses can be reached with a small number of hops, peers are likely to be sending fewer total filters since they will reach their saturation cutoff more quickly.
+[^8]: My reasoning here is that in networks where many addresses can be reached with a small number of hops, peers are likely to be sending fewer total filters since they will reach their saturation cutoff more quickly.
 
-* How much of this traffic can be encrypted?
+* How much of this traffic can be encrypted? (ideally: most or all)
 
-* How much would the network benefit from adding "shortcuts" (e.g. long-distance high-bandwidth radio links between distant endpoints, or nodes which also have internet connections and use these to knit physically distant regions of the mesh together)? Intuitively it seems like past a certain size these would be key to scaling well. How can this intuition be formalized?
+* How much, if at all, would the network benefit from adding "shortcuts" (e.g. long-distance high-bandwidth radio links between distant endpoints, or nodes which also have internet connections and use these to knit physically distant regions of the mesh together)?
 
-* How should we manage public identities on the network? Should identities be long-lived or per-session?
+* How should we manage public identities on the network? Should identities be long-lived or per-session? Should we even have any rules here?
 
 * How well does this algorithm handle peer churn? How fast should the update intervals for broadcasting Bloom filter changes be? Should they scale dynamically?
 

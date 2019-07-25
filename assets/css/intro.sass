@@ -26,22 +26,22 @@ body
   border: 0
   margin: 0
 
-  &.nojs
-    animation-duration: 3.4s
+  &.nofancy
+    animation-duration: 4.2s
     animation-name: fade-opacity-in
 
-    .withjs
+    .fancy
       display: none
-    .withoutjs
+    .simple
       display: block
 
 
-  &:not(.nojs)
+  &:not(.nofancy)
     background-color: black
 
-    .withjs
+    .fancy
       display: block
-    .withoutjs
+    .simple
       display: none
 
 

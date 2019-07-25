@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Thoughts on some 2015 Putnam Exam Problems
+mathjax: true
 ---
 
 Now that a few days have gone by, I thought I'd write a few notes on things I found interesting when I took this year's Putnam exam.

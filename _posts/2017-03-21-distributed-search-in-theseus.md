@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Distributed Search in Theseus
+mathjax: true
 ---
 
 > Previously:<br/>

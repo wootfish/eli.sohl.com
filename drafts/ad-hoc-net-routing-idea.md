@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Idea Sketch for Mesh Routing in Ad-Hoc Networks
+mathjax: true
 ---
 
 

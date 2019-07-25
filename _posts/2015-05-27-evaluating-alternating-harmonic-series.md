@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Evaluating the Alternating Harmonic Series
+mathjax: true
 ---
 
 Here's a fun little note I just found while organizing my desk. I came up with this proof during a class on infinite series last summer.

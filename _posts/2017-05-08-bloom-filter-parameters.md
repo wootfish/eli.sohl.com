@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Bloom Filter Parameters for Distributed Search
+mathjax: true
 ---
 
 > Previously:<br/>

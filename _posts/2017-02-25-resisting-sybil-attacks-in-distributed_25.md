@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Resisting Sybil Attacks in Distributed Hash Tables
+mathjax: true
 ---
 
 > Previously:

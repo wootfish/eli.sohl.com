@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 'Symbolic Computational Geometry in Python: Heron''s Formula'
+mathjax: true
 ---
 
 Floating point numbers suck. Sometimes they're the best we've got, but they still suck. Floating point numbers are to math as Physics 101 lab measurements  are to the laws of physics: you get basically what you expect, but the margin of error can be non-negligible. Sometimes that's okay. Sometimes it's not. But what choice do we have? I'm so glad you asked.

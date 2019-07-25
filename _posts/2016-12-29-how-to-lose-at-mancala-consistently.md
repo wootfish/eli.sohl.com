@@ -1,6 +1,7 @@
 ---
 layout: post
 title: How to Lose at Mancala (Consistently!)
+mathjax: true
 ---
 
 Over winter break, I spent a few days fiddling with a Mancala AI. It came together surprisingly quickly! Here's a little journaling on that project.

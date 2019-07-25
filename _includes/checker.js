@@ -1,8 +1,8 @@
-function checkJSEnabled() {
+function checkFancyEnabled() {
     var enabled = localStorage.getItem("enabled");
 
     if (enabled === null) {
-        enableJS();
+        enableFancy();
         return true;
     }
 
@@ -14,18 +14,19 @@ function checkJSEnabled() {
 }
 
 
-function enableJS() {
+function enableFancy() {
     localStorage.setItem("enabled", true);
     location.reload();
 }
 
 
-function disableJS() {
+function disableFancy() {
     localStorage.setItem("enabled", false);
     location.reload();
 }
 
 
-if (checkJSEnabled()) {
-    $("body").removeClass("nojs")
+$("body").removeClass("nojs")
+if (checkFancyEnabled()) {
+    $("body").removeClass("simple")
 }

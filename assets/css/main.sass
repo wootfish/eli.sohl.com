@@ -28,22 +28,22 @@ body
 
   overflow-y: scroll
 
-  &.nojs
+  &.nofancy
     animation-duration: 0.7s
     animation-name: fade-opacity-in
 
-    .withjs
+    .fancy
       display: none
-    .withoutjs
+    .simple
       display: block
 
 
-  &:not(.nojs)
+  &:not(.nofancy)
     background-color: black
 
-    .withjs
+    .fancy
       display: block
-    .withoutjs
+    .simple
       display: none
 
     .contentbox

@@ -3,12 +3,6 @@ layout: main
 ---
 
 
-<div class="withjs">
-    <canvas id="drawcanvas">Oh no, canvas not supported :(</canvas>
-    <canvas id="tilecanvas"></canvas>
-</div>
-
-
 <div class="contentbox contents">
     <h1 class="display-1 breakword">sohliloquies</h1>
     <hr>
@@ -22,6 +16,17 @@ layout: main
 
     <h1>{{ page.title }}</h1>
     <small>{{ page.date | date: "%-d %B %Y" }}</small>
+
+    {% if page.mathjax %}
+    <div class="alert alert-warning" role="alert">
+        Hey there! It looks like you have Javascript disabled. Good call --
+        that's my default setting too. I just wanted to let you know that this
+        particular blog post has some equations embedded in it which won't show
+        up unless you enable Javascript from cdnjs.cloudflare.com on this page.
+        If you'd rather not do that, you can still read the equations via View
+        Source or on Github.
+    </div>
+    {% endif %}
 
     <div class="blogpost my-4">
         {{ content }}

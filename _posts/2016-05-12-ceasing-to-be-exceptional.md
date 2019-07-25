@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Ceasing to Be Exceptional
+mathjax: true
 ---
 
 Somewhere just north of a decade ago -- so when I was 10 or so -- I was helping strangers in online forums troubleshoot games they were making. It was crazy fun. I still remember this one guy: He had a 3D FPS he was building in Game Maker, a tool that (for this use case) gives you a graphics engine and not much else. He had mouselook set up (no trivial feat) and had a bare-bones firing system, but it only worked when the camera was leveled out flat. You couldn't shoot up or down. That's a big problem, but the game was still pretty fun in spite of it, so in the spirit of trying to make a good thing better I offered to help.

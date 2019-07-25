@@ -28,6 +28,14 @@ body
 
   overflow-y: scroll
 
+  &.nojs
+    .withoutjs
+      display: block
+
+  &:not(.nojs)
+    .withoutjs
+      display: none
+
   &.nofancy
     animation-duration: 0.7s
     animation-name: fade-opacity-in

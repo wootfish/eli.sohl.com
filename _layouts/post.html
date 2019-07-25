@@ -14,16 +14,16 @@ layout: main
     </div>
     <hr>
 
-    <h1>{{ page.title }}</h1>
+    <h1 class="mb-0">{{ page.title }}</h1>
     <small>{{ page.date | date: "%-d %B %Y" }}</small>
 
     {% if page.mathjax %}
-    <div class="alert alert-warning" role="alert">
+    <div class="alert alert-warning withoutjs my-3" role="alert">
         Hey there! It looks like you have Javascript disabled. Good call --
         that's my default setting too. I just wanted to let you know that this
-        particular blog post has some equations embedded in it which won't show
-        up unless you enable Javascript from cdnjs.cloudflare.com on this page.
-        If you'd rather not do that, you can still read the equations via View
+        specific blog post has embedded Mathjax equations which won't show up
+        unless you enable Javascript from cdnjs.cloudflare.com on this page. If
+        you'd rather not do that, you can still read the raw LaTeX via View
         Source or on Github.
     </div>
     {% endif %}

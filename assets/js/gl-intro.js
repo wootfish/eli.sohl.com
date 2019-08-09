@@ -45,19 +45,15 @@ function doEnterAnimation() {
 
 
 function main() {
-    const canvas = document.getElementById("glcanvas");
-    gl = canvas.getContext("webgl");
-
+    const gl = document.getElementById("glcanvas").getContext("webgl");
     if (!gl) {
         alert("fuck -- no webgl");  // TODO handle this better
         return;
     }
 
-
     resize(gl.canvas);
 
-
-    // load t from local storage if possible, else initialize it
+    // load t from local storage if possible, else initialize it from time
     // (this keeps the background from jumping whenever we switch pages)
     // also, reinitialize t if this is a page refresh
     if (!sessionStorage.getItem('t') || pageWasReloaded()) {
@@ -65,12 +61,10 @@ function main() {
         sessionStorage.setItem('t', t);
     }
 
-
     if (!sessionStorage.getItem('warp') || pageWasReloaded()) {
         warp = (warp_min+warp_max)/2;
         sessionStorage.setItem('warp', warp);
     }
-
 
     // compile and initialize shaders
     const vertexShaderSource = document.getElementById("2d-vertex-shader").text;
@@ -100,8 +94,8 @@ function main() {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    // set up a texture for the gray-scott data array, and a corresponding
-    // framebuffer with the texture as its color buffer
+    // set up a texture for the data array, and a corresponding framebuffer
+    // with the texture as its color buffer
     const gs_width = 320;
     const gs_height = 320;
     const gs_texture = gl.createTexture();
@@ -175,9 +169,6 @@ function main() {
 }
 
 
-if (checkJSEnabled()) main();
-
-
 // wire up & display UI elements
 // (we don't want them to appear way before the background)
 
@@ -202,4 +193,8 @@ window.onpageshow = function () {
             warp_increasing = false;
         }
     }).fadeIn(170, "linear");
+
+    if (checkFancyEnabled()) {
+        main();
+    }
 }

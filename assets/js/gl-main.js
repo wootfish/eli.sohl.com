@@ -23,12 +23,15 @@ function updateState() {
 
 
 function main() {
-    const canvas = document.getElementById("drawcanvas");
-    gl = canvas.getContext("webgl");
+    const gl = document.getElementById("drawcanvas").getContext("webgl");
     const tiler = document.getElementById("tilecanvas").getContext("2d");
 
     if (!gl) {
         alert("fuck -- no webgl");  // TODO handle this better
+        return;
+    }
+    if (!tiler) {
+        alert("fuck -- no canvas");  // TODO handle this better
         return;
     }
 
@@ -153,7 +156,7 @@ function main() {
 }
 
 
-if (checkJSEnabled()) main();
+if (checkFancyEnabled()) main();
 
 
 if (sessionStorage.getItem('fancyfade') == 'true') {

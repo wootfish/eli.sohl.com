@@ -28,5 +28,5 @@ function disableFancy() {
 
 $("body").removeClass("nojs")
 if (checkFancyEnabled()) {
-    $("body").removeClass("simple")
+    $("body").removeClass("nofancy")
 }

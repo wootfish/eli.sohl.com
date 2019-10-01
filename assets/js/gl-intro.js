@@ -96,13 +96,13 @@ function main() {
 
     // set up a texture for the data array, and a corresponding framebuffer
     // with the texture as its color buffer
-    const gs_width = 320;
-    const gs_height = 320;
+    const tex_width = 320;
+    const tex_height = 320;
     const gs_texture = gl.createTexture();
     const gs_framebuffer = gl.createFramebuffer();
     {
         gl.bindTexture(gl.TEXTURE_2D, gs_texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gs_width, gs_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // initialize the texture
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tex_width, tex_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // initialize the texture
 
         // disable mips, specify wrap method
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -112,15 +112,13 @@ function main() {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, gs_framebuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, gs_texture, 0);
-    }
-    {
+
         // set up the noise program's persistent state
         gl.useProgram(noiseProgram);
         gl.enableVertexAttribArray(positionAttributeNoiseLocation);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(positionBuffer, 2, gl.FLOAT, false, 0, 0);
-    }
-    {
+
         // set up the render program's persistent state
         gl.useProgram(renderProgram);
         gl.enableVertexAttribArray(positionAttributeRenderLocation);
@@ -140,20 +138,20 @@ function main() {
         if (entering) doEnterAnimation();
 
         {
-            // draw noise pattern to gray-scott data texture
+            // draw noise pattern to data texture
             gl.bindFramebuffer(gl.FRAMEBUFFER, gs_framebuffer);
             gl.useProgram(noiseProgram);
             gl.disable(gl.DEPTH_TEST);
             gl.disable(gl.BLEND);
-            gl.viewport(0, 0, gs_width, gs_height);
+            gl.viewport(0, 0, tex_width, tex_height);
             gl.uniform1f(tUniformLocation, t);
             gl.uniform1f(warpUniformLocation, warp);
-            gl.uniform2f(resolutionUniformNoiseLocation, gs_width, gs_height);
+            gl.uniform2f(resolutionUniformNoiseLocation, tex_width, tex_height);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
         {
-            // render gray-scott data texture's contents to canvas
+            // render data texture's contents to canvas
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.useProgram(renderProgram);
             resize(gl.canvas);
@@ -172,9 +170,9 @@ function main() {
 // wire up & display UI elements
 // (we don't want them to appear way before the background)
 
-// (doing this in window.onpageshow lets us reset the page after thaw from
+// doing this in window.onpageshow lets us reset the page after thaw from
 // firefox's bfcache, which is needed to make sure that "back" navigation
-// doesn't behave differently from a fresh page load)
+// doesn't behave differently (and worse) than a fresh page load
 
 window.onpageshow = function () {
     fadein = 0;

@@ -81,15 +81,15 @@ function main() {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    // set up a texture for the gray-scott data array, and a corresponding
-    // framebuffer with the texture as its color buffer
-    const gs_width = 320;
-    const gs_height = 320;
+    // set up a texture for the data array, and a corresponding framebuffer
+    // with the texture as its color buffer
+    const tex_width = 320;
+    const tex_height = 320;
     const gs_texture = gl.createTexture();
     const gs_framebuffer = gl.createFramebuffer();
     {
         gl.bindTexture(gl.TEXTURE_2D, gs_texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gs_width, gs_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // initialize the texture
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tex_width, tex_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // initialize the texture
 
         // disable mips, specify wrap method
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -131,10 +131,10 @@ function main() {
             gl.useProgram(noiseProgram);
             gl.disable(gl.DEPTH_TEST);
             gl.disable(gl.BLEND);
-            gl.viewport(0, 0, gs_width, gs_height);
+            gl.viewport(0, 0, tex_height, tex_height);
             gl.uniform1f(tUniformLocation, t);
             gl.uniform1f(warpUniformLocation, warp);
-            gl.uniform2f(resolutionUniformNoiseLocation, gs_width, gs_height);
+            gl.uniform2f(resolutionUniformNoiseLocation, tex_height, tex_height);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
         {

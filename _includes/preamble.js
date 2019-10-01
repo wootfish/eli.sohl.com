@@ -5,17 +5,20 @@ var gl;
 var now;
 var first_frame = Date.now();
 var last_frame = Date.now();
-var target_fps = 30;  // but make the cap adjustable
+var target_fps = 30;
 var frame_interval = 1000/target_fps;
 var default_frame_interval = frame_interval;
 var frame_count = 0;
-var t, warp;
+//var t, warp, fadein;
 var t_slow = 0.2;
 var t_fast = 1;
-var warp_min = 0.09;
+var warp_min = 0.17;
 var warp_max = 0.34;
-var warp_delta = 0.011;
+var warp_med = (warp_min+warp_max)/2.0;
+var tiler = null;
 var debug = false;
+var params;
+
 
 // clipspace coordinates for two right triangles covering the whole screen
 const positions = [
@@ -72,10 +75,6 @@ function limitFrameRate() {
 }
 
 
-function logFPS() {
-}
-
-
 function resize(canvas) {
     // get browser display's size
     const displayWidth = canvas.clientWidth;
@@ -114,4 +113,23 @@ function createProgram(gl, vertexShader, fragmentShader) {
     // on failure
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
+}
+
+
+function initParams(fade_val) {
+    params = {warp: warp_min, fadein: fade_val};
+
+    if (!sessionStorage.getItem('t') || pageWasReloaded()) {
+        params.t = (Date.now()**2) % 1000001;
+    } else {
+        params.t = parseFloat(sessionStorage.getItem('t'));
+    }
+
+    function increment_t () {
+        $(params).animate({t: params.t + 10}, {
+            duration: 1000,
+            complete: increment_t
+        });
+    }
+    increment_t();
 }

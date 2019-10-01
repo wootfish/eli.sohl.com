@@ -126,7 +126,7 @@ function initParams(fade_val) {
     }
 
     function increment_t () {
-        $(params).animate({t: params.t + 1700}, {
+        $(params).animate({t: params.t + 1000}, {
             duration: 10000,
             easing: 'linear',
             complete: increment_t

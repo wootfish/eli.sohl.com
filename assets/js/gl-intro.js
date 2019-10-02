@@ -8,18 +8,18 @@
 
 
 window.onpageshow = function () {
-    initParams(0, 10000);
+    initParams(0, 11000);
 
     $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {
-        $("#greeting").fadeOut(2600);
-        $("#enter").fadeOut(2300);
+        $("#greeting").fadeOut(2900);
+        $("#enter").fadeOut(2600);
         $(params).animate({
             warp: warp_med,
             fadein: 1
         }, {
             queue: false,
-            duration: 3400,
+            duration: 3800,
             complete: function () {
                 sessionStorage.setItem('fancyfade', true);
                 window.location.href = './blog.html';

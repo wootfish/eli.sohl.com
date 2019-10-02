@@ -117,7 +117,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
 
 function initParams(fade_val) {
-    params = {warp: (fade_val == 0 ? warp_min : warp_max), fadein: fade_val};
+    params = {warp: (fade_val == 0 ? warp_min : warp_med), fadein: fade_val};
 
     if (!sessionStorage.getItem('t') || pageWasReloaded()) {
         params.t = (Date.now()**2) % 1000001;

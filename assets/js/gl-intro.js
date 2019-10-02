@@ -29,7 +29,7 @@ window.onpageshow = function () {
     }).mouseenter(function () {
         $(params).animate({warp: warp_max}, {queue: false, duration: 1700});
     }).mouseleave(function () {
-        $(params).animate({warp: warp_min}, {queue: false, duration: 1700});
+        $(params).animate({warp: warp_min}, {duration: 1700});
     }).fadeIn(170, "linear");
 
     if (checkFancyEnabled()) {

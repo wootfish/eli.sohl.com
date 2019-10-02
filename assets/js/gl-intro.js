@@ -8,7 +8,7 @@
 
 
 window.onpageshow = function () {
-    initParams(0, 5100);
+    initParams(0, 10000);
 
     $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {

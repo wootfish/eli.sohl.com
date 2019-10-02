@@ -116,7 +116,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 
-function initParams(fade_val) {
+function initParams(fade_val, t_rate) {
     params = {warp: (fade_val == 0 ? warp_min : warp_med), fadein: fade_val};
 
     if (!sessionStorage.getItem('t') || pageWasReloaded()) {
@@ -127,7 +127,7 @@ function initParams(fade_val) {
 
     function increment_t () {
         $(params).animate({t: params.t + 500}, {
-            duration: 10000,
+            duration: t_rate,
             easing: 'linear',
             complete: increment_t
         });

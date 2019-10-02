@@ -8,7 +8,7 @@
 
 
 window.onpageshow = function () {
-    initParams(0);
+    initParams(0, 10000);
 
     $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {
@@ -21,7 +21,6 @@ window.onpageshow = function () {
             queue: false,
             duration: 3400,
             complete: function () {
-                sessionStorage.setItem('t', params.t);
                 sessionStorage.setItem('fancyfade', true);
                 window.location.href = './blog.html';
             }

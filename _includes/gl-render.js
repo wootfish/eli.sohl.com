@@ -103,6 +103,10 @@ function main() {
             tiler.fillStyle = tiler.createPattern(gl.canvas, 'repeat');
             tiler.fillRect(0, 0, tiler.canvas.width, tiler.canvas.height);
         }
+
+        // save the last value of t, so the next rendered frame can pick up
+        // from here even if there's a page load event in between
+        sessionStorage.setItem('t', params.t);
     }
 
     requestAnimationFrame(full_render);

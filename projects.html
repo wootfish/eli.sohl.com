@@ -3,6 +3,13 @@ layout: main
 ---
 
 
+<script>
+function do_toggle(div_id) {
+    $(div_id).toggle({duration: 340, easing: 'linear'});
+}
+</script>
+
+
 <div class="contentbox contents">
     <h1 class="display-1 breakword">projects</h1>
     <hr>
@@ -12,6 +19,110 @@ layout: main
         </span>
         {% include switcher.html %}
     </div>
+
     <hr>
-    <p>theseus, light show stuff, whatever else</p>
+
+    <h2 class="project-row" onclick="do_toggle('#theseus-details');">
+        theseus <span>+</span>
+    </h2>
+    <div id="theseus-details" class="display-none">
+        <p>
+        I've been working on Theseus <a href="{% post_url 2017-02-17-theseus-robust-system-for-preserving %}">since early 2017</a>.
+        The goal: To create a robust system for sharing and preserving
+        research. The project was first conceived as a response to governmental
+        attempts at censorship of climate change research.
+        </p>
+
+        <p>
+        The system consists of two parts: The actual application described
+        above - <b>Theseus</b> - and a distributed hash table (DHT) on top of
+        which the application is built.
+        </p>
+
+        <p>
+        The DHT is a very simple distributed database that the application uses
+        to form peer-to-peer connections and share data.
+        </p>
+
+        <p>
+        In theory, any number of DHT algorithms could be used, but I'm making a
+        new one. The working name for it is <b>Theseus DHT</b>. The motivation
+        for this extra effort is to try and improve on the state of the art for
+        defending against certain categories of attack, particularly Sybil
+        attacks.
+        </p>
+
+        <p>
+        The implementation is not yet complete, but the theoretical results
+        achieved so far (the best of which I'm still in the process of writing
+        up) are striking.
+        </p>
+
+        <p>
+        There's a lot about Theseus and Theseus DHT on my blog.
+        <a href="/tags/theseus.html">Here's a list of those posts</a>.
+        Bear in mind that not everything in them is up to date.
+        </p>
+    </div>
+
+    <hr>
+
+    <h2 class="project-row" onclick="do_toggle('#visuals-details');">
+        visuals <span>+</span>
+    </h2>
+    <div id="visuals-details" class="display-none">
+        watch this space :)
+    </div>
+
+    <hr>
+
+    <h2 class="project-row" onclick="do_toggle('#cryptopals-details');">
+        cryptopals <span>+</span>
+    </h2>
+    <div id="cryptopals-details" class="display-none">
+        <p>
+        These are a series of cryptography challenges written by the folks at
+        Matasano Security (which I believe has since been absorbed by NCC
+        Group). Sets 1 through 7 are available
+        <a href="https://cryptopals.com">here</a>, and you can check out Set 8
+        <a href="https://toadstyle.org/cryptopals/">here</a>. They start out
+        easy enough, but the later sets have a few genuinely tricky problems
+        hidden in them.
+        </p>
+
+        <p>
+        You can check out my solutions
+        <a href="https://github.com/wootfish/cryptopals">on Github</a>.
+        I've worked through sets 1 through 7 and plan on taking on set 8 soon.
+        </p>
+
+        <p>
+        Back in the day I was very into <a href="https://projecteuler.net">Project Euler</a>
+        (I think I'm still in the <a href="https://projecteuler.net/profile/wootfish.png">99.4th percentile or so</a>
+        on there after half a decade of inactivity). I mention that because to
+        me, a lot of what makes Project Euler fun can also be found in
+        Cryptopals. It's a different and more interesting sort of programming,
+        and it's just so satisfying when you get it right.
+        </p>
+    </div>
+
+    <hr>
+
+    <h2 class="project-row" onclick="do_toggle('#book-notes-details');">
+        book notes <span>+</span>
+    </h2>
+    <div id="book-notes-details" class="display-none">
+        <p>
+        I only take the time to write these about books I've really enjoyed;
+        as a result, these posts are less about offering deep criticism or
+        reviews and more about just trying to share some of what I like or find
+        compelling in the books I feature.
+        </p>
+
+        <p>
+        You can find a collection of these posts <a href="/tags/book-notes.html">here</a>.
+        </p>
+    </div>
+
+    <hr>
 </div>

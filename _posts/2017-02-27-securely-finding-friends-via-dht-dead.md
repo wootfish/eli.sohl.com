@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Securely Finding Friends via DHT Dead Drops
+tags: [theseus]
 ---
 
 > Previously:<br/>

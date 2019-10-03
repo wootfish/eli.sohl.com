@@ -2,6 +2,7 @@
 layout: post
 title: Distributed Search in Theseus
 mathjax: true
+tags: [theseus]
 ---
 
 > Previously:<br/>

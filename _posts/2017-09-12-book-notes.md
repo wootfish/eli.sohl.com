@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Book Notes
+tags: [book-notes]
 ---
 
 Post-graduation, I've been finding it easier to carve out free time. Some of this I've spent on Theseus and other projects. More of it I've spent reading. It's important for technical people to retain some analog hobbies.

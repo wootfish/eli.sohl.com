@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Resisting Man-in-the-Middle Attacks in P2P Networks
+tags: [theseus]
 ---
 
 > Previously:<br/>

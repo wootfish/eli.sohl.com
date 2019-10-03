@@ -2,6 +2,7 @@
 layout: post
 title: Reclaiming Cyberspace
 description: At first, no one really knew what the internet was for. We knew what it was, and people were coming up with all sorts of uses for it -- bulletin boards, instant messaging, mailing lists -- but there was this general sense that the internet's potential went far beyond any of that. Bigger things were coming; it's just that no one quite knew what they would look like. To capture this sense of excited uncertainty, sci-fi authors of the '80s and '90s leaned heavily on the idea of cyberspace.
+tags: [theseus]
 ---
 
 

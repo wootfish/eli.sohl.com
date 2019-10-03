@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 'Theseus: A Robust System for Preserving and Sharing Research'
+tags: [theseus]
 ---
 
 <hr class="bloghr" />

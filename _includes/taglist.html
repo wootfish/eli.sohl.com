@@ -1,0 +1,12 @@
+Tags:
+{% for tag in page.tags %}
+<span class="mx-1">
+{% if tag == "theseus" %}
+<a href="/tags/theseus.html">theseus</a>
+{% elsif tag == "book-notes" %}
+<a href="/tags/book-notes.html">book-notes</a>
+{% else %}
+{{ tag }}
+{% endif %}
+</span>
+{% endfor %}

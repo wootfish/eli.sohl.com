@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Message Encryption in Theseus
+tags: [theseus]
 ---
 
 > Previously:<br/>

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Book Notes
+tags: [book-notes]
 ---
 
 Over this past couple years I've been lucky enough to find time in between classes and research to actually read for _fun_. I thought it might be even more fun to write a little on different books that've left strong impressions on me. It's nice to keep a record, but maybe I can also share some of the enjoyment I've gotten from them.

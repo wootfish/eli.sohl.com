@@ -1,0 +1,30 @@
+---
+layout: main
+---
+
+<div class="contentbox contents">
+    <h1 class="display-1 breakword">contact</h1>
+
+    <hr>
+
+    <div class="overflow-hidden">
+        <span>
+            <a href="/blog.html">blog</a> | <a href="/projects.html">projects</a> | <a href="/contact.html">contact</a>
+        </span>
+        {% include switcher.html %}
+    </div>
+
+    <hr>
+    <br>
+    <h1>Posts tagged "book-notes":</h1>
+    <br>
+
+    {% for post in site.tags.book-notes %}
+    <div>
+        <h6 class="mb-0">{{ post.date | date: "%-d %B %Y" }}</h6>
+        <h2><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h2>
+    </div>
+    <br>
+    {% endfor %}
+
+</div>

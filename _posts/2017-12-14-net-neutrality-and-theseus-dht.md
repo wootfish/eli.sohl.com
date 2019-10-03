@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Net Neutrality and Theseus DHT
+tags: [theseus]
 ---
 
 The design for Theseus, as it stands, consists of a distributed hash table (DHT), a torrent client, a distributed search algorithm, and a web-based UI. Until now, I'd been developing everything as one monolithic entity. The purpose of this blog post is to make two announcements: first, that I'm going to be breaking out Theseus DHT into a stand-alone software package; second, that I'm setting a hard release date for this package: New Year's Eve.

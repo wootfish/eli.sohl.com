@@ -1,6 +1,7 @@
 ---
 layout: post
 title: The State of Theseus, One Month In
+tags: [theseus]
 ---
 
 For just over a month now I've been working nonstop on one part after another of my current pet project, Theseus. Things are coming along very well so far -- in fact, I've surprised myself with the amount of progress I've been able to make in such a short time.

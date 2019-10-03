@@ -3,10 +3,6 @@ layout: post
 title: 'Theseus: A Robust System for Preserving and Sharing Research'
 ---
 
-> Suddenly, in the space of a few weeks, I discovered what appeared to be definitive answers to the problems which had baffled me for years... I went about saying to myself that now at last I had done something worth doing, and I had the feeling that I must be careful not to be run over in the street before I had written it down.
-
-_The Autobiography of Bertrand Russell_
-
 <hr class="bloghr" />
 
 # The Promise

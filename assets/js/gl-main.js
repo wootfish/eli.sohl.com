@@ -8,7 +8,7 @@
 
 
 window.onpageshow = function () {
-    initParams(1, 34000);
+    initParams(1, 42000);
 
     if (sessionStorage.getItem('fancyfade') == 'true') {
         $(".contentbox").fadeIn(5100);

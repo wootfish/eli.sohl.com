@@ -12,14 +12,14 @@ window.onpageshow = function () {
 
     $("#greeting").fadeIn(170, "linear");
     $("#enter").click(function () {
-        $("#greeting").fadeOut(2900);
+        $("#greeting").fadeOut(3200);
         $("#enter").fadeOut(2600);
         $(params).animate({
             warp: warp_med,
             fadein: 1
         }, {
             queue: false,
-            duration: 3800,
+            duration: 420*10,
             complete: function () {
                 sessionStorage.setItem('fancyfade', true);
                 window.location.href = './blog.html';

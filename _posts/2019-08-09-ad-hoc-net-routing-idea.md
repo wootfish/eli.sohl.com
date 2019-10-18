@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Idea Sketch: Low-Overhead Routing for Ad-Hoc Mesh Networks"
+title: "Low-Overhead Routing for Ad-Hoc Mesh Networks"
 mathjax: true
 ---
 
@@ -34,9 +34,9 @@ Let's start by doing away with any idea of assigning globally unique identifiers
 
 But how do we establish connections without specifying who we're connecting to?
 
-Assign[^1] randomly distributed fixed-length addresses to peers, with no intimations at uniqueness. Each peer might even have several addresses. These are less about _identifying_ peers and more about peers _claiming responsibility_ for certain regions in a shared, co-owned address space (somewhat like node IDs in Kademlia).
+Start by assigning[^1] randomly distributed fixed-length addresses to peers, with no intimations at uniqueness. Each peer might even have several addresses. These are less about _identifying_ peers and more about peers _claiming responsibility_ for certain regions in a shared, co-owned address space (somewhat like node IDs in Kademlia).
 
-[^1]: Technically "assign" is a loaded word here. The implication of address assignments coming from a central authority is not intended. Ideally peers' addresses would come from some sort of trapdoor proof-of-work function (possibly after hashing its output, if necessary). Peer addresses should somehow be made to expire after a fixed window of time, in order to complicate address squatting.
+[^1]: Technically "assigning" is a loaded word here. The implication of address assignments coming from a central authority is not intended. Ideally, peers' addresses would come from some sort of trapdoor proof-of-work function (possibly after hashing its output, if necessary). Peer addresses should somehow be made to expire after a fixed window of time, in order to complicate address squatting.
 
 Define distance between addresses via the `xor` metric, and endow peers with responsibility for the addresses closest to their own local addresses by `xor`. Every peer serves as an introduction point for any target address close to their own address.
 

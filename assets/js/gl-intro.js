@@ -19,7 +19,7 @@ window.onpageshow = function () {
             fadein: 1
         }, {
             queue: false,
-            duration: 6800,
+            duration: 5100,
             complete: function () {
                 sessionStorage.setItem('fancyfade', true);
                 window.location.href = './blog.html';

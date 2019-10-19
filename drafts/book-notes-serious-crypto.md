@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Book Notes: Serious Cryptography"
+tags: [book-notes]
 ---
 
 ![Cover Image](/assets/img/serious-crypto.png)

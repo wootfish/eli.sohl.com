@@ -1,5 +1,4 @@
 title: eli dot sohl dot com
-highlighter: rouge
 sass:
     sass_dir: assets/css
     style: compressed

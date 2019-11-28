@@ -6,7 +6,8 @@ title: Theseus Revamp
 
 I am considering some changes to the design for Theseus.
 
-The big one is Tor. I've always been committed to supporting Tor, but now I am considering _requiring_ it.
+The big one is Tor. I've always been committed to supporting Tor, but now I am considering _requiring_ it. Peers would
+make themselves available as onion services, and all peer connections would be made through Tor.
 
 Tor gives us NAT traversal for free. This is the killer feature, since reliable TCP NAT traversal is nontrivial.[^1]
 
@@ -21,7 +22,14 @@ An alternative is to simply route all traffic through our helpful third party; t
 network can offer us. Peers can simply establish themselves as Tor onion services, listen for connections through the
 network, and establish connections through Tor as well.
 
-I'd like to take a moment to underline how vital NAT traversal is for a peer-to-peer system like Theseus.
+I'd like to take a moment to underline how vital NAT traversal is for a peer-to-peer system like Theseus. We rely on
+each peer to help maintain the health of the network. If peers can't receive incoming connections then their ability to
+perform this duty is severely limited, because no one can reach out to them to request information. They are only able
+to offer information over outgoing connections. Worse, the peers at the other ends of those outgoing connections have no
+way of knowing that the peer they're talking to is otherwise inaccessible, so they could add these peers to their
+routing tables and degrade the quality of the table's information. The impact would be significant if (as in the modern
+internet) the great majority of peers are behind NAT. Thus the integrity of the network depends on having a reliable
+method for NAT traversal. Onion services provide this.
 
 Of course, Tor provides other benefits in addition to NAT traversal. Privacy is the most obvious one. I'm not sure much
 needs to be said on that: the second of five promises made [in my original post announcing Theseus](2017-02-17-theseus-robust-system-for-preserving)
@@ -32,6 +40,28 @@ best way to deliver on it is through Tor.
 Those are the high-level benefits. They are unsolved problems with Theseus that would be solved by always using Tor.
 There are also solved problems for which more elegant solutions would be available if Tor is in use.
 
+Most notably, communications with onion services are end-to-end encrypted. This stands in contrast to normal Tor use,
+where traffic from Tor exit nodes is sent as-is and an additional application-level protocol like TLS is required to
+ensure end-to-end encryption. With onion services, all communication between the service operator and the service user
+takes place within the Tor network, which both peers have encrypted connections to; peers' initial handshake establishes
+a further shared secret and uses one-way authentication to prevent man-in-the-middle attacks on its negotiation.
+Subsequent messages are then end-to-end encrypted and authenticated using a key derived from this shared secret. For
+details on the handshake, see [here](https://gitweb.torproject.org/torspec.git/tree/rend-spec-v3.txt#n1775) and
+[here](https://gitweb.torproject.org/torspec.git/tree/tor-spec.txt#n1102).
+
+This is fantastic. Up to this point, encryption for Theseus has been specified through the Noise Protocol Framework. I
+am still a huge fan of Noise, but I think it may not be necessary given the level of security automatically provided by
+onion services. Dropping Noise as a Theseus component would permit _substantial_ simplifications to the Theseus
+codebase.
+
+The major drawback to dropping Noise would be a loss of flexibility. Noise offers out-of-the-box support for mutual
+authentication, rekeying, and other attractive features. Mutual authentication in particular is necessary for confirming
+that a peer owns whatever onion address they claim to own.
+
+Some sort of challenge-response protocol could be used here; this seems less elegant than Noise's solution of simply
+mixing ECDH secrets into the session's key material, but it would likely still work if properly designed.
+
+<!--
 Some context: Previous drafts of the Theseus DHT protocol have included the idea of a _peer key_ which is used in peers'
 initial Noise handshake.[^2] The motivation for these is to ensure that some non-ephemeral public key material is
 involved in peers' key negotiation in order to complicate man-in-the-middle attacks. The peer key is mixed into the
@@ -55,6 +85,7 @@ key.[^5]
 
 Deriving the peer key from the peer's contact info frees us from having to transmit these values separately. This
 simplifies both the protocol spec and its implementation considerably.
+-->
 
 Other benefits of using Tor exclusively: Sharing contact info is simpler; offering long-term points of introduction to
 the network is easier than it would be if most of our peers were listening on dynamically allocated IP addresses;

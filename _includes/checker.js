@@ -26,7 +26,7 @@ function disableFancy() {
 }
 
 
-$("body").removeClass("nojs")
+document.body.classList.remove("nojs");
 if (checkFancyEnabled()) {
     $("body").removeClass("nofancy")
 }

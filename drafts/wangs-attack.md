@@ -16,24 +16,24 @@ significance, and it is included in [set 7 of the Cryptopals Challenges](https:/
 I've been working through Cryptopals lately and I found this to be, without a doubt, the hardest and most rewarding
 challenge in the first 7 sets.
 
-Two reasons why: first, the attack is tricky to implement; second, it is tricky to _understand_. [The original
-paper](https://link.springer.com/content/pdf/10.1007%2F11426639_1.pdf) provides only a loose sketch of the attack,
-accompanied by some example collisions to show that it works. To work out the details, you have to read between the
-lines of a challenging paper which (for English speakers) is only available in translation.
+The attack is hard for two reasons: first, it is tricky to implement; second, it is tricky to _understand_. [The
+original paper](https://link.springer.com/content/pdf/10.1007%2F11426639_1.pdf) provides only a loose sketch of the
+attack, accompanied by some example collisions to show that it works. To work out the details, you have to read between
+the lines of a challenging paper which (for English speakers) is only available in translation.
 
 Eventually I gave in and started searching for blog posts on the subject. The landscape is surprisingly sparse. There
 are a few posts, but they left me with a lot of unanswered questions. To actually write the attack, I ended up having to
-forego these and instead just retrace the paper's steps as much as possible, filling in the blanks as I went.
+forego these and instead retrace the paper's steps as much as possible, filling in the blanks as I went.
 
 This is written to be the post I wish I'd found. I hope someone finds it useful. If it isn't detailed enough for you,
-fly out to Seattle and we'll go through it over beers.
+come on out to Seattle and we'll go through it over beers.
 
 
 ## The Basic Idea
 
-Wang et al. frame this as a _differential attack_, meaning they are interested in collisions in pairs of messages where
-the messages also `xor` to some fixed constant. That is to say, we want messages $$m_1, m_2$$ such that $$H(m_1) =
-H(m_2)$$ and $$m_1 \oplus m_2 = D$$ for some fixed differential $$D$$.
+Wang et al. frame this as a _differential attack_, meaning they are interested in finding collisions between pairs of
+messages where the messages also `xor` to some fixed constant. That is to say, we want messages $$m_1, m_2$$ such that
+$$H(m_1) = H(m_2)$$ and $$m_1 \oplus m_2 = D$$ for some fixed differential $$D$$.
 
 This might sound like adding an unnecessary constraint, but it gives us a powerful way of reframing the problem. Note
 that this definition makes $$m_2$$ fully dependent on $$m_1$$ and $$D$$, so for the attack to succeed it suffices to
@@ -136,26 +136,27 @@ a = r3(a,b,c,d,1,3,m); d = r3(d,a,b,c, 9,9,m); c = r3(c,d,a,b,5,11,m); b = r3(b,
 a = r3(a,b,c,d,3,3,m); d = r3(d,a,b,c,11,9,m); c = r3(c,d,a,b,7,11,m); b = r3(b,c,d,a,15,15,m)
 ```
 
-This may look pretty arbitrary. That's fine; I'm not going to try to convince you that it isn't. Much like the round
-functions, we don't really need to concern ourselves with the motivations behind the design here. The main reason I
-included this code is because it shows exactly how a message block is mixed into the hash function's state.
+This may look pretty arbitrary. That's fine; I'm not going to try to convince you that it isn't. Much like with the
+round functions, we don't need to concern ourselves with the motivations behind this design. The main reason I included
+this code is because it shows exactly how a message block is mixed into the hash function's state.
 
-Recall that the first integer argument to each of these functions is the index of the message chunk within the message
-block. Note how each chunk is used exactly once per round, and how the order of use varies between rounds.
+Recall that the first integer argument to each of these functions is the index of the message chunk it uses. Note how
+each chunk is used exactly once per round, and how the order of use varies between rounds.
 
-In the code block above, intermediate states are grouped into rows of four. This mimics the paper's notation, which
-denotes e.g. the first state on the first row as $$a_1$$, the fourth row's third intermediate state as $$c_4$$, and so
-on. $$a_0, b_0, c_0, d_0$$ denote the values to which the four state variables `a, b, c, d` are initialized.
+In the code block above, intermediate states are grouped into rows of four. This looks nice, and it also mimics the
+paper's notation. This notation denotes e.g. the first state on the first row as $$a_1$$, the third state on the fourth
+row as $$c_4$$, and so on. $$a_0, b_0, c_0, d_0$$ denote the values to which the four state variables `a, b, c, d` are
+initialized.
 
-The paper extends this notation to let us refer to individual bits within states: for instance, $$c_{4,1}$$ refers
-specifically to $$c_4$$'s least significant bit, $$d_{2,14}$$ refers to $$d_2$$'s 14th bit counting from the
-least significant end, $$b_{9,32}$$ is $$b_9$$'s 32nd-least significant bit (i.e. its most significant bit), and so on.
+The paper uses an extension of this notation to denote individual bits within states: for instance, $$c_{4,1}$$ refers
+specifically to $$c_4$$'s least significant bit, $$d_{2,14}$$ refers to $$d_2$$'s 14th bit counting from the least
+significant end, $$b_{9,32}$$ is $$b_9$$'s 32nd-least significant bit (i.e. its most significant bit), and so on.
 
 This notation is important because it is used to express all of the paper's constraints on MD4's intermediate states.
-These form the core of the attack.
+These are central to the attack.
 
-Note that both subscripts are 1-indexed -- this is something for implementers to look out for as a potential source of
-off-by-one errors.
+Note that both subscripts in this notation are 1-indexed -- this is something for implementers to look out for as a
+potential source of off-by-one errors.
 
 A quick note on terminology: The original paper prefers the term _conditions_ over _constraints_ when discussing the
 rules it defines for MD4's intermediate states. _Conditions_ is more in line with the attack's theoretical
@@ -166,7 +167,7 @@ attack. This post uses the two terms more or less interchangeably.
 ## The Attack
 
 The core of Wang's attack is a large list of constraints on the hash function's intermediate states. Despite what the
-paper says, these do not quite form a set of sufficient conditions -- but do they come close.[^3] Here is the relevant
+paper says, these do not quite form a set of sufficient conditions -- but they do come close.[^3] Here is the relevant
 table (from page 16 of the paper):
 
 [^3]: Subsequent research has identified the conditions missing from Wang et al.'s paper, as well as other differentials which utilize smaller sets of constraints (e.g. [Yu Sasaki et al., 2007](https://www.iacr.org/archive/fse2007/45930331/45930331.pdf)). This subsequent research is worth studying in their own right, but it is out of scope for this post.
@@ -184,36 +185,35 @@ $$2^{-25}$$. If _all_ the conditions are satisfied, then "the probability can be
 sounds pretty good, but don't get too excited just yet.
 
 If you'll grant me license to editorialize for a moment: The unusually loose phrasing of this probability's value seems
-(to me) to imply that Wang et al. were unable to directly measure the probability, suggesting that even they may not
-have found a methodology for enforcing _all_ of their conditions. They likely got close, but how close is anyone's
-guess. With that in mind, let's see how close we can get.[^4]
+(to me) to imply that Wang et al. were unable to directly measure it, suggesting that even they may not have found a
+methodology for enforcing _all_ of their conditions. They likely got close, but how close is anyone's guess.
 
-The idea for the whole attack is something like this:
+With that in mind, let's see how close we can get. The idea for the whole attack is something like this:
 
-[^4]: How close? I'm measuring a success probability of about $$2^{-17.3}$$ using the techniques described here. With my Python implementation running in a Qubes VM on my ThinkPad T420s, this shakes out to about one collision per 20 seconds.
+
 
 Generate a random input message; then, compute all the intermediate states generated by hashing this message; in the
 process of computing these states, derive and perform the necessary message modifications for these states to satisfy as
 many as possible of the conditions in Table 6.
 
-Wang et al. simply call this "message modification", but let's have a little more fun and refer to it as _massaging the
-message_. Successfully carrying out the attack means managing a meticulous message massage.
+Wang et al. simply call this "message modification", but let's add a little flavor and refer to it as _massaging the
+message_, or simply conducting a _message massage_.
 
-After massaging the message, our odds of finding a collision between the message and its modified version are very good.
-The more conditions we are able to satisfy, the higher the probability of success.
+After massaging the message, our odds of finding a collision between the message and its modified version are greatly
+increased. The more conditions we are able to satisfy, the higher the probability of success.
 
 We'll start by massaging the message so that all the first-round conditions are met; then, we'll use a somewhat more
-complex procedure to enforce as many of the second-round conditions as we can manage. We won't even bother with the
-third-round conditions - you'll see why when we get to the second round.
+complex procedure to enforce a few of the second-round conditions. We won't even bother with the third-round conditions
+-- you'll see why when we get to the second round.
 
 
 #### Enforcing Constraints
 
-Since our constraints all concern the values of specific bits within 32-bit integers, we can easily enforce them through
-bitwise operations.
+Since all our constraints pertain to specific bits within 32-bit integers, we can easily enforce them through bitwise
+operations.
 
-Frankly, I'd hope you can figure this part out on your own. That said, there are a couple different reasonable ways of
-doing it, and the choice you make can have a big impact on performance, so let's take a moment to go over the options.
+Frankly, I'd hope you can figure this part out on your own. That said, the way you choose to implement it can have a big
+impact on performance, so let's take a moment to go over the options.
 
 The first option is to enforce each constraint individually. This is less performant than the other option we'll be
 looking at, but it is also arguably more straightforward.
@@ -258,11 +258,11 @@ for i in indices:
     a = (a & mask_2) | (b & mask_1)
 ```
 
-All of these are perfectly reasonable, but we can do better. Each of these solutions involves a loop over the list of
+All of these are perfectly reasonable, but we can do better. Each of these solutions involves a loop over a list of
 indices. This loop would be executed once per state processed. Is this necessary? Not really. These loops generate masks
 within them and carry out their operations using those masks; we can optimize by precomputing and consolidating these
-masks, storing them, then using these stored values to check or enforce each set of constraints. The result is a
-non-branching one-liner for each operation. Check it out:
+masks, storing them, then using these stored values to check or enforce each set of constraints. The result, at the cost
+of a tiny bit of prep work, is a non-branching one-liner for each operation. Check it out:
 
 ```python
 class Constraint:
@@ -297,8 +297,8 @@ class Eqs(Constraint):
         return (word_1 & self.mask_inv) | (word_2 & self.mask)
 ```
 
-This is no small detail. Getting rid of loops is a big deal for performance. In my implementation, switching from
-the first method here to the second method improved overall performance by 25%!
+This is no small detail -- in my implementation, switching from the first method here to the second method improved
+overall performance by 25%!
 
 We can describe all the round 1 constraints in terms of these `Zeros`, `Ones`, and `Eqs` objects. For the sake of
 completeness, here's what that might look like:
@@ -321,6 +321,8 @@ round_1 = [[Eqs(6)],
            [Zeros(26, 28, 29), Ones(22, 25), Eqs(18)],
            [Zeros(18, 29), Ones(25, 26, 28)]]
 ```
+
+This gives us almost everything we need for round 1. Round 2 is a little more involved... but we'll get to that later.
 
 
 #### Massaging the Message: Round One
@@ -364,11 +366,27 @@ $$
 
 How easy is that? Right? Not bad at all!
 
-We can follow this process to straightforwardly enforce all our conditions on $$a_1, d_1, c_1, ..., b_4$$.
+We can follow this process to enforce all our conditions on $$a_1, d_1, c_1, ..., b_4$$.
 
-With a success probability of roughly $$2^{-25}$$, this brings us to a point where the attack is actually practical.
-This is a good time to test your attack code. For reference, with just these constraints my Python implementation was
-finding about one collision per day.
+We can even define a modified round function that automatically makes the required changes to each state's corresponding
+message block at the same time as computing the states:
+
+```python
+def f(a, b, c, d, k, s, m):
+    # serves as normal round function, but also adjusts m as it goes
+    a_new = r1(a, b, c, d, k, s, m)
+    for suite in round_1[k]:
+        a_new = suite.massage(a_new, b)
+    m[k] = (rrot(a_new, s) - a - F(b, c, d)) % (1 << 32)
+    return a_new
+```
+
+This allows us to implement the round 1 message massage by simply copy-pasting the MD4 round 1 block from above and
+swapping out `r1` for `f`.
+
+This brings us to a success probability of roughly $$2^{-25}$$, at which point the attack is actually practical. This is
+a good time to test your attack code. For reference, with just these constraints my Python implementation was finding
+about one collision per day.
 
 That's not bad, but we can do way better - at the cost of some added complexity.
 
@@ -398,39 +416,38 @@ The first step is shown in the leftmost section of the diagram, where $$a_5$$ is
 $$m_1$$ is modified to produce the new value of $$a_5$$. This change also alters the value of a previous state ($$a_1$$)
 and a later state ($$a_9$$).
 
-We don't really care if $$a_9$$ is changed, since we haven't massaged that state.[^5] The change to $$a_1$$, however,
-will have to be dealt with.
+We don't really care if $$a_9$$ changes, since we haven't massaged that state.[^4] The change to $$a_1$$, however, will
+have to be dealt with.
 
-[^5]: In fact, no constraints are specified for $$a_9$$ and so we won't be massaging it at all.
+[^4]: In fact, no constraints are specified for $$a_9$$ and so we won't be massaging it at all.
 
 First, there is the possibility that our change to $$m_1$$ modified $$a_1$$ in such a way that our conditions on $$a_1$$
-are no longer met. Some second-round conditions are more likely than others to mess up first-round conditions; for
-whatever reason, the conditions for $$a_5$$ seem fairly stable. If we _were_ to find our first-round constraints
-invalidated by our second-round message massage, the simplest solution (though not the only one, as we will see when we
-get to $$d_5$$) is to just start over with a new message and hope for better luck.[^6]
+are no longer satisfied. Some second-round conditions are more likely than others to mess up first-round conditions; for
+whatever reason, the conditions for $$a_5$$ seem to be stable.
 
-[^6]: I'm sure there are other, more complex methods of ensuring sets of conditions from two different rounds are simultaneously met; this is something I haven't looked into much yet and is a potential area for improvement in my current implementation of the attack. For instance, one simple approach would be to randomly generate new message blocks, massage one set of conditions into them, check them against the other set, and repeat this process until the check passes.
+If we _were_ to find our first-round constraints invalidated by our second-round message massage, that would be a big
+problem. See the sections on $$d_5$$ and $$a_6$$ for a couple ideas of what effective solutions might look like.
 
-If the conditions on $$a_1$$ are still satisfied, then we can move on to the next step: containing the disruption caused
-by changing $$a_1$$'s value. This is illustrated in the middle section of the diagram. $$a_1$$, shown in green, is in a
+If the conditions on $$a_1$$ are still satisfied, we can move on to the next step: containing the disruption caused by
+changing $$a_1$$'s value. This is illustrated in the middle section of the diagram. $$a_1$$, shown in green, is in a
 known-good state; its direct dependencies $$d_1, c_1, b_1, a_2$$ are highlighted in yellow to indicate that they have
 been disrupted by the change to $$a_1$$.
 
-Recall that we have a closed-form equation for deriving the message modification necessary to set any intermediate state
-to any value. If we've saved the old values of $$d_1, c_1, b_1, a_2$$, we can just re-evaluate that equation with the
-new value of $$a_1$$ to derive new message blocks $$m_2, m_3, m_4, m_5$$ which will give rise to the old values of
-$$d_1, c_1, b_1, a_2$$. Since these are $$a_1$$'s only direct dependencies, if the values of these four states don't
-change, then nothing after them in round 1 will change either.
+Recall that we can derive the message modification necessary to set any intermediate state to any value (albeit not
+without side effects). If we've saved the old values of $$d_1, c_1, b_1, a_2$$, we can just re-evaluate our equation
+with the new value of $$a_1$$ to derive new message blocks $$m_2, m_3, m_4, m_5$$ which will produce the old values of
+$$d_1, c_1, b_1, a_2$$. Since these are $$a_1$$'s only direct dependencies, preventing them from changing prevents
+each subsequent state from changing as well.
 
 Of course, making these changes to $$m_2, m_3, m_4, m_5$$ will create an even greater ripple effect, disrupting other
 states in round 2. This is shown in the third part of the diagram, where $$d_5, a_6, a_7, a_8$$ are highlighted to show
 that their values have changed (changes to round 3 states are omitted to avoid clutter).
 
-The critical thing to notice is that all of these states occur _after_ the state we are concerned with massaging
-($$a_5$$). Thus, we've managed to contain the impact from modifying $$a_5$$ so that the only altered states are ones
-where no conditions have yet been enforced and therefore none of our work can be disrupted.
+The critical thing here is that all of these states occur _after_ the state we're concerned with massaging ($$a_5$$).
+Thus we have managed to contain the impact from modifying $$a_5$$ so that the only altered states are ones where no
+constraints have yet been enforced, and therefore none of our work can be disrupted.
 
-Well... almost none. There is still a chance of disrupting our _equality constraints_. Take, for example, the constraint
+Well... almost none. There is still a chance of messing up our _equality constraints_. Take, for example, the constraint
 $$a_{2,14} = b_{1,14}$$.
 
 Suppose we update $$a_{2}$$, and suppose further that we end up changing $$a_{2,19}$$ in the process. Afterwards, as
@@ -442,29 +459,27 @@ state's equality constraints, we have to make sure that these equalities still h
 As it happens, our modifications to $$a_{2}$$ don't tend to disrupt $$a_{2,19}$$. When we move on to massaging $$d_5$$
 and $$a_6$$, though, we will have to take this issue into consideration.
 
-You can read my implementation of the $$a_5$$ massage step [here (TODO TODO TODO)](TODO)
-
 
 #### Massaging the Message: $$d_5$$
 
 Moving right along: Our next task is to massage $$d_5$$. This state takes $$m_4$$ as input, and $$m_4$$ is also used by
 $$a_2$$.
 
-The considerations that we discussed in the context of $$a_5$$ apply here as well, but we have an additional challenge
-to overcome: our changes to $$d_5$$ have a tendency to disrupt our earlier changes to $$a_2$$. This cuts both ways: if
-we re-massage $$a_2$$, our changes are also likely to break the constraints for $$d_5$$. Our typical method of
-satisfying constraints can get either $$a_2$$ or $$d_5$$ to a known-good state, but it is very unlikely to take care of
-both of them at once.
+The considerations discussed above in the context of $$a_5$$ apply here as well, but we have an additional challenge to
+overcome: our changes to $$d_5$$ have a tendency to disrupt our earlier changes to $$a_2$$. This cuts both ways: if we
+re-massage $$a_2$$, our changes are also likely to break the constraints for $$d_5$$. The method we have been using thus
+far for satisfying sets of constraints can get either $$a_2$$ or $$d_5$$ to a known-good state, but it is very unlikely
+to take care of both of them at once.
 
 There are several potential solutions here.
 
-If we're truly lazy, we could try just running a loop that starts by randomizing the message chunk, then generates the
-corresponding states $$a_2$$ and $$d_5$$, checks whether the states' constraints are satisfied, and exits only if they
-are. This works, but it is not fast or elegant.
+If we're truly lazy, the low-effort solution is to try just running a loop that starts by randomizing the message chunk,
+then generates the corresponding states $$a_2$$ and $$d_5$$, checks whether the states' constraints are satisfied, and
+exits only if they are. This works, but it is not fast or elegant.
 
 We could try enforcing our conditions on one state, then compute the resulting value of the other state, enforce our
 conditions on that state, compute the resulting new value of the first state, and go back and forth until both are
-satisfied. It would be nice if this worked reliably; unfortunately, it doesn't.
+satisfied. It would be nice if this worked reliably... but it doesn't.
 
 My preferred solution is to _combine_ both sets of constraints. We will find a way of translating both of them from
 constraints on _states_ to constraints on _the corresponding message chunk itself_. This requires some careful
@@ -485,7 +500,7 @@ def r2(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
 
 The values of `a, b, c, d` come from previous states, so we can treat them as constant. This allows us to simplify the
 round functions somewhat. Let `N_1` and `N_2` denote consolidated constants for `r1` and `r2`, respectively. We can
-then rewrite our intermediate states in terms of these:
+then rewrite the formulae for our intermediate states like so:
 
 $$
 \begin{align}
@@ -529,8 +544,10 @@ $$
 \end{align}
 $$
 
-As luck would have it, all of these constraints translate to different indices. If this were not the case then we would
-have a bit of an awkward situation, but as things stand it is straightforward to enforce all of these at once.
+As luck would have it, all of these constraints translate to distinct indices. If this were not the case then we would
+have a bit of an awkward situation,[^5] but as things stand it is straightforward to enforce all of these at once.
+
+[^5]: For instance, if we had (say) the constraints $$(N_1 + m_4)_5 = 0$$ and $$(N_2 + m_4)_5 = 0$$, and we also had $$N_{1,5} \ne N_{2,5}$$, then we would not be able to satisfy both constraints just by changing $$m_{4,5}$$. We could try flipping a lower-order bit in $$m_4$$ -- for example, if we further note that $$N_{1,4} \ne N_{2,4}$$ -- meaning that precisely one of those bits is 1 -- then setting $$m_{4,4} = 1$$ would induce a carry on precisely one of $$N_1, N_2$$, zeroing the 1 bit at index 5 and allowing the constraint to be enforced. This method is somewhat involved, and it does not work in all cases. I have not used it in my implementation.
 
 Our general methodology will be to work from low-order bits upward. For each bit, we will note the value it has and the
 value we want it to have. If the constraint is already satisfied, we do nothing; otherwise, we flip the corresponding
@@ -544,7 +561,6 @@ initial value could just as easily be any other constant or even `random.getrand
 of simplicity and determinism.
 
 ```python
-######## d5
 N_1 = (a_1 + F(b_1, c_1, d_1)) % MODULUS
 N_2 = (d_4 + G(a_5, b_4, c_4) + 0x5A827999) % MODULUS
 b_rot = rrot(b_4, 5)
@@ -579,52 +595,26 @@ a_2 = r1(a_1, b_1, c_1, d_1, 4, 3, m)
 This suffices to satisfy our constraints on $$d_5$$.
 
 
+#### Massaging the Message: $$a_6$$
 
+These later constraints are gradually harder and harder to enforce. The last constraint my implementation enforces is
+$$a_{6,29} = 1$$. For whatever reason, we can usually massage this constraint into $$a_6$$ without any trouble. The
+probability of failure appears to be about 0.0075, which is pretty low.
 
+Since this probability is so low, I chose to use a pretty quick-and-dirty way of handling constraint failures. Frankly,
+there is a little room for improvement here. I suspect we could manage a 2% or 3% speedup, but I haven't gotten around
+to trying it yet.
 
+For now, what I'm doing is simple: generate $$a_6$$, massage $$a_6$$, regenerate $$d_1$$, check whether our constraints
+on $$d_1$$ or $$c_1$$ are violated, if so then replace $$m_1$$ with a random 32-bit int and try again in a loop until
+all our constraints are met.
 
-<!--
-For each of $$a_5$$ through $$b_5$$, some variation of the three-step process above suffices to enforce our constraints
-and clean up the side effects. Starting with $$a_6$$, though, a more involved process is required: correcting $$a_6$$
-means updating $$m_1$$, which spreads changes to $$d_1, c_1, b_1, a_2, d_2$$, requiring updates to (among others)
-$$d_5$$ - - which is positioned prior to $$a_6$$ chronologically, meaning that we can't safely ignore the changes to it.
-The third-round constraints on $$b_{9}, a_{10}$$ pose similar challenges on an even greater scale.
+As mentioned, this loop is entered about 0.75% of the time. When entered, it exits after about 17 iterations on average.
 
-This is a tricky situation to resolve; frankly, I'm not convinced it's worth the effort. Of the 122 conditions required
-for Wang's attack, only 8 pertain to any state later than $$b_5$$; thus, heuristically, enforcing the first 114
-conditions should yield messages satisfying all 122 conditions with a probability roughly on the order of $$2^{-8}$$.
+I suspect it would be possible to improve this by applying a similar method as with $$a_6$$. If successful, this would
+let us drop the constraint checks and the `while` loop, which would slightly (but measurably!) improve the script's hash
+rate. Maybe someday I'll try that. Or maybe you will :-)
 
-That probability is high enough that exhaustive search should be a viable and performant option for finding messages
-satisfying the constraints on $$a_6, d_6, c_6, b_{9}, a_{10}$$. That's good enough for me.
-
-
-#### Follow-up: Equality Constraints
-
-We've got one more detail to cover. Recall that one of the three constraint categories in our taxonomy is _equality_, as
-in (say) $$a_{2,14} = b_{1,14}$$. There's a bit of a _gotcha_ here with the approach described earlier: recall how we
-found a methodology for modifying any given state while leaving its direct dependencies unchanged. It turns out that
-sometimes this isn't quite what we want to do.
-
-Suppose we update $$b_{1}$$, changing $$b_{1,14}$$ in the process. Then we make other changes to carefully preserve the
-old value of $$a_2$$. If $$a_{2,14} = b_{1,14}$$ prior to these changes, then $$a_{2,14} \ne b_{1,14}$$ afterwards. As
-we can see, changing $$b_1$$ has the potential to invalidate $$a_2$$.
-
-One possible solution here: modify $$a_2$$ to re-enforce the equality constraints, then jump through the necessary hoops
-to contain the side effects from this change. This gets very messy very quickly.
-
-If you choose this solution, the round 1 constraints have an interesting property that you will want to be aware of.
-This should make your task somewhat easier: In round 1, no two consecutive states' equality constraints involve the same
-bits. They don't overlap at all. Corollary: in round 1, correcting an invalidated equality constraint in one state will
-_never_ directly invalidate an equality constraint in a following state. This is nice in that it leaves you with one
-less way for side effects to propogate.
-
-A different, simpler possible solution: First, say that exhaustive search is our chosen method for finding message
-blocks that can simultaneously satisfy multiple rounds' state constraints. We can simply extend our search so that the
-loop termination condition also includes checks on following states' equality constraints. This is the option I chose to
-use in my implementation. The advantage of this option is that it allows us to avoid modifying the state to which the
-equality constraint applies, meaning we also avoid creating any more side effects that we'd then have to clean up.
-
--->
 
 ## The Results
 
@@ -634,22 +624,29 @@ research on the subject, because you can do better than this attack. The paper c
 starting point.
 
 Note that while later attacks introduced different message differentials and different sets of conditions, the basic
-ideas behind how to _implement_ the attack are relatively unchanged. The bulk of the ideas in this blog post can be
-applied to more modern differential attacks pretty directly.
+ideas behind how to _implement_ the attack are relatively unchanged. The core ideas in this blog post map to more recent
+differential attacks on MD4 and related functions more or less directly.
 
-If you want to see what an implementation of Wang's attack might look like, my version (which enforces all constraints up
-through $$b_5$$ (TODO TODO TODO finish up second round massage function TODO TODO TODO)) can be found
-[here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
+If you're curious about what an implementation of Wang's attack might look like, my take on it can be found [here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
 
-You may be wondering how modern hash functions defend themselves against attacks like this. The long answer could fill a
-small book; the short answer is that modern designs try to "mix" message blocks together more effectively. For instance,
-SHA-1 and SHA-2 use "message expansion" steps which expand the 16 words of a message block into 80 or 64 words
-respectively. In each case, the expansion step is designed so that changing any of the 16 message chunks produces a
-large number of changes in the expansion. This causes differentials to spread much more quickly and in much more complex
-ways through the function's internal state. Another defense is to simply build a hash function around a different design
-primitive; a good example of this is SHA-3, which is designed around a sponge function instead of round functions.
+I'm measuring a success probability of about $$2^{-17.3}$$ using the techniques described in this post. With my Python
+implementation running in a Qubes VM on my ThinkPad T420s, I see a rate of about three collisions per minute.
 
+You may be wondering how modern hash functions defend against this sort of attack. The long answer to that question
+would fill a small book; the short answer is that modern designs take greater pains to ensure dispersion of
+differentials through the function's full internal state.
 
+For instance, SHA-1 and SHA-2 use "message expansion" steps which expand the 16 words of a message block into an input
+buffer of 80 and 64 words respectively. In both cases, the expansion step is designed so that changing any of the 16
+message chunks will give rise to a large number of differences in the expanded message. Message expansion takes place
+before the (expanded) message is mixed into the hash function's internal state. As a consequence, any small change to
+the message will produce many more (and more complex) changes to the internal state than in MD4.
+
+Another defense is to simply build a hash function around a different design primitive; a good example of this is SHA-3,
+which uses a radically different design based around a sponge function. The sponge function is required to provide
+strong differential dispersion by definition. The resulting algorithm is strikingly simple and comes with elegant
+security proofs. I'm no expert, but reading about SHA-3 and sponge constructions makes me wonder why we haven't been
+building hash functions this way from the start.
 
 
 <hr>

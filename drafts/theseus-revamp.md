@@ -3,11 +3,66 @@ layout: post
 title: Theseus Revamp
 ---
 
+# Overview
 
-I am considering some changes to the design for Theseus.
+I am considering modifying the design for Theseus in some big ways. Let's lead with the _what_, and then we can go
+through the _why_. The main changes I'm considering are:
+
+* Requring all peer connections to be established through Tor onion services.
+
+* Using onion services' default encryption rather than a custom Noise-based encryption layer.
+    * By default, this encrypted channel is one-way authenticated; we will need to find a way of ensuring mutual
+      authentication once the client peer has shared its own onion address & therefore has a public key to authenticate
+      with.
+
+* Redefining node addresses:
+    * Deriving addresses from Argon2id, using onion address as the "password" and Unix timestamps as the "salt".
+    * Maintaining the current construct of a sliding window for address validity, such that only addresses whose
+      timestamps differ from current Unix time by less than a given threshold are considered valid.
+    * Including a proof-of-work component to add asymmetry between address generation and verification.
+        * This would likely involve extending the Argon2id hash output from 20 bits to some larger amount, with the
+          first 20 used as a node address and the remaining bits used as input for some proof-of-work function. The
+          address would only be considered valid if proof-of-work validation succeeds.
+        * Probably the simplest construct would be to extract 4 or 8 bytes, treat them a `long int` or `long long int`
+          respectively, and require that they fall above or below a certain (possibly sliding) threshold.
+
+* Adding a carefully tuned proof-of-work constraint to `put` queries. This allows us to extend our formal analysis of
+  the DHT in interesting ways -- more on this later.
+    * The level of work required should scale super-linearly (quadratically? exponentially?) relative to the size of the
+      data to store, so that `put`s for small data should be very cheap, but storing large binary blobs directly on the
+      DHT is impossible without considerable precomputation.
+    * The proof-of-work step should involve the data and the address but not the storer, any timestamp, or any other
+      semantically significant field.
+    * More on this later.
+
+* Making the `t` field in `put` responses mandatory.
+    * In tandem with this, if a peer promises to store data for a certain duration but then discards the node address at
+      which the data is stored before the promised duration has run out, the peer should re-publish this data on the
+      network with a `t` field set to the difference between promised and actual storage time as a best-effort attempt
+      at preventing this data from being silently lost.
+    * Note: Some related formal work on the subject of timeouts and ratelimiting is forthcoming.
+
+* Making simplifications wherever newly possible. For instance:
+    * The Noise handshake re-negotiation queries are no longer needed.
+    * Sharing any contact info aside from onion addresses is no longer needed.
+    * The on-wire format for routing info will have to be adjusted.
+    * It might make sense to shelve the "data tags" feature for `put` requests.
+    * The `info` KRPC query will have to be redesigned.
+        * It was built out to provide some functionality which is no longer needed.
+        * Most specified info keys are now obsoleted.
+        * It will need some new functionality. In particular, we will have to look into whether it is possible to add a
+          solid challenge-response authentication construct to it, to support simultaneously sharing & proving ownership
+          of one's own onion addresses.
+
+
+# Discussion
+
+## Tor
 
 The big one is Tor. I've always been committed to supporting Tor, but now I am considering _requiring_ it. Peers would
 make themselves available as onion services, and all peer connections would be made through Tor.
+
+### NAT Traversal
 
 Tor gives us NAT traversal for free. This is the killer feature, since reliable TCP NAT traversal is nontrivial.[^1]
 
@@ -56,36 +111,11 @@ codebase.
 
 The major drawback to dropping Noise would be a loss of flexibility. Noise offers out-of-the-box support for mutual
 authentication, rekeying, and other attractive features. Mutual authentication in particular is necessary for confirming
-that a peer owns whatever onion address they claim to own.
+that a peer owns whatever onion address they claim to own. We would need to build out something else to provide this
+functionality.
 
 Some sort of challenge-response protocol could be used here; this seems less elegant than Noise's solution of simply
 mixing ECDH secrets into the session's key material, but it would likely still work if properly designed.
-
-<!--
-Some context: Previous drafts of the Theseus DHT protocol have included the idea of a _peer key_ which is used in peers'
-initial Noise handshake.[^2] The motivation for these is to ensure that some non-ephemeral public key material is
-involved in peers' key negotiation in order to complicate man-in-the-middle attacks. The peer key is mixed into the
-underlying key material as part of a series of ECDH exchanges. The specification currently calls for these keys to use
-Curve25519.
-
-[^2]: [I wrote about these back in 2017](2017-06-11-transient-public-keys-for-resisting), though I called them _node keys_ at the time.
-
-Tor onion services (as of version 3) are addressed using Ed25519 public keys. A public key is generated and combined
-with some metadata, then base32 encoded to produce an onion address. Thus, the onion address can be base64 decoded to
-recover the Ed25519 public key. This key can be converted to a Curve25519 public key with minimal effort.[^3]
-
-[^3]: There's a good, short discussion of this topic [here](https://crypto.stackexchange.com/a/68129).
-
-If the conversion is successful,[^4] I see no reason why not to also use the resulting Curve25519 key as our peer
-key.[^5]
-
-[^4]: My understanding is that the conversion is possible as long as $$x \ne 0$$ and $$y \ne 1$$ (which are conditions any sane crypto library should be enforcing anyway, but we should still validate these constraints ourselves). TODO: read up on this more.
-
-[^5]: TODO explain why this is reasonable to be suspicious of, and why I don't think it's a problem because it doesn't involve anything the attacker couldn't simulate offline and therefore it should leak no extra information beyond what is available to offline cryptanalysis (i.e. hopefully little to nothing).
-
-Deriving the peer key from the peer's contact info frees us from having to transmit these values separately. This
-simplifies both the protocol spec and its implementation considerably.
--->
 
 Other benefits of using Tor exclusively: Sharing contact info is simpler; offering long-term points of introduction to
 the network is easier than it would be if most of our peers were listening on dynamically allocated IP addresses;
@@ -94,30 +124,84 @@ Theseus on a given network reduces to the problem of accessing Tor, which has be
 many people -- activists, journalists, dissidents -- their lives literally depend on being able to access Tor reliably
 without detection); and so on.
 
-This would also change -- and potentially simplify -- our method of selecting node addresses.
+## Node Address Generation
 
-Currently, node addresses are generated a specially formed input with Argon2id. The preimage consists of a timestamp in
-Unix time, an IPv4 address, and 6 bytes of random noise. This design has several issues, and I've never been
-particularly happy with it.
+Moving to Tor hidden services would also change -- and potentially simplify -- our method of selecting node addresses.
 
-As part of this redesign, I'm inclined to change node address[^6] derivation to simply use Argon2id hashes of a peer's onion
-address, keyed (or perhaps salted, depending on API availability) by (padded) Unix timestamps. Perhaps in some
-situations we can even save bandwidth by returning timestamps instead of full node addresses in protocol messages.[^7]
-Most of my current concerns with the node address generation model would be resolved by this change.
+As of the last iteration of Theseus's design, node addresses are generated by hashing a specially formed input with
+Argon2id. The preimage consists of a timestamp in Unix time, an IPv4 address, and 6 bytes of random noise. This design
+has several issues, and I've never been particularly happy with it.
 
-[^6]: AKA node IDs by most Kademlia systems' terminology.
+As part of this redesign, I'm inclined to change node address derivation to simply use Argon2id hashes of a peer's onion
+address, salted by Unix timestamps. Argon2id takes 16-byte salt, so let's just put the timestamp in an 8-byte int and
+concatenate it with itself.
 
-[^7]: The trade-off here is a weird one: you'd be forcing a lot of Argon2id computations, which will have a small but real impact on device performance and power consumption; on the other hand, even if you provided node IDs directly, peers would still want to validate at least some of them -- meaning that some of those Argon2id computations would take place whether they are forced or not. There are strong arguments for both sides here -- this is one to think over for sure.
+When peers are announcing their own node addresses, they could even save bandwidth by just sending over the timestamps
+used to generate the addresses, rather than the full addresses themselves. We might still want to include full addresses
+with routing query responses -- this is probably worth looking into down the road.
 
-My big unresolved concern with node addresses is that the work factors for generating and validating addresses are
-symmetric; validation is no cheaper than generation. We want address generation to be at least slightly hard so that
-running an exhaustive search for desirable addresses is also hard. There is no need for address validation to be hard,
-though -- in fact, we would prefer for it to be as easy as possible. Asymmetric proof-of-work functions built around
-hard hash functions exist; hashcash and equihash are two famous examples. I am very interested in trying to introduce
-some asymmetry here in order to make validation as cheap as possible while still maintaining a strong security margin.
+Something else I'd like to address in this design: node address generation and validation currently take the same amount
+of work. This leaves room for improvement: Honest peers will need to generate addresses infrequently; Sybil peers will
+need to generate addresses more or less constantly. Thus, it makes sense to try to make address generation, as long as
+this can be done while keeping address validation cheap (since honest peers will likely be validating addresses often).
 
+My proposed solution here is to extend Argon2id's output past the address size and to enforce a constraint on the
+trailing bytes. The actual constraint used is sort of beside the point, since the search for valid addresses is
+trivially parallelizable. As far as I can tell, we would gain nothing from using e.g. Equihash. We might as well keep
+things simple by interpreting the trailing bytes as an unsigned integer and constraining this integer's value to fall
+below a certain threshold. Note that this is very similar to, but ultimately offers much more granularity than, the
+common constraint of requiring "n leading 0s" seen in e.g. Hashcash, Equihash, etc.
 
+One very nice thing about this: our cutoff threshold could be adjusted with time. This seems useful simply as an
+acknowledgement of Moore's law,[^2] as well as a way of limiting the advantage a Sybil attacker gains from precomputing
+addresses. Moreover, we get to adjust the threshold by very small amounts and in a very smooth way; this stands in sharp
+contrast to more common proof-of-work schemes based on finding hashes starting with a fixed series of bits (since the
+difficulty level of such problems can only ever be halved or doubled).
 
+[^2]: Many, including Moore, expect the law to hold until around 2025; if this sliding threshold turns out to be a bad choice, it can always be re-evaluated down the road and adjusted -- as long as majority consensus is reached among network peers (or, in many cases, among the people developing those peers' Theseus clients).
+
+## Proof-of-Work for Storing Data
+
+I'm still thinking this one through, and I've been going back and forth on it for a long time. Here's where I'm at so
+far.
+
+If malicious peers decided to just store a tremendous amount of data on the network, what would we do about it? They're
+not doing anything wrong, per se -- after all, a DHT is meant to store data, so they're using it as intended -- they're
+just trying to push the DHT to (and past) its capacity. How do we deal with this?
+
+Well, how would such an attack be carried out? All else being equal, attackers would want to store as much data per
+`put` query as possible. If we introduced a proof-of-work constraint that is negligible for small data but significant
+for large data, we could punish this behavior at minimal impact for normal use (assuming that normal DHT use primarily
+involves storing small data). This would disincentivize large `put`s, so malicious peers would have to submit many small
+`put`s instead. These, of course, are trivial to ratelimit. Thus we can place a hard limit on how much data an attacker
+is able to store with any given peer, as a function of the ratelimit threshold and the level of work of which the
+attacker is capable, with increases to level of work very quickly leading to diminishing returns.
+
+Once a peer is ratelimited, they'll need to switch to sending `put`s over new identities; for this, they'll need to go
+through the node address generation process many times, so in some sense flooding the network with data reduces to
+launching a small-scale Sybil attack -- meaning that our Sybil defenses come into play here as well.
+
+Let's also _consider_ adding timestamps here as well. As with node addresses, this would be a countermeasure against
+precomputation. If you solve a proof-of-work problem once, should you be able to store that data in perpetuity? Or
+should your license last for some shorter period of time (say, one month)? Something to think about.
+
+OK, so we haven't worked through the necessary math to nail down any specifics here, but the conceptual grounding seems
+solid. Now, how can we minimize the overhead of this extra proof-of-work constraint for honest peers?
+
+First, let's set a lower threshold below which proof-of-work is not required. Maybe in the ballpark of 1kb -- maybe
+much lower. We can finalize the parameterization after conducting more formal analysis.
+
+Second, let's make the function involve both the data and the data address. Thus, solving the proof-of-work problem
+would let you store the given datum at _one_ address. This should be fine for normal use, but it means that flooding the
+entire network with data would mean solving these problems for a very wide range of addresses.
+
+Third, let's make the above parameters the _only_ non-arbitrary inputs to the function. The primary motivation for this
+is to make it so that when you rotate addresses you can, without any hard work on your part, send out `put`s for locally
+stored data at any addresses you're discarding.
+
+## Everything Else
+
+More notes to come!
 
 
 <hr>

@@ -6,63 +6,80 @@ title: Theseus Revamp
 # Overview
 
 I am considering modifying the design for Theseus in some big ways. Let's lead with the _what_, and then we can go
-through the _why_. The main changes I'm considering are:
+through the _why_. Here's what I have in mind:
 
 * Requring all peer connections to be established through Tor onion services.
 
 * Using onion services' default encryption rather than a custom Noise-based encryption layer.
-    * By default, this encrypted channel is one-way authenticated; we will need to find a way of ensuring mutual
-      authentication once the client peer has shared its own onion address & therefore has a public key to authenticate
-      with.
+
+    * Onion services provide end-to-end encryption. The server, whose public key is known from their onion address,
+      authenticates to the client during the protocol for establishing this encrypted channel.
+
+    * We will need to find a way of ensuring mutual authentication once the client peer has shared its own onion
+      address.
 
 * Redefining node addresses:
+
     * Deriving addresses from Argon2id, using onion address as the "password" and Unix timestamps as the "salt".
+
     * Maintaining the current construct of a sliding window for address validity, such that only addresses whose
       timestamps differ from current Unix time by less than a given threshold are considered valid.
+
     * Including a proof-of-work component to add asymmetry between address generation and verification.
+
         * This would likely involve extending the Argon2id hash output from 20 bits to some larger amount, with the
           first 20 used as a node address and the remaining bits used as input for some proof-of-work function. The
           address would only be considered valid if proof-of-work validation succeeds.
+
         * Probably the simplest construct would be to extract 4 or 8 bytes, treat them a `long int` or `long long int`
           respectively, and require that they fall above or below a certain (possibly sliding) threshold.
 
 * Adding a carefully tuned proof-of-work constraint to `put` queries. This allows us to extend our formal analysis of
   the DHT in interesting ways -- more on this later.
+
     * The level of work required should scale super-linearly (quadratically? exponentially?) relative to the size of the
       data to store, so that `put`s for small data should be very cheap, but storing large binary blobs directly on the
       DHT is impossible without considerable precomputation.
+
     * The proof-of-work step should involve the data and the address but not the storer, any timestamp, or any other
       semantically significant field.
+
     * More on this later.
 
 * Making the `t` field in `put` responses mandatory.
+
     * In tandem with this, if a peer promises to store data for a certain duration but then discards the node address at
       which the data is stored before the promised duration has run out, the peer should re-publish this data on the
       network with a `t` field set to the difference between promised and actual storage time as a best-effort attempt
       at preventing this data from being silently lost.
+
     * Note: Some related formal work on the subject of timeouts and ratelimiting is forthcoming.
 
-* Making simplifications wherever newly possible. For instance:
-    * The Noise handshake re-negotiation queries are no longer needed.
-    * Sharing any contact info aside from onion addresses is no longer needed.
-    * The on-wire format for routing info will have to be adjusted.
-    * It might make sense to shelve the "data tags" feature for `put` requests.
-    * The `info` KRPC query will have to be redesigned.
-        * It was built out to provide some functionality which is no longer needed.
-        * Most specified info keys are now obsoleted.
-        * It will need some new functionality. In particular, we will have to look into whether it is possible to add a
-          solid challenge-response authentication construct to it, to support simultaneously sharing & proving ownership
-          of one's own onion addresses.
+* Removing the Noise handshake re-negotiation queries, as they are no longer needed.
+
+* Reworking the way contact info is stored and shared to use onion addresses instead of `IP,port` pairs.
+
+* Reworking the way routing info is stored and shared.
+
+* Redesigning the `info` KRPC query.
+
+    * It was built out to provide some functionality which is no longer needed.
+
+    * Most specified info keys are now obsoleted.
+
+    * It will need some new functionality. In particular, we will have to look into whether it is possible to add a
+      solid challenge-response authentication construct to it, to support simultaneously sharing & proving ownership
+      of one's own onion addresses.
+
+* _Possibly:_ Shelving the "data tags" feature for `put` requests.
 
 
-# Discussion
+# Tor
 
-## Tor
+The big news item here is Tor. I've always been committed to supporting Tor, but now I am considering _requiring_ it.
+Peers would make themselves available as onion services, and all peer connections would be made through Tor.
 
-The big one is Tor. I've always been committed to supporting Tor, but now I am considering _requiring_ it. Peers would
-make themselves available as onion services, and all peer connections would be made through Tor.
-
-### NAT Traversal
+### Tor: NAT Traversal
 
 Tor gives us NAT traversal for free. This is the killer feature, since reliable TCP NAT traversal is nontrivial.[^1]
 
@@ -86,6 +103,8 @@ routing tables and degrade the quality of the table's information. The impact wo
 internet) the great majority of peers are behind NAT. Thus the integrity of the network depends on having a reliable
 method for NAT traversal. Onion services provide this.
 
+### Tor: Privacy
+
 Of course, Tor provides other benefits in addition to NAT traversal. Privacy is the most obvious one. I'm not sure much
 needs to be said on that: the second of five promises made [in my original post announcing Theseus](2017-02-17-theseus-robust-system-for-preserving)
 was that the system would provide _guarantees of anonymity for users who need them_. I remain as committed to that
@@ -94,6 +113,8 @@ best way to deliver on it is through Tor.
 
 Those are the high-level benefits. They are unsolved problems with Theseus that would be solved by always using Tor.
 There are also solved problems for which more elegant solutions would be available if Tor is in use.
+
+### Tor: Simplifications
 
 Most notably, communications with onion services are end-to-end encrypted. This stands in contrast to normal Tor use,
 where traffic from Tor exit nodes is sent as-is and an additional application-level protocol like TLS is required to
@@ -104,12 +125,12 @@ Subsequent messages are then end-to-end encrypted and authenticated using a key 
 details on the handshake, see [here](https://gitweb.torproject.org/torspec.git/tree/rend-spec-v3.txt#n1775) and
 [here](https://gitweb.torproject.org/torspec.git/tree/tor-spec.txt#n1102).
 
-This is fantastic. Up to this point, encryption for Theseus has been specified through the Noise Protocol Framework. I
-am still a huge fan of Noise, but I think it may not be necessary given the level of security automatically provided by
-onion services. Dropping Noise as a Theseus component would permit _substantial_ simplifications to the Theseus
-codebase.
+Up to this point, encryption for Theseus has been specified through the Noise Protocol Framework. I am still a huge fan
+of Noise, but I think it may not be necessary given the level of security automatically provided by onion services.
+Dropping Noise as a Theseus component would permit _substantial_ simplifications to the Theseus codebase and test suite,
+which would be fantastic.
 
-The major drawback to dropping Noise would be a loss of flexibility. Noise offers out-of-the-box support for mutual
+The major drawback to dropping Noise is a loss of flexibility. Noise offers out-of-the-box support for mutual
 authentication, rekeying, and other attractive features. Mutual authentication in particular is necessary for confirming
 that a peer owns whatever onion address they claim to own. We would need to build out something else to provide this
 functionality.
@@ -117,12 +138,10 @@ functionality.
 Some sort of challenge-response protocol could be used here; this seems less elegant than Noise's solution of simply
 mixing ECDH secrets into the session's key material, but it would likely still work if properly designed.
 
-Other benefits of using Tor exclusively: Sharing contact info is simpler; offering long-term points of introduction to
-the network is easier than it would be if most of our peers were listening on dynamically allocated IP addresses;
-relatedly, peers can rotate their identifiers whenever -- and as often as -- they choose to; the problem of accessing
-Theseus on a given network reduces to the problem of accessing Tor, which has been worked on extensively (because for
-many people -- activists, journalists, dissidents -- their lives literally depend on being able to access Tor reliably
-without detection); and so on.
+Other benefits of using Tor exclusively: Sharing contact info is simpler; operating long-lived introduction points for
+the network is easier; peers can rotate their identifiers whenever -- and as often as -- they choose to (unlike if they
+were identified by e.g. IP/port pairs); in the average case, accessing Theseus on a given network reduces to of
+accessing Tor, and extensive work has gone into making Tor accessible; and so on.
 
 ## Node Address Generation
 
@@ -160,10 +179,10 @@ difficulty level of such problems can only ever be halved or doubled).
 
 [^2]: Many, including Moore, expect the law to hold until around 2025; if this sliding threshold turns out to be a bad choice, it can always be re-evaluated down the road and adjusted -- as long as majority consensus is reached among network peers (or, in many cases, among the people developing those peers' Theseus clients).
 
-## Proof-of-Work for Storing Data
+# Proof-of-Work for Storing Data
 
-I'm still thinking this one through, and I've been going back and forth on it for a long time. Here's where I'm at so
-far.
+This is the other big idea. I'm still thinking this one through, and I've been going back and forth on it for a long
+time. Here's where I'm at so far.
 
 If malicious peers decided to just store a tremendous amount of data on the network, what would we do about it? They're
 not doing anything wrong, per se -- after all, a DHT is meant to store data, so they're using it as intended -- they're
@@ -181,14 +200,14 @@ Once a peer is ratelimited, they'll need to switch to sending `put`s over new id
 through the node address generation process many times, so in some sense flooding the network with data reduces to
 launching a small-scale Sybil attack -- meaning that our Sybil defenses come into play here as well.
 
-Let's also _consider_ adding timestamps here as well. As with node addresses, this would be a countermeasure against
-precomputation. If you solve a proof-of-work problem once, should you be able to store that data in perpetuity? Or
-should your license last for some shorter period of time (say, one month)? Something to think about.
+Let's also _consider_ adding timestamps here as well. After all, if you solve a proof-of-work problem once, should you
+be able to store that data in perpetuity? Or should your license last for some shorter period of time (say, one month)?
+Something to think about.
 
 OK, so we haven't worked through the necessary math to nail down any specifics here, but the conceptual grounding seems
-solid. Now, how can we minimize the overhead of this extra proof-of-work constraint for honest peers?
+solid. Now how can we minimize the overhead of this extra proof-of-work constraint for honest peers?
 
-First, let's set a lower threshold below which proof-of-work is not required. Maybe in the ballpark of 1kb -- maybe
+First, let's specify some threshold below which proof-of-work is not required. Maybe in the ballpark of 1kb -- maybe
 much lower. We can finalize the parameterization after conducting more formal analysis.
 
 Second, let's make the function involve both the data and the data address. Thus, solving the proof-of-work problem
@@ -198,10 +217,6 @@ entire network with data would mean solving these problems for a very wide range
 Third, let's make the above parameters the _only_ non-arbitrary inputs to the function. The primary motivation for this
 is to make it so that when you rotate addresses you can, without any hard work on your part, send out `put`s for locally
 stored data at any addresses you're discarding.
-
-## Everything Else
-
-More notes to come!
 
 
 <hr>

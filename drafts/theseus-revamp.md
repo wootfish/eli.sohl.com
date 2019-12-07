@@ -179,6 +179,16 @@ difficulty level of such problems can only ever be halved or doubled).
 
 [^2]: Many, including Moore, expect the law to hold until around 2025; if this sliding threshold turns out to be a bad choice, it can always be re-evaluated down the road and adjusted -- as long as majority consensus is reached among network peers (or, in many cases, among the people developing those peers' Theseus clients).
 
+One small note: this does technically put a soft limit on how many node addresses a single peer can have. The limit is
+just the number of seconds in an address's lifespan multiplied by the proof-of-work test's success probability. I don't
+see this as much of a problem -- I doubt most honest peers will ever run into this limit -- but nevertheless it would be
+better if we could let honest users run as many nodes as they see fit to.
+
+It may make sense, then, to make accomodations in the code for users to operate multiple onion addresses (i.e. to exist
+as multiple distinct "peers" on the network). I will be the first to admit it: this is technically convenient but
+terminologically nightmarish. I'm still working on what the best definitions for "peer" and related terms would be after
+this change.
+
 # Proof-of-Work for Storing Data
 
 This is the other big idea. I'm still thinking this one through, and I've been going back and forth on it for a long
@@ -215,8 +225,42 @@ would let you store the given datum at _one_ address. This should be fine for no
 entire network with data would mean solving these problems for a very wide range of addresses.
 
 Third, let's make the above parameters the _only_ non-arbitrary inputs to the function. The primary motivation for this
-is to make it so that when you rotate addresses you can, without any hard work on your part, send out `put`s for locally
-stored data at any addresses you're discarding.
+is to make it so that when you rotate addresses you can, at negligible cost, send out `put` messages to maintain
+continuity in the network for any locally stored data at the address(es) you're discarding.
+
+# Next Steps
+
+The Theseus protocol spec will need to be rewritten. This will require nailing down what `put` and `info` should look
+like, which will be nontrivial.
+
+On the implementation side: a fair bit of the codebase will need rewriting. I'd like to use this opportunity to move as
+much of the code to `async`/`await` as possible.[^3] Note that this does not mean leaving Twisted behind -- the project
+offers `asyncioreactor` for this exact purpose.[^4]
+
+[^3]: I've got a few reasons for this, but if I'm being honest, the biggest one for me is that the stack traces you get from exceptions are just so much cleaner than what you get using `@inlineCallbacks`.
+
+[^4]: `asyncioreactor` is a Twisted reactor implemented in terms of Python's `asyncio` event loop, allowing you to mix Twisted code and other `async` code as desired. You can find an example of what this looks like [here](https://meejah.ca/blog/python3-twisted-and-asyncio).
+
+Here are my current plans for the codebase. Everything here is subject to change as necessary, of course, but I expect
+it to work out well as-is.
+
+Theseus will continue to use the Twisted Application Framework. For `Argon2id` bindings, we will continue to use
+`PyNaCl`. The user-facing Theseus client will run off an API served by the Theseus daemon through Twisted Web.[^5] Tor
+integration will be handled through [`txtorcon`](https://github.com/meejah/txtorcon).
+
+[^5]: Caveat: I haven't used Twisted Web before. If it proves not to be a good fit, I am not opposed to bringing in an external library like `aiohttp`.
+
+We no longer need `NoiseWrapper`, and we can likely adjust `DHTProtocol` to subclass `NetstringReceiver` (which would be
+a big win).
+
+We will have to decide whether, and how, to support operating multiple onion addresses.[^6]
+
+[^6]: Some questions: When clients share their own onion addresses, should they share _all_ their addresses? Or should they pretend to only be operating one address? If the latter, how do they choose which address to use? If the former, how does this change our mutual authentication protocol? For that matter, should servers broadcast other addresses they also operate, and if they do then how should they prove ownership?[^7] More generally, are we considering multiple cohosted onion addresses as corresponding to _multiple cohosted logical peers_ or as _one peer providing multiple points of access_? Do we think the benefits of this latter option would outweigh the costs? Could we perhaps go for some sort of "hybrid" solution (e.g. distinct peers with a shared routing table)?
+
+[^7]: Recall that unlike the original onion service connection, which provides one-way authentication through Tor's own protocols, all subsequent authentication must take place at the application level, which is to say within our own code.
+
+All this should be less work than it looks like. I'm as confident in this project as I've ever been, and I can't wait to
+get it out there into the world.
 
 
 <hr>

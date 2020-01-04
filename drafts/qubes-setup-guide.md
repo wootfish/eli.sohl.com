@@ -1,19 +1,25 @@
 ---
 layout: post
-title: How to Install Qubes and Get It Set Up Just Right
+title: How to Install Qubes OS and Set It Up Just Right
 ---
 
-Qube OS is my favorite operating system by a wide margin. <add more about how great qubes is here>
+Qubes is my favorite OS by a wide margin. It gives you an unbelievable level of control over your system. I could go on for hours about this, but I won't. I'm going to assume you're already familiar with Qubes, or at least already sold on trying it out.
 
-I've been using Qubes heavily for a number of years at this point, and I've figured out a lot of nice little tricks to get it to work just right. This, from start to finish, is what I do to install Qubes from scratch and get it set up just how I like it. Try it out -- maybe it'll work for you too!
+I've been using Qubes heavily for a number of years at this point. In that time, I've figured out a lot of nice little tricks and customizations for it. This, from start to finish, is what I do to install Qubes from scratch and get it set up just how I like it. Try it out -- maybe you'll like it, too!
 
 # Setup
 
 ## Hardware
 
-I like to buy used hardware -- the prices are great, and anything with a robust build is going to be effectively good as new. ThinkPads tend to hold up particularly well in this regard. Make sure to swap out any stock hard drive for an SSD, naturally. A lot of VM operations bottleneck on disk I/O, so an SSD makes an even bigger difference here than usual.
+I prefer used hardware, mostly because the prices are great. If you buy from a good retailer and pick a brand with solid build quality, you can expect used hardware to be good as new in every way that counts. ThinkPads tend to hold up particularly well in this regard. If you're in Seattle, I recommend swinging by InterConnection to see what they have in stock.
 
-I've used Qubes on a ThinkPad W540, a T420s, and a couple of desktops. I've had great results in each case.
+Make sure to swap out any stock hard drive for an SSD, naturally. A lot of VM operations bottleneck on disk I/O, so an SSD makes an even bigger difference than usual with Qubes.
+
+I've used Qubes on a ThinkPad W540, a T420s, and a couple of desktops. I've had great results in each case. Qubes maintains an _awesome_ reference page for hardware compatibility:
+
+https://www.qubes-os.org/hcl/
+
+Make sure to look up any potential laptop purchases there before committing to them.
 
 You're going to want at least 8G of RAM. I've been able to get by on 4G when necessary, but it does run noticably slower. If your laptop comes with 4G RAM stock, you should look up whether the motherboard supports more. 8G would be plenty; 16G would plenty and then some.
 
@@ -23,32 +29,30 @@ You'll need a USB drive to write the installer to. Make sure to copy any importa
 
 ## Firmware
 
-First off, make sure your laptop's firmware is up to date.
+First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea (especially with ThinkPads), and it'll be easiest to do it now before you've installed AEM.
 
-This isn't strictly _necessary_, but it is a good idea (especially with ThinkPads), and it'll be easiest to do it now before you've installed AEM.
-
-Be careful doing this -- make sure your laptop has a full charge, stays plugged in, and doesn't unexpectedly power down during the update process, or else you run the risk of bricking your laptop's mobo.
+Be careful here: make sure your laptop has a full charge, stays plugged in, and doesn't unexpectedly power down during the update process. The failure states for a BIOS update can be difficult or impossible to recover from, so you really do not want anything to go wrong here.
 
 ## Getting an image
 
-I'm just going to go ahead and assume you're running Linux (or something like it).
+I'm just going to go ahead and assume you're running Linux.
 
-From a trusted device (or the closest thing you can find to one), go to
+From a trusted device, or the closest thing you can find to one, go to
 
 https://www.qubes-os.org/downloads/
 
 and download the latest stable release. At time of writing, this is `4.0.2`.
 
-You can download or torrent the image. Torrenting is usually much faster, but a direct download can be carried out over Tor; ultimately, your choice depends on your priorities.
+You can torrent the image or download it directly over HTTPS. I usually torrent because it goes much faster. A direct download can be carried out over Tor, though, so for some users that option may be preferable.
 
-After your download is complete, validate the image. Do this by following the steps described here:
+After your download is complete, you should validate the image. Do this by following the steps described here:
 
 https://www.qubes-os.org/security/verifying-signatures/
 
-You _really should_ go through the above process. But if right now you're rolling your eyes and thinking "we both know that's not going to happen", then at the absolute minimum you should run checksums on your local images. If you downloaded `4.0.2` then you should see the following:
+You _really should_ go through the above process. But if you're currently rolling your eyes and thinking "we both know that's not going to happen", then at the absolute minimum you should run checksums on your local images. If you downloaded `4.0.2` then you should see the following:
 
 ```
-$ sha256sum *.iso
+$ sha256sum Qubes-R4.0.2-x86_64.iso
 4451712940d38d1766320ec814a9029f043f46fd339ad6e9ebb7c6594982a699  Qubes-R4.0.2-x86_64.iso
 ```
 
@@ -66,3 +70,8 @@ sudo dd if=Qubes-R4.0.2-x86_64.iso of=/dev/sdc bs=4M status=progress
 
 When `dd` completes, remove the drive, plug it into the box you want to install Qubes on, and boot from USB.
 
+## Base Installation
+
+The installer does a pretty good job of guiding you through this process, but I'll cover it anyway.
+
+...

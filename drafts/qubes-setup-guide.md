@@ -11,7 +11,7 @@ I've been using Qubes heavily for a number of years at this point. In that time,
 
 ## Hardware
 
-I prefer used hardware, mostly because the prices are great. If you buy from a good retailer and pick a brand with solid build quality, you can expect used hardware to be good as new in every way that counts. ThinkPads tend to hold up particularly well in this regard. If you're in Seattle, I recommend swinging by InterConnection to see what they have in stock.
+I prefer used hardware, mostly because the prices are great. If you buy from a good retailer and pick a brand with solid build quality, you can expect used hardware to be good as new in every way that counts. ThinkPads tend to hold up particularly well in this regard. If you're in Seattle, I recommend seeing what InterConnection has in stock.
 
 Make sure to swap out any stock hard drive for an SSD, naturally. A lot of VM operations bottleneck on disk I/O, so an SSD makes an even bigger difference than usual with Qubes.
 

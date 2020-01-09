@@ -163,9 +163,9 @@ I live in constant fear of someone compromising an account of someone whose Vim 
 
 Now, if someone's reading my post drafts before I push them to GitHub, I don't care. If someone's reading my private repos, I don't care. If they set up a backdoor in `sudo` to catch my password, [I lol](https://www.qubes-os.org/doc/vm-sudo/). If they hard-push empty repos to every GitHub project I'm [allowing unsigned commits on](https://help.github.com/en/github/administering-a-repository/enabling-required-commit-signing), I'll be a little annoyed as I restore my `dev` VM from backup, logout my GitHub web session, and rotate SSH keys. If they get the GPG private key that I'm signing commits with, that's when it's game over.
 
-Split GPG lets you keep that private key safe. Your `dev` VM never directly touches it, so a compromised package that gets run in `dev` has no chance of recovering it. This is awesome.
+Split GPG lets you keep that private key safe. Your `dev` VM doesn't get to directly access it (and doesn't have to!), so a compromised package that gets run in `dev` doesn't have the access necessary to steal it. This is awesome.
 
-Split GPG is not just for commit signing. The Qubes devs give the example of email signing, which is another good one. If your email VM gets compromised (through an exploit in a codec, say, or in your email app's implementation of some wire protocol), your private keys are still safe.
+Split GPG is not just for commit signing. The Qubes docs give the example of email signing, which is another good one. If your email VM gets compromised (through an exploit in a codec, say, or in your email app's implementation of some wire protocol), your private keys are still safe.
 
 The [official guide](https://www.qubes-os.org/doc/split-gpg/) does a great job of describing the setup process and the security benefits you get from it.
 

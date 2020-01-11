@@ -123,35 +123,74 @@ Note that you can now start dom0 applications by name from dmenu (e.g. `mod-d Qu
 
 Qubes' native xfce environment is fine, and it does a better job of surfacing the OS's features for new users. You can still switch back to xfce any time you want. But once you know what you're doing, you might find -- as I do -- that i3 is a much more comfortable place to work.
 
+I like to add a CPU temperature readout to the bar at the bottom. This works a little differently than in stock i3 because of Qubes' custom config.
+
+Open `/usr/bin/qubes-i3status` as root. Add a new function, `status_cputemp()`, that looks something like this:
+
+```
+status_cputemp() {
+    local cputemp=$(sensors | grep 'Package id 0:' | cut -d' ' -f5)
+    json cputemp "T:$cputemp"
+}
+```
+
+You may need to adjust the innermost set of commands here depending on what `sensors` returns on your system.
+
+Add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost block and include the result to the final echo: `echo ",[$cputemp$qubes$disk$bat$load$time]". Then restart i3 and see if it worked.
+
+### USB Keyboard
+
+If you don't plan on using a USB keyboard, skip this step. Doing so will reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
+
+That said, some of us can't resist the siren song of the mechanical keyboard. I'd be lost without my CM Storm with Cherry MX Blues, so this step is a must for me.
+
+In dom0:
+
+```
+$ sudo qubes-dom0-update
+$ sudo qubesctl state.sls qvm.usb-keyboard
+```
+
+Per the [Qubes docs](https://www.qubes-os.org/doc/usb-qubes/#automatic-setup):
+
+> The above command will take care of all required configuration, including creating USB qube if not present. Note that it will expose dom0 to USB devices while entering LUKS passphrase. Users are advised to physically disconnect other devices from the system for that time, to minimize the risk.
+
+As suggested, I leave my USB keyboard and mouse unplugged until after I log in, typing in my initial passwords through my laptop keyboard. This allows me to ensure that the USB keyboard is only ever directly exposed to sys-usb, not dom0.
+
+
 ### VMs
 
-I like to create a `dev` VM for any coding I do off the clock. You have the option to base this on whatever you want, with Fedora and Debian being the most convenient options.
+You generally want to give your AppVMs short names, because i3 makes you type them a lot.
 
-I like to configure the default Fedora disposable VM to use `sys-whonix` as its NetVM. You can still set individual disposable VM instances to use `sys-firewall` if you ever want to skip Tor.
+I like to create a `dev` VM for any coding I do on my own time. You have the option to base this on whatever you want, with Fedora and Debian being the most convenient options.
+
+I like to configure the default Fedora disposable VM to use `sys-whonix` as its NetVM. You can still set individual disposable VM instances to use `sys-firewall` if you ever want to skip Tor. Note that these DVMs' Firefox should not be treated as equivalent to Tor Browser; the latter comes with a bunch of small tweaks that are missing in the former.
 
 If you have a VPN client you like to use, you can set up a VPN NetVM. Connecting an AppVM to this VPN NetVM gives you an ironclad guarantee that all traffic sent from your AppVM will either be wrapped in the VPN or dropped. If you torrent, you will want to do this. The guide is [here](https://www.qubes-os.org/doc/vpn/).
 
-Call me crazy, but I feel a little uncomfortable using Tor Browser. It's great, but software monoculture makes exploit targeting easy. Of course, there's a $1m bounty for Tor Browser 0-days. As such, it would be reasonable not to care about this; I probably shouldn't care either, but I do, because I'm incurably paranoid.
+Call me crazy, but I feel a little uncomfortable using Tor Browser. It's great, but software monoculture makes exploit targeting easy. Of course, there's a $1m bounty for Tor Browser 0-days, and people run honeypot browser sessions looking for that payout. As such, it's reasonable not to worry too much about 0-day Tor browser exploits; I probably shouldn't worry, but I do, because I'm just like that.
 
-If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. As for what to use, [here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole schtick, his suggestions here are simple but solid. In particular, I encourage disabling JavaScript by default (if you have the patience for that).
+If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. As for what to use, [here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole schtick, his suggestions here are simple and solid. In particular, I encourage disabling JavaScript by default (if you have the patience for that).
 
-You can do this setup in `whonix-ws-dvm` or you can create a new VM; if you choose the latter, I'd suggest naming it `dvm-web` and setting your browser as its only application in the Qubes Settings menu. This ensures that you can get what you want by just typing "dvm" into dmenu and hitting Enter.
+You can set this all up in `whonix-ws-15-dvm` or you can create a new VM; if you choose the latter, I'd suggest naming it `dvm-web` and setting your browser as its only application in the Qubes Settings menu. This ensures that you can get what you want by just typing "dvm" into dmenu and hitting Enter.
 
-I'd also suggest changing your default search engine to DuckDuckGo. Google gives marginally better results overall, especially for technical searches, but DuckDuckGo doesn't force Tor users to do the unpaid labor of solving captchas. They don't give a fuck who you are or where you're connecting from. I appreciate that.
+In fact, you'll find that `whonix-ws-15-dvm` competes with `whonix-gw-15` in dmenu's autocompletions, so you might want to rename or clone `whonix-ws-15-dvm` regardless.
+
+I'd also suggest changing your default search engine to DuckDuckGo. Google gives marginally better results overall, especially for technical searches, but DuckDuckGo doesn't force Tor users to do the unpaid labor of solving captchas. Google figures that if they can't track your searches, they'll just have to extract value from you a different way; DDG apparently doesn't give a fuck who you are or where you're connecting from. I appreciate that.
 
 ### Homepages
 
-I'm not going to admit how long it took me to think of this one.
+It took me a while to think of this one.
 
-You're going to have different uses for different VMs. If I'm opening `personal: Firefox` I'm probably headed to Twitter; with `dev: Firefox` it's probably GitHub. By default, these browsers will open to a blank page. You can save yourself a step by just setting their homepages to whatever you're most likely to use them for.
+You're going to have different uses for different VMs. If I'm opening `personal: Firefox` I'm probably headed to Twitter; with `dev: Firefox` it's probably GitHub. By default, these browsers will open to a blank page. You can save yourself a step by just setting each VM's browser's homepage to whatever you're most likely to use that VM for. Your finance VM might go to your bank's web site, and so on.
 
-This actually ends up being _more_ convenient than a traditional Linux install, because in that case your best option for Firefox really is just to open on a blank tab.
+This actually ends up being _more_ convenient than a traditional Linux install, because in that case your best option for Firefox really is just to open on a blank tab. It also helps shore up your security boundaries against human error by making sure you open up each page in the correct VM.
 
 ### Split GPG
 
-Split GPG lets you keep your GPG private keys on a standalone VM with no network access. Other VMs can request temporary access to these keys. This isn't full access -- they can't read the keys' values -- it just gives them an interface to request that your standalone VM performs certain operations with those keys and relays the results.
+Split GPG lets you keep your GPG private keys on a standalone VM with no network access. Other VMs can request temporary access to these keys. This isn't full access -- they can't read the keys directly -- it just gives them an interface to request that your standalone VM performs certain operations with those keys and relays the results.
 
-I really strongly recommend this. In fact, I wish Qubes supported something similar for SSH keys. (do they? let me know if so!!)
+I really strongly recommend this. In fact, I wish Qubes supported something similar for SSH keys. (does it? let me know if so!!)
 
 You can find the setup guide [here](https://www.qubes-os.org/doc/split-gpg/).
 
@@ -168,4 +207,8 @@ Split GPG lets you keep that private key safe. Your `dev` VM doesn't get to dire
 Split GPG is not just for commit signing. The Qubes docs give the example of email signing, which is another good one. If your email VM gets compromised (through an exploit in a codec, say, or in your email app's implementation of some wire protocol), your private keys are still safe.
 
 The [official guide](https://www.qubes-os.org/doc/split-gpg/) does a great job of describing the setup process and the security benefits you get from it.
+
+Security-conscious users might want to note that Git and GPG both (as of Jan 2020) still make heavy use of SHA-1 in spite of it being [extremely](https://sha-mbles.github.io/) [broken](https://arstechnica.com/information-technology/2020/01/pgp-keys-software-security-and-much-more-threatened-by-new-sha1-exploit/). We don't have room to unpack the implications that here but it seems worth mentioning.
+
+It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. Maybe someday.
 

@@ -9,8 +9,6 @@ Here's an idea that I've been turning over for a while now. It's a way of discov
 
 The core construct is simple enough that I wonder whether I'm the first to get to it. I hope I'm not -- it'd be especially nice if someone else has already taken care of implementing it, too -- but just in case, here's an outline of what I have in mind. If there's prior art, I'd love to add a link to it.
 
-This is just the sketch of an idea, not a full specification. It is light on details in some areas because I'm not a subject matter expert. With that said, here we go.
-
 
 ## Transports
 
@@ -23,7 +21,7 @@ As mentioned above, we have two sorts of connections: first, connections via dir
 
 The goal of a mesh network's routing protocol is to infer enough about the topography of those radio links for us to establish efficient relay circuits over them.
 
-This is easier said than done. Each radio link has finite bandwidth, so we have to be careful to minimize overhead. Ideally, the routing layer's total bandwidth overhead should be no worse than $$\mathcal{O}(n)$$ with respect to network size (or equivalently, per-peer bandwidth should be no worse than $$\mathcal{0}(1)$$). Any weaker bound than this places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
+This is easier said than done. Each radio link has finite bandwidth, so we have to be careful to minimize overhead. Ideally, the routing layer's total bandwidth overhead should be no worse than $$\mathcal{O}(n)$$ with respect to network size (or equivalently, per-peer bandwidth should be no worse than $$\mathcal{O}(1)$$). Any worse bound places an absolute upper limit on the network's size, as routing overhead is guaranteed to eventually saturate the network.
 
 How do we meet this standard?
 
@@ -38,7 +36,7 @@ Start by assigning[^1] randomly distributed fixed-length addresses to peers, wit
 
 [^1]: Technically "assigning" is a loaded word here. The implication of address assignments coming from a central authority is not intended. Ideally, peers' addresses would come from some sort of trapdoor proof-of-work function (possibly after hashing its output, if necessary). Peer addresses should somehow be made to expire after a fixed window of time, in order to complicate address squatting.
 
-Define distance between addresses via the `xor` metric, and endow peers with responsibility for the addresses closest to their own local addresses by `xor`. Every peer serves as an introduction point for any target address close to their own address.
+Define distance between addresses via the `xor` metric (written as $$\oplus$$), and endow peers with responsibility for the addresses closest to their own local addresses by `xor`. Every peer serves as an introduction point for any target address close to their own address.
 
 Note that for a target address $$a_t$$ with $$d_1 = a_1 \oplus a_t$$ and $$d_2 = a_2 \oplus a_t$$, the inequality $$d_1 < d_2$$ holds if and only if $$a_1$$ has more leading bits in common with $$a_t$$ than $$a_2$$ does.
 
@@ -147,27 +145,27 @@ Note that any two peers who are able to open a connection through a rendezvous p
 
 ## Security
 
-Allusions have been made throughout this post to similarities between this design and the architecture of onion networks. Of course, direct parallels can't be drawn without a full specification, but if I were to write a full spec, I would make it a primary goal to try to carry over as many of onion networks' proven security properties as possible.
+Allusions have been made throughout this post to similarities between this design and the architecture of onion networks. Of course, direct parallels can't be drawn without a full specification, but if I were to write a full spec, I would make it a primary goal to try to carry over as many of onion networks' security properties as possible.
 
 Nodes in the network would have personal public/private keypairs, and would broadcast their public keys along with all other relevant data. The lifespan of keys would likely be per-session (or maybe even per-connection) to try and limit the degree to which users could be tracked through them. These keys would be used by the message transport layer to hide every aspect of a message except for the next hop in its route.
 
-Of course, a somewhat greater level of trust in the network is required here than in Tor since we rely on remote nodes to self-report their neighbors, as well as those neighbors public keys, addresses, filters, etc. There is lots of room for research into minimizing risk here. Disjoint lookups, already mentioned above, might help significantly.
+Of course, a somewhat greater level of trust in the network is required here than in Tor since we rely on remote nodes to announce their neighbors, as well as their neighbors' public keys, addresses, filters, etc. There is lots of room for research into minimizing risk here. Disjoint lookups, already mentioned above, might help significantly.
 
-An efficient, low-overhead ad-hoc mesh network protocol stack would be a powerful tool for resisting pervasive corporate and governmental surveillance, moreso because the network would lack any barrier to entry whatsoever, and because peers could remain effectively anonymous (aside from the physical location data leaked by their radio signals) whenever desired.
+An efficient, low-overhead ad-hoc mesh network protocol stack would be a powerful tool for resisting pervasive corporate and governmental surveillance, moreso because the network would lack any barrier to entry whatsoever and because peers could remain effectively anonymous (aside from any physical location data leaked by their radio signals) as desired.
 
 
 ## Scaling
 
 Let's be clear: peers will have a limited knowledge of the full mesh, and will only be able to connect to peers they can establish a rendezvous with. It follows that there is no guarantee of every peer being able to reach every other peer. In large networks, distinct "regions" with limited interconnectivity may form.
 
-This could be mitigated to some degree by establishing "shortcuts" to connect these regions together, whether over long-range point-to-point radio, internet link, satellite link, or whatever else. These could knit distant regions together, dramatically lowering average path length in the network graph and increasing the odds of successful rendezvous.
+This could be mitigated to some degree by establishing "shortcuts" between the cores of these regions. Shortcuts could operate over long-range point-to-point radio, internet link, satellite link, or whatever else. They would knit distant regions together, dramatically lowering average path length in the network graph and increasing the odds of successful rendezvous.
 
-Just as an aside: I personally think that this limit might not necessarily be a bad thing. A degree of locality in the network could have benefits as well as drawbacks. Only time can tell for sure, and there are interesting arguments to be made both ways. More on that later, maybe.
+Just as an aside: I personally think that a certain spatial limit might not necessarily be a bad thing. A degree of locality in the network could have benefits as well as drawbacks. Only time can tell for sure, and there are interesting arguments to be made both ways. More on that later, maybe.
 
 
 ## Prior Work
 
-The idea of limiting any individual node's knowledge of an ad-hoc network's overall layout is not new; this was being discussed back in '99 ([PDF link](http://www.ee.oulu.fi/~carlos/papers/routing/IW99.pdf)), and the advantages of this strategy for building scalable networks have been noted for just as long. However, the chosen strategy for the linked paper was to limit how often peers send routing info updates past their immediate neighbors, rather than to find a routing protocol whose baseline maintenance only ever requires peers to exchange routing info with said immediate neighbors.
+The idea of limiting any individual node's knowledge of an ad-hoc network's overall layout is not new; this was being discussed at least as far back as '99 ([PDF link](http://www.ee.oulu.fi/~carlos/papers/routing/IW99.pdf)), and the advantages of this strategy for building scalable networks have been noted for just as long. However, the chosen strategy for the linked paper was to limit how often peers send routing info updates past their immediate neighbors, rather than to find a routing protocol whose baseline maintenance only ever requires peers to exchange routing info with said immediate neighbors.
 
 I am not aware of prior work on using Bloom filters in this context. If you are, please [reach out](/contact.html) -- you would absolutely make my day.
 
@@ -176,15 +174,15 @@ I am not aware of prior work on using Bloom filters in this context. If you are,
 
 Relative to current networks, it appears that this protocol could form a core part of networks providing greatly preferable privacy properties.[^6]
 
-[^6]: For instance: it is common for copyright holders (music labels, movie studios, etc) to monitor BitTorrent peer swarms operating over the internet, and to serve copyright infringement notices to the owners of any IPs observed in a swarm. Whatever you might think of people who torrent copyrighted material, it is undeniable that this practice on the part of the copyright holders is designed to intimidate and take advantage of people who lack the means to stand up to legal threats, and that for these copyright holders the fines associated with such notices serve as a way of profiting off artists' work without having to share any of the profits with said artists. This is just one example of an exploitive practice which would not be possible if network connections could be established without sharing any personally identifying information.
+[^6]: For instance: it is common for copyright holders (music labels, movie studios, etc) to monitor BitTorrent peer swarms operating over the internet, and to serve copyright infringement notices to the owners of any IPs observed in a swarm. Whatever you might think of people who torrent copyrighted material, it is clear that this practice on the part of the copyright holders is designed to intimidate and take advantage of people who lack the means to stand up to legal threats, and that for these copyright holders the fines associated with such notices serve as a way of profiting off artists' work without having to share any of the profits with said artists. This is just one example of an exploitive practice which would not be possible if network connections could be established without sharing any personally identifying information.
 
-This sort of construct would be valuable in areas where internet service is not available or where it has been disrupted (e.g. in the aftermath of a natural or artificial disaster). In areas where internet service is broadly available, the value of a mesh network may seem less obvious to some, but it is no less real: not only would it provide redundant infrastructure, it would also be free to join. People with Internet connections could perhaps even establish crossover points between the internet and their local ad-hoc network, serving as a bridge to grant internet access to their peers in the mesh network.[^7] Since internet access is increasingly becoming a necessity, the possibility of providing it for free is very attractive and has the potential to have a concrete positive impact on many people's lives.
+This sort of construct would be valuable in areas where internet service is not available or where it has been disrupted (e.g. in the aftermath of a natural or artificial disaster). In areas where internet service is broadly available, the value of a mesh network may seem less obvious to some, but it is no less real: not only would it provide redundant infrastructure, it would also be free to join. People with Internet connections could perhaps even establish crossover points between the internet and their local ad-hoc network, serving as bridges to grant internet access to their peers in the mesh network.[^7] Since internet access is increasingly becoming a necessity, the possibility of providing it for free is very attractive and has the potential to have a concrete positive impact on many people's lives.
 
-[^7]: Though doing this would, of course, almost certainly violate their contract with the ISP -- unless (say) the internet access is provided via a direct line into an internet exchange, in which case the ISP issue would be bypassed completely.
+[^7]: Though doing this would, of course, almost certainly violate their contract with the ISP, though it's anyone's guess whether the ISP will notice. The ISP issue could also be bypassed completely if (say) the internet access is provided through a direct line into an [internet exchange point](https://en.wikipedia.org/wiki/Internet_exchange_point).
 
-It would be trivial to build a DHT on top of this construct as well, though this may or may not be a good idea as it would raise the memory overhead of maintaining a presence on the network.
+It would be trivial to build a DHT on top of this construct as well, though this may or may not be a good idea. It would raise the memory overhead associated with maintaining a presence on the network.
 
-This infrastructure could also lay the groundwork for entirely new categories of app architecture. More on that later, maybe.
+This infrastructure could also lay the groundwork for entirely new categories of app architecture. More on that later, too, maybe.
 
 
 ### Questions

@@ -69,6 +69,31 @@ _why_. Here's what I have in mind:
       solid challenge-response authentication construct to it, to support simultaneously sharing & proving ownership
       of one's own onion addresses.
 
+        * Some more on this:
+        
+        * The "server" peer will have to initiate the challenge-response exchange.
+
+        * We have to be very careful to avoid anything that could weaken the key used by our hidden service. What sort
+          of key is it? Can we do ECDH? That would be awesome if so.
+
+            * eg: challenger sends some long urandom bytestring
+              responder computes shared ECDH secret btwn hidden service pubkeys, possibly mixes some sort of nonce into
+              it, then encrypts the challenge string under the shared secret and sends the ciphertext
+
+            * it's probably a good idea to let each peer add some randomness into the challenge, which would be an
+              argument for the responder providing a nonce. they could just send a tuple (nonce, ciphertext)
+
+            * but is it _necessary_? what does the responder's nonce do for us security-wise? it's not like we have to
+              worry about replay attacks, because our output is already tied to the pair of keys in use
+
+            * it would basically just let us avoid producing a large number of plaintext/ciphertext pairs encrypted
+              under the same key as a byproduct of the algorithm, but this is sort of a silly goal to have, because
+              each peer could produce these on their own, so the only party who would "benefit" would be an observer who
+              can't find that key (but can somehow still read that hidden service traffic -- ?!)
+
+            * it would NOT prevent us from providing a one-try oracle for the ECDH shared secret to the responding peer
+
+
 * _Possibly:_ Shelving the "data tags" feature for `put` requests.
 
    * Argument _for_ shelving this feature: The only data tags previously specified were `ip` and `port`, both of which are now irrelevant. We could swap them out for a tag representing a peer's onion address, perhaps.

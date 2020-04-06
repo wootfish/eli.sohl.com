@@ -134,3 +134,8 @@ function initParams(fade_val, t_rate) {
     }
     increment_t();
 }
+
+
+function simpleModeForced() {
+    return window.matchMedia("(max-width:768px)").matches;
+}

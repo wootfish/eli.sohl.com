@@ -2,6 +2,9 @@
 ---
 
 
+$small: 768px
+
+
 =keyframes($name)
   @-webkit-keyframes #{$name}
     @content
@@ -22,27 +25,37 @@
     opacity: 1
 
 
+=simplebody
+  animation-duration: 4.2s
+  animation-name: fade-opacity-in
+
+  .fancy
+    display: none
+  .simple
+    display: block
+
+
+=fancybody
+  background-color: black
+  .fancy
+    display: block
+  .simple
+    display: none
+
+
 body
   border: 0
   margin: 0
 
-  &.nofancy
-    animation-duration: 4.2s
-    animation-name: fade-opacity-in
 
-    .fancy
-      display: none
-    .simple
-      display: block
+  @media (max-width: $small)
+    +simplebody
 
-
-  &:not(.nofancy)
-    background-color: black
-
-    .fancy
-      display: block
-    .simple
-      display: none
+  @media (min-width: $small)
+    &.nofancy
+      +simplebody
+    &:not(.nofancy)
+      +fancybody
 
 
 p

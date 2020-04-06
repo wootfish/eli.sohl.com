@@ -73,6 +73,7 @@ function main() {
     function full_render() {
         requestAnimationFrame(full_render);
         if (limitFrameRate()) return;
+        if (simpleModeForced()) return;
         //updateState();
         //if (entering) doEnterAnimation();
         if (tiler !== null) resize(tiler.canvas);

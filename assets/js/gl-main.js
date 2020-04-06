@@ -7,6 +7,27 @@
 {% include gl-render.js %}
 
 
+function maybeMain() {
+    if (simpleModeForced()) {
+        // if fancy mode is enabled but we're forcing simple mode, then hold off
+        // on initialization until the screen gets wide enough to get fancy
+        requestAnimationFrame(maybeMain);
+        return;
+    }
+    if ($(".contentbox").css("display") == "none") {
+        // if we fade the contentbox in, jquery sets the display style for us,
+        // but if we resize the window after that then our media query sets
+        // display: none again - this check deals with that issue.
+
+        // (we could also just run the fade in css, but then how would we fancy
+        // fade when coming from the landing page & fast fade otherwise?)
+
+        $(".contentbox").fadeIn(5100);
+    }
+    main();
+}
+
+
 window.onpageshow = function () {
     initParams(1, 34000);
 
@@ -24,6 +45,6 @@ window.onpageshow = function () {
             return;
         }
         resize(tiler.canvas);
-        main();
+        maybeMain();
     }
 }

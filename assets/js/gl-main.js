@@ -22,7 +22,7 @@ function maybeMain() {
         // (we could also just run the fade in css, but then how would we fancy
         // fade when coming from the landing page & fast fade otherwise?)
 
-        $(".contentbox").fadeIn(5100);
+        $(".contentbox").show();
     }
     main();
 }

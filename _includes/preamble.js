@@ -137,5 +137,5 @@ function initParams(fade_val, t_rate) {
 
 
 function simpleModeForced() {
-    return window.matchMedia("(max-width:768px)").matches;
+    return window.matchMedia("(max-width:840px)").matches;
 }

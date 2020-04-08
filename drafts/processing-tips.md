@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Grab Bag: Processing Tips & Tricks
+title: "Grab Bag: Processing Tips & Tricks"
 ---
 
 I adore Processing. It's so easy to use! As someone with a deep aversion to boilerplate, I can tell that the designers of Processing are kindred spirits. The more I use it, the more appreciation I gain for the care that they've clearly put into this project. The language is terse, expressive, powerful, focused, flexible... I could go on.

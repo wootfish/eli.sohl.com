@@ -546,10 +546,10 @@ At first glance this syntax may look unusual, but it allows us to keep using
 `==` in the intended way, avoiding the confusion of having `a == b` sometimes
 returning something other than a `bool`.
 
-Obsidian defines infix operators for equality and inequality: `|EQ|` and `|NE|`.
-Our SMT solver library (`pySMT`) supports infix arithmetic (eg `smt_var + 5`),
-plus infix boolean conjunctions (eg `smt_var_1 & smt_var_2`), so those are
-already taken care of.
+Obsidian defines infix operators for equality and inequality: `obsidian.EQ` and
+`obsidian.NE`. These are the only operators I've found myself needing so far,
+since our SMT solver library (`pySMT`) supports infix arithmetic (eg `var_1 =
+var_2 + 5`) and infix boolean conjunctions (eg `var_1 = var_2 & var_3`) already.
 
 `EQ` and `NE` accept any pySMT expression; they also accept `obsidian.Point`
 objects. `point_1 |EQ| point_2` is equivalent to `(point_1.x |EQ| point_2.x) &
@@ -559,6 +559,23 @@ Note that while we do lean on the `|` operator for this special behavior, we
 don't have to override its default behavior to do so. This is because our
 special behavior is only triggered when one of `|`'s arguments is an `Infix`
 instance. Absent `Infix`, `|` behaves normally.
+
+You may be wondering why I chose `|`. The reason is simple: in Python's
+[operator precedence ordering](https://docs.python.org/3/reference/expressions.html#evaluation-order),
+`|` is the next operator after `==`, meaning that `var1 |EQ| var2` will obey the
+same operator precedence as `var1 == var1`.
+
+There is one tiny limitation to this notation.
+
+Python allows programmers to write a three-way comparison `a == b == c` and
+evaluates this the way a novice programmer would expect, i.e. `(a == b) and (b
+== c)`, rather than evaluating it in the way programmers coming from a
+background in less helpful languages might expect, i.e. as `(a == b) == c`.
+Unfortunately `a |EQ| b |EQ| c` obeys the latter semantics, not the former.
+
+The reason for this behavior is just that it keeps the implementation of `Infix`
+simple. If anyone is interested in working on lifting this limitation, I have
+some ideas on how it could be done and would be glad to work with you on this.
 
 # Next Steps
 

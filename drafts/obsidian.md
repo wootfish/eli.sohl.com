@@ -658,6 +658,14 @@ haven't seen any benefit to wrapping this functionality, but something about
 exposing our dependencies to end user code seems strange, so I thought I'd call
 it out here.
 
+## Unit Tests
+
+It would be nice to have some unit tests. Currently I'm treating the scripts in
+`examples/` as tests, re-running them after any big changes and making sure they
+still look right - this works, but it's not ideal. I've been meaning to spend
+some time figuring out the best way to automate this process (or, even better,
+replace it with something more rigorous), but haven't gotten around to it yet.
+
 ## More Examples
 
 I'm happy with the examples Obsidian has, but I'd like to write (or see) more.

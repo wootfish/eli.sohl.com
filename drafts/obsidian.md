@@ -1,0 +1,689 @@
+---
+layout: post
+title: "Obsidian: A Constraint-Based Graphics Programming System"
+---
+
+# Preface
+
+What's your greatest fear? Mine is making publication-grade vector graphics.
+
+When I think about figures, I think in terms of shapes and arrangements. I want
+to represent concepts with simple shapes, then arrange the shapes to reflect
+relationships: some shapes contained within others, some grouped together in
+rows or columns, some connected, some separated, and so on.
+
+Once I've decided how I want things to look, then comes the hard part: figuring
+out how to translate this mental model into a graphic design tool's
+abstractions.
+
+I think there must be a fundamental disconnect between the tools I've tried and
+my own mindset. I'm always surprised by how much effort is involved in simple
+tasks like aligning shapes, grouping them together, rearranging them, and so on.
+Drawing even simple figures becomes repetitive, tedious, and error-prone.
+
+Using these tools, the relationships between shapes usually end up being
+implicit, not explicit, and there always seems to come a point when I'll have to
+cover for the tool's shortcomings through ugly hacks like hard-coding positions
+that I've calculated by hand. The result always ends up feeling just barely good
+enough, and modifying it feels like playing jenga, where even the slightest
+movement could instantly break everything.
+
+What I want is a tool whose data model matches my mental model: a tool that
+works in terms of shapes and arrangements.
+
+Last December, I came across [a blog post about a system called Basalt](https://www.anishathalye.com/2019/12/12/constraint-based-graphic-design).
+It seemed like just what I've always wanted: a terse API that lets the user
+express relationships between shapes in terms of constraints which then get
+passed off to an SMT solver. Since the solver is responsible for finding numeric
+values for every shape's position and dimensions, the programmer is free to
+define everything in clear, abstract terms, writing expressive code free from
+magic numbers and letting the machine take care of the details. It's not a new
+idea, but it is a good idea.
+
+A couple months later, I came up with a great use case for Basalt, but was
+disappointed to realize that the library had never been released. I'm not sure
+if it's still being developed - the author seems pretty busy - but the idea was
+good enough that I thought, _hey, why not try and build this myself_?
+
+I started out aiming for feature parity with the examples from that blog post,
+but quickly found myself building the library out even further and finding ways
+to simplify or improve on it. Pretty soon, my project had taken on a life of its
+own.
+
+I've been hacking on it for a couple weeks at this point. It's still definitely
+a work in progress, but I think it's ready to share. Since the project is
+inspired by "Basalt", I figure the name should be, too, and so I give you:
+__Obsidian__.
+
+# Introducing Obsidian
+
+[Obsidian](https://github.com/wootfish/obsidian) is a constraint-based system
+for graphics programming. It lets you define groups of shapes, specify
+relations between them, style them in any way supported by the SVG format, and
+render them from that information alone.
+
+The shapes and arrangements you specify get passed off to an SMT solver, which
+does all the heavy lifting of computing shapes' relative and absolute positions.
+This means that the relationships between shapes can take any form understood by
+the solver, effectively allowing them to be arbitrarily complex. Forget about
+"snap to guides" - we live in the future, we can do better than that.
+
+You can save rendered images as PNG, SVG, or GIF (static or animated).
+
+If you use Jupyter notebooks, you can also display rendered images natively
+within your notebooks and even use Jupyter's IO widgets to interactively adjust
+any shape parameters you'd like (e.g. dimensions, margins, font sizes, or
+anything else you can derive an expression for).
+
+The easiest way to understand how this all fits together is to see it in action.
+Let's take a look at some code samples.
+
+## Example: Circle and Square
+
+This script generates a circle, inscribes a square inside it, and places them
+both on a pleasant gray background.
+
+This idea is borrowed from the start of the blog post I linked in the preface.
+You might find it interesting to contrast that post's code with this one's (the
+generated figures are pretty much identical).
+
+```python
+from obsidian import Canvas, Group, EQ
+from obsidian.geometry import Circle, Rectangle, Point
+
+SQRT_2 = 2**0.5
+
+WIDTH = HEIGHT = 300
+
+CIRCLE_STYLE = {"stroke": "#0000ff", "fill_opacity": "0"}
+RECT_STYLE = {"stroke": "#ff0000", "fill_opacity": "0"}
+
+circle = Circle(style=CIRCLE_STYLE)
+square = Rectangle(style=RECT_STYLE)
+
+g = Group([circle, square], [
+    circle.center |EQ| square.center,
+    circle.radius |EQ| WIDTH / 4,
+    square.width |EQ| square.height,
+    square.width |EQ| circle.radius * SQRT_2
+])
+
+canvas = Canvas(g, WIDTH, HEIGHT, bg_color="#e0e0e0")
+canvas.save_png("gallery/circle_and_square.png")
+canvas.save_svg("gallery/circle_and_square.svg")
+```
+
+This script produces the following image:
+
+<img src="/assets/img/circle_and_square.svg">
+
+Note the total absence of magic numbers in this script. In fact, it uses almost
+no numbers at all. Instead, shapes are created, relationships between their
+attributes are defined, and Obsidian takes it from there.
+
+Don't get hung up on the unusual `|EQ|` syntax. More will be said on this below.
+In brief, it's a way of using infix syntax with custom operators. The `EQ`
+operator in particular represents an equality constraint. We use `EQ` rather
+than `==` because the latter is generally expected to return a bool or bool-like
+value, rather than an object representing an SMT formula.
+
+## Example: Binary Counting
+
+Here's another example that shows just how terse Obsidian can be. This one shows
+the binary representations of the numbers 0 through 31:
+
+```python
+from obsidian import Canvas, Group, ShapeGrid, EQ
+from obsidian.geometry import Rectangle
+
+GRID_W = 5
+GRID_H = 2**5
+SPACING = 3
+
+BG = "#000000"
+RED = "#AA1010"
+BLUE = "#3030AA"
+
+squares = ShapeGrid(w=GRID_W, h=GRID_H, spacing=SPACING,
+        factory=lambda: Rectangle(width=10, height=10))
+
+for i, square in enumerate(squares.shapes):
+    mask = 2 ** (GRID_W - 1 - (i % GRID_W))
+    color = BLUE if (i // GRID_W) & mask else RED
+    square.style = {"fill": color}
+
+canvas_w = squares.bounds.width + 2*SPACING
+canvas_h = squares.bounds.height + 2*SPACING
+canvas = Canvas(squares, canvas_w, canvas_h, bg_color=BG)
+canvas.save_png("gallery/square_grid.png")
+canvas.save_svg("gallery/square_grid.svg")
+```
+
+And here's the output:
+
+<img src="/assets/img/square_grid.svg">
+
+This example makes use of Obsidian's built-in ShapeGrid class. This is a special
+kind of Group which knows how to generate the necessary constraints to arrange
+shapes into rows and columns with uniform spacing. Helper classes like this
+allow us to keep Obsidian scripts terse and expressive.
+
+Note that the canvas's width and height don't need to be specified explicitly -
+they'll be derived and converted to integers once the solver determines values
+for `squares.bounds.width` and `squares.bounds.height`. Note also that `squares`
+is centered in the canvas by default; this is a convenience feature provided by
+`Canvas`, and can be adjusted or disabled as desired.
+
+## Example: Go Board
+
+Here's a third example - this one's my favorite:
+
+<img src="/assets/img/go_board.svg">
+
+This Go board is defined, populated with stones, and rendered
+[in just 177 lines of code](https://github.com/wootfish/obsidian/blob/master/examples/go_board.py),
+roughly a quarter of which are spent on docstrings, comments, and the
+specification of the board position (the script accepts an arbitrary position,
+[passed in as ASCII art](https://github.com/wootfish/obsidian/blob/master/examples/go_board.py#L149)).
+
+This example is built around a class called `GoBoard`, which looks something
+like this (some methods omitted for brevity - the interesting stuff all happens
+in `__init__`):
+
+```python
+class GoBoard:
+    BG_STYLE = {"fill": "#f2b06d"}
+    LINE_STYLE = {"stroke": "#101010", "stroke_width": 1}
+    TEXT_STYLE = {"fill": "#000000"}
+
+    def __init__(self, width, height, inset, rows=19, cols=19, font_size=15, margin_between_stones=3):
+        assert 7 <= rows <= 50
+        assert 7 <= cols <= 50
+
+        # initialize properties, and get local references for some of them
+        self.rows = rows
+        self.cols = cols
+        self.font_size = font_size
+        self.constraints = constraints = []
+        self.bg = Rectangle(0, 0, width, height, self.BG_STYLE)
+        self.stones = []
+
+        # derive stone radius from distance between adjacent intersections
+        intersection_distance = min((width - 2*inset) / cols,
+                                    (height - 2*inset) / rows)
+        self.stone_radius = (intersection_distance - margin_between_stones) / 2
+
+        # create points for the 4 corners of the board's grid
+        top_left = Point(inset, inset)
+        bot_left = Point(inset, height-inset)
+        top_right = Point(width-inset, inset)
+        bot_right = Point(width-inset, height-inset)
+
+        # make lists of points evenly distributed along each edge of the board
+        top_points = [Point() for _ in range(cols)]
+        left_points = [Point() for _ in range(rows)]
+        right_points = [Point() for _ in range(rows)]
+        bottom_points = [Point() for _ in range(cols)]
+        constraints.append(evenly_spaced(top_left, top_right, top_points))
+        constraints.append(evenly_spaced(top_left, bot_left, left_points))
+        constraints.append(evenly_spaced(top_right, bot_right, right_points))
+        constraints.append(evenly_spaced(bot_left, bot_right, bottom_points))
+
+        # draw a line between each opposing pair of points
+        h_lines = [Line(p1, p2, self.LINE_STYLE) for p1, p2 in zip(left_points, right_points)]
+        v_lines = [Line(p1, p2, self.LINE_STYLE) for p1, p2 in zip(top_points, bottom_points)]
+        self.h_lines = h_lines
+        self.v_lines = v_lines
+
+        # mark the board's "star points"
+        self.star_points = star_points = []
+        for row in self.get_star_lines(rows):
+            for col in self.get_star_lines(cols):
+                intersection = self.get_intersection(row, col)
+                star_point = Rectangle(width=5, height=5, style={"fill": "#000000"})
+                star_points.append(star_point)
+                constraints.append(star_point.center |EQ| intersection)
+
+        # annotate the grid rows
+        self.grid_coords = grid_coords = []
+        for row, pt in enumerate(left_points):
+            anchor = Point(inset/2 - 1, pt.y - 3)
+            s = str(rows - row)
+            grid_coords.append(self.make_text(s, anchor))
+
+        # annotate the grid columns
+        col_letters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz"  # no I (as is conventional)
+        for letter, pt in zip(col_letters, bottom_points):
+            anchor = Point(pt.x, height - inset/2)
+            grid_coords.append(self.make_text(letter, anchor))
+
+    def get_intersection(self, row, col):
+        """
+        Returns the intersection of the given row and col as a Point.
+        """
+        x = self.v_lines[col].pt1.x
+        y = self.h_lines[row].pt1.y
+        return Point(x, y)
+
+    @staticmethod
+    def get_star_lines(size):
+        ...  # returns offsets for star points (eg [2, 4, 6] on 9x9)
+
+    def make_black_stone(self):
+        return Circle(radius=self.stone_radius, style={"stroke": "black", "stroke_width": 1.3, "fill": "#000000"})
+
+    def make_white_stone(self):
+        return Circle(radius=self.stone_radius, style={"stroke": "black", "stroke_width": 1.3, "fill": "#FFFFFF"})
+
+    def make_text(self, string, anchor):
+        return Text(string, self.font_size, anchor, GoBoard.TEXT_STYLE)
+
+    def add_stone(self, player, row, col):
+        ...  # makes a stone, positions it, and appends it to self.stones
+
+    def get_group(self):
+        shapes = [self.bg]
+        shapes += self.h_lines
+        shapes += self.v_lines
+        shapes += self.star_points
+        shapes += self.grid_coords
+        shapes += self.stones
+        return Group(shapes, self.constraints)
+```
+
+This is a bit longer than the earlier examples, but I'm including it anyway to
+show how well Obsidian's idiomatic patterns hold up in this more complex
+context. Note how list comprehensions and helper functions like `evenly_spaced`
+help the code to remain terse and expressive. Here, too, there is a total lack
+of magic numbers.[^1]
+
+[^1]: Aside, arguably, from the offsets on the Text anchor points - but getting text to look right always seems to take a little bit of magic :)
+
+Note also how the series of steps followed by `__init__` is just the same as how
+one might draw a board by hand: mark the corners, identify the edges, distribute
+points evenly along each edge, form a grid by connecting opposite pairs of
+points with lines, place markings on certain grid intersections, then add
+annotations on the edges of the board.
+
+This class's `__init__` method accepts a number of parameters. Finding the ideal
+values for these parameters is an iterative process; we pick some values, render
+them, open the rendered file, then possibly make changes based on what we see,
+at which point the process repeats. The tighter we can make this loop, the
+faster we can iterate and the better our results will be. Enter Jupyter.
+
+If you haven't used Jupyter before, you're missing out. Jupyter's interface is
+great for the sort of interactive coding you do when drawing Obsidian figures,
+and figures can be rendered directly within the notebook. Not only that, but
+Jupyter provides widgets that can be used to manipulate render parameters. Look
+at this:
+
+(TODO)
+
+That's about as convenient as it gets.
+
+# Design
+
+## Shapes
+
+Obsidian is built around the concept of the `Shape`. Every `Shape` has two
+useful attributes: `bounds` (consisting of four edges) and `center`.
+
+By default, `center` is simply computed as: `Point((left_edge + right_edge) / 2, (top_edge + bottom_edge) / 2)`
+
+Almost every class in Obsidian is a [dataclass](https://docs.python.org/3/library/dataclasses.html).
+In particular, all `Shape` subclasses should be dataclasses. The relevant idioms
+are on display in `obsidian/geometry.py`.
+
+For instance, here's how the `Point` class is defined:
+
+```python
+@dataclass
+class Point(Shape):
+    x: REAL = SMTField()
+    y: REAL = SMTField()
+    style: STYLE = StyleField()
+
+    @property
+    def bounds(self):
+        x, y = self.x, self.y
+        return Bounds(x, x, y, y)  # just a point!
+```
+
+And here's `Rectangle`:
+
+```python
+@dataclass
+class Circle(Shape):
+    x: REAL = SMTField()
+    y: REAL = SMTField()
+    radius: REAL = SMTField()
+    style: STYLE = StyleField()
+
+    @property
+    def bounds(self):
+        left_edge, right_edge = self.x - self.radius, self.x + self.radius
+        top_edge, bottom_edge = self.y - self.radius, self.y + self.radius
+        return Bounds(left_edge, right_edge, top_edge, bottom_edge)
+```
+
+The `@dataclass` decorator automatically creates `__init__` methods for these
+classes based on their annotated fields. You can read about the details of how
+this works [here](https://docs.python.org/3/library/dataclasses.html). Any
+argument that is not supplied will be initialized to a default value; for
+anything marked as `SMTField`, this default value will be a fresh, unique free
+variable from the SMT solver which can be used in any constraint.
+
+## Groups
+
+A special type of `Shape` is the `Group`, which represents a collection of
+`Shape`s (potentially including other `Group`s). By default, a `Group` defines
+its bounds in terms of the `min`s and `max`es of its members' bounds.
+
+`Group` can be subclassed to create composite shapes (like
+`obsidian.symbols.XorSymbol`) or semi-structured shape containers (like
+`obsidian.shape.ShapeGrid`).
+
+## Canvas
+
+When you want to render a `Group`, you put it on a `Canvas`. In the simplest
+case, this just looks like so:
+
+```python
+group = Group([...], [...])
+canvas = Canvas(group)
+canvas.save_png("/tmp/file.png")
+```
+
+used this way, Canvas will:
+
+* Set its own width and height as equal to `group`'s width and height
+
+* Center-align `group` like so: `group.center |EQ| Point(width/2, height/2)`
+
+* Pass the constraints to the SMT solver and get a solution, if any exists
+
+* Use the solved model to render every shape from `group.shapes` in order
+
+* Store the rendered image as `canvas.rendered`
+
+* Save `canvas.rendered` as a PNG at the given path, i.e. `/tmp/file.png`
+
+If any of that is not what you want, you can override it. For instance, you can
+have Canvas align the group to any corner, or have it leave alignment entirely
+up to you. You can pass integers for `width` and `height`, or express them in
+terms of the SMT solver's free variables (e.g. `width = group.bounds.width +
+10`).
+
+`Canvas.render()` offers keyword arguments for two different forms of caching:
+it can store a solved model, and it can keep a cache of free variables' values.
+These are very basic features that I've included to try to speed up complex
+renders. They're not fancy, but they help. See the docstring for details.
+
+
+## Dependencies
+
+Obsidian uses pySMT to express constraints and feed them to a solver.
+All constraints are expressed in pySMT-native format, which effectively means
+that they're all instances of `pysmt.fnode.FNode`. As the user, you don't really
+need to know this unless you're writing type annotations or getting serious
+about optimization.
+
+For rendering, Obsidian uses a little library called `drawSvg`. This provides a
+layer of abstraction on top of Cairo (which is also required). `drawSvg` is
+small, nearly undocumented, and sort of eccentric, but it has all the features I
+want and offers them through a fairly terse interface, so I'm happy with it for
+now.[^2]
+
+[^2]: Ordinarily, Obsidian users will never have to touch `drawSvg`; however, you will need to use it if you want to generate animations, since the Canvas APIs currently only generate single frames.
+
+## Aligning Shapes
+
+Helper functions are provided for to help with aligning shapes. Each of these
+functions generates a single, possibly complex constraint. For instance:
+
+```python
+def top_align(shapes):
+    s = FreshSymbol(REAL)
+    return And(Equals(shape.bounds.top_edge, s) for shape in shapes)
+```
+
+This constrains all the shapes' top edges to the same (unknown) value,
+effectively setting them equal.
+
+```python
+def evenly_spaced(start_point, end_point, shapes):
+    n = len(shapes)
+    assert n > 1
+    constraints = []
+    for i in range(n):
+        j = n - i - 1
+        x = (start_point.x*j + end_point.x*i) / (n-1)
+        y = (start_point.y*j + end_point.y*i) / (n-1)
+        constraints.append(Equals(shapes[i].x, x))
+        constraints.append(Equals(shapes[i].y, y))
+    return And(constraints)
+```
+
+This sets the `x` and `y` attributes of the objects in `shapes` such that the
+shapes are evenly distributed between `start_point` and `end_point`. You can see
+this function in action within `GoBoard.__init__()`.
+
+## Infix Operators
+
+This is one of the more unusual parts of Obsidian.
+
+First, a little background.
+
+By default, Python functions use a form of _prefix notation_: a function `F` of
+two arguments `a, b` is written `F(a, b)`. However, certain built-in operators
+use _infix notation_: for instance, we write `1 + 1` rather than `+ 1 1`,
+placing the `+` operator between, not ahead of, its arguments.
+
+Python has a number of built-in infix operators, but does not offer any way to
+define new ones. This is unfortunate, since just about everyone prefers to write
+math in infix notation.
+
+There are two options here. The first is to repurpose a built-in infix operator.
+For example, Python doesn't let you override the `==` operator itself, but it
+does let you provide your own `__eq__` methods which behave however you want.
+
+Technically this _could_ be used to make the expression `smt_var_1 == smt_var_2`
+return a constraint.[^3] This approach has some drawbacks, though. For instance,
+[`__eq__` and related methods](https://docs.python.org/3/reference/datamodel.html#object.__eq__)
+have [some convoluted semantics](https://stackoverflow.com/questions/3588776/how-is-eq-handled-in-python-and-in-what-order)
+which only really make sense in the context of boolean comparisons.
+
+Another downside is that we lose the ability to actually use `==` in its
+intended way, to compare variables by value. Since Python objects are True by
+default, a conditional like `if smt_var_1 == smt_var_2:` will _always_ execute,
+even if the two variables are distinct. Similarly, by default
+`smt_var_1 != smt_var_2` would always be False for _any_ pair of free variables,
+since its default implementation is simply `return not self.__eq__(other)` and
+arbitrary objects are considered truthy by default.
+
+We could still compare by reference (e.g. `smt_var_1 is smt_var_2`) but this is
+fragile and makes us unnecessarily dependent on assumptions about our SMT
+library's implementation.
+
+[^3]: This is, for instance, the option that Basalt appears to have chosen.
+
+Luckily, there's another option. Check out this excerpt from
+`obsidian/infix.py`:
+
+```python
+class Infix:
+    """
+    Cute little hack for defining custom infix operators.
+    Attrib: https://code.activestate.com/recipes/384122/#c5
+    Usage:
+
+    >>> import operator
+    >>> mul = Infix(operator.mul)
+    >>> 4 |mul| 4
+    16
+    >>> div = Infix(operator.truediv)
+    >>> 8 |div| (2 |div| 2)
+    8.0
+    """
+
+    def __init__(self, f):
+        self.f = f
+
+    def __ror__(self, other):
+        return Infix(lambda x: self.f(other, x))
+
+    def __or__(self, other):
+        return self.f(other)
+```
+
+This customizes the `|` operator, which has simpler semantics than `==` and is
+expected to return non-boolean values. This doesn't really define a new infix
+operator - evaluation proceeds like `(4 | mul) | 4`, with `|` as the infix
+operator in both steps - but it allows us to write custom operators in a way
+which mimics infix notation.
+
+At first glance this syntax may look unusual, but it allows us to keep using
+`==` in the intended way, avoiding the confusion of having `a == b` sometimes
+returning something other than a `bool`.
+
+Obsidian defines infix operators for equality and inequality: `|EQ|` and `|NE|`.
+Our SMT solver library (`pySMT`) supports infix arithmetic (eg `smt_var + 5`),
+plus infix boolean conjunctions (eg `smt_var_1 & smt_var_2`), so those are
+already taken care of.
+
+`EQ` and `NE` accept any pySMT expression; they also accept `obsidian.Point`
+objects. `point_1 |EQ| point_2` is equivalent to `(point_1.x |EQ| point_2.x) &
+(point_1.y |EQ| point_2.y)`.
+
+Note that while we do lean on the `|` operator for this special behavior, we
+don't have to override its default behavior to do so. This is because our
+special behavior is only triggered when one of `|`'s arguments is an `Infix`
+instance. Absent `Infix`, `|` behaves normally.
+
+# Next Steps
+
+Obsidian is a work in progress. It's usable - I've been using it - but there is
+still room for improvement and expansion.
+
+## Speed
+
+Simple figures render instantly; complex ones may take longer. If you have a
+figure with thousands of shapes (and thus thousands of free variables), renders
+might take at least a few seconds.
+
+There are some tricks you can use to improve performance.
+
+* If you're rendering the same arrangement of shapes with different styles (eg
+  for an animation), you can use a cache to speed things up; see
+  `Canvas.render()`'s docstring for details.
+
+* Every constraint object comes with a `.simplify()` method, and simplifying
+  complex constraints may speed up your overall render time. If you're working
+  in Jupyter, you can use `%time` to benchmark any step in your script. This can
+  tell you whether or not your simplifications are helping. If you want to
+  simplify a list of constraints, pass them to `pysmt.shortcuts.And` first.
+
+* If you are subclassing Group and making heavy use of your custom group's
+  `bounds` attribute, you may see performance benefits from overriding the
+  default implementation. The default looks at every sub-shape's bounds and
+  takes `min`s and `max`es across them; you can likely find a simpler
+  representation for this data.
+
+Before this project I'd never touched an SMT solver, so I'm sure there are all
+sorts of improvements that I've missed. I'd be really interested to get input
+from anyone who has more background in this area.
+
+## Variety
+
+I've just been adding things to this library as I've needed (or wanted) them. If
+you find yourself using this, you'll likely want to do the same. Please feel
+free to do so and submit pull requests!
+
+Just for reference: I've been collecting basic geometric shapes under
+`geometry.py`, text and symbols under `symbols.py`, and helper functions for
+nontrivial constraints under `arrange.py`. Abstract helper groups like ShapeGrid
+live in `groups.py`. This layout is sort of ad-hoc, but it has worked so far.
+
+We're missing some pretty obvious features (e.g. arrows, arcs, a helper for
+multi-segment lines) but at some point down the road I would expect us to reach
+feature parity with SVG.
+
+## Flexibility
+
+Currently we're letting `pySMT` decide what solver to use. It might be a good
+idea to let the user override this behavior. I don't know enough about solvers
+to have strong opinions here, but would be very interested to hear other folks'
+takes on this.
+
+## svgDraw
+
+This library has everything we need, but it also has some eccentricities, and it
+lacks any API documentation beyond the repo's `README.md`. I know, that's not
+great. We could either bring in a different dependency if anyone knows another
+one with feature parity (including Jupyter rendering), or we could contribute
+some docs to `svgDraw`. I'd lean towards the latter option.
+
+Another note on `svgDraw`: currently, it positions the coordinate system's
+origin in the canvas's bottom-left corner, with the positive y-direction
+pointing upwards. Obsidian follows the convention more commonly found in
+interactive graphics software, where the origin is in the top-left and the
+positive y-direction points downwards. This requires our renderers in
+`canvas.py` to finesse our y-coordinates somewhat for the sake of compatibility.
+
+`svgDraw` allows the user to move the origin, but not to invert the y-axis; it
+would be nice if they supported that inversion and added a flag to apply all the
+necessary changes to convert from one coordinate system to the other. This isn't
+strictly needed - Obsidian's renderer can, and does, handle this on its own -
+but it would be a cool feature for `svgDraw` to have, and it would make
+Obsidian's code a lot cleaner, too.
+
+## pySMT
+
+`svgDraw` isn't the only library with eccentricities. `pySMT` has a minor bug
+which actually prevents our infix operators from working unless we patch it
+at runtime. The issue has to do with how Python handles operators like `|`. I
+won't go into the full details here - you can read about them [in the comment
+block above Obsidian's patch](https://github.com/wootfish/obsidian/blob/master/obsidian/__init__.py#L15)
+in `__init__.py`.
+
+This is a minor bug, but it might be nice to draw up and submit a bugfix so we
+can remove that weird patch from `obsidian.__init__`.
+
+## Styling and Animation
+
+Currently, complex style information (e.g. gradients) has to be expressed
+through svgDraw's APIs. Ditto for animations: Obsidian can render individual
+frames, but collecting them into (say) a GIF requires importing from svgDraw. I
+haven't seen any benefit to wrapping this functionality, but something about
+exposing our dependencies to end user code seems strange, so I thought I'd call
+it out here.
+
+## More Examples
+
+I'm happy with the examples Obsidian has, but I'd like to write (or see) more.
+
+It'd be interesting to see how terse we can get with scripts for simple
+geometric patterns like the Petersen graph or a Fibonacci spiral.
+
+Circuit diagrams could be another fun challenge. In a similar vein, I'd like to
+take a crack at reproducing the sorts of wire diagrams you always find in books
+and articles on computer architecture, since that's something I think Obsidian
+could do exceptionally well (and something touched on in the examples from the
+blog post linked in the Preface).
+
+Some more interactive examples would be nice, as would examples of animations
+or examples with more complex styling.
+
+# Conclusion
+
+Obsidian gives you a terse, clear, expressive vocabulary for describing images
+with code and then rendering your descriptions. It lets you harness the full
+power of modern SMT solvers to generate figures based on constraints which can
+be as simple or complex as you like. It is designed to be easy to use, easy to
+read, and easy to extend.
+
+[The full code base is open source](https://github.com/wootfish/obsidian).
+Contributions are invited, and if you found this interesting, feel free to
+[get in touch](https://eli.sohl.com/contact)!
+
+<hr>

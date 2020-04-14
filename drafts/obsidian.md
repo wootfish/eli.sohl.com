@@ -22,11 +22,11 @@ tasks like aligning shapes, grouping them together, rearranging them, and so on.
 Drawing even simple figures becomes repetitive, tedious, and error-prone.
 
 Using these tools, the relationships between shapes usually end up being
-implicit, not explicit, and there always seems to come a point when I'll have to
-cover for the tool's shortcomings through ugly hacks like hard-coding positions
-that I've calculated by hand. The result always ends up feeling just barely good
-enough, and modifying it feels like playing jenga, where even the slightest
-movement could instantly break everything.
+implicit, not explicit, and there always seems to come a point where I'll have
+to cover for the tool's shortcomings through ugly hacks like hard-coding
+positions that I've calculated by hand. The result always ends up feeling just
+barely good enough, and modifying it feels like playing jenga, where even the
+slightest movement could instantly break everything.
 
 What I want is a tool whose data model matches my mental model: a tool that
 works in terms of shapes and arrangements.
@@ -40,7 +40,7 @@ define everything in clear, abstract terms, writing expressive code free from
 magic numbers and letting the machine take care of the details. It's not a new
 idea, but it is a good idea.
 
-A couple months later, I came up with a great use case for Basalt, but was
+A few months later, I came up with a great use case for Basalt, but was
 disappointed to realize that the library had never been released. I'm not sure
 if it's still being developed - the author seems pretty busy - but the idea was
 good enough that I thought, _hey, why not try and build this myself_?
@@ -68,7 +68,7 @@ This means that the relationships between shapes can take any form understood by
 the solver, effectively allowing them to be arbitrarily complex. Forget about
 "snap to guides" - we live in the future, we can do better than that.
 
-You can save rendered images as PNG, SVG, or GIF (static or animated).
+The renderer currently supports PNG, SVG, and GIF (static or animated).
 
 If you use Jupyter notebooks, you can also display rendered images natively
 within your notebooks and even use Jupyter's IO widgets to interactively adjust
@@ -121,7 +121,7 @@ Note the total absence of magic numbers in this script. In fact, it uses almost
 no numbers at all. Instead, shapes are created, relationships between their
 attributes are defined, and Obsidian takes it from there.
 
-Don't get hung up on the unusual `|EQ|` syntax. More will be said on this below.
+Don't get hung up on the unusual `|EQ|` syntax. More will be said on that below.
 In brief, it's a way of using infix syntax with custom operators. The `EQ`
 operator in particular represents an equality constraint. We use `EQ` rather
 than `==` because the latter is generally expected to return a bool or bool-like
@@ -163,10 +163,10 @@ And here's the output:
 
 <img src="/assets/img/square_grid.svg">
 
-This example makes use of Obsidian's built-in ShapeGrid class. This is a special
-kind of Group which knows how to generate the necessary constraints to arrange
-shapes into rows and columns with uniform spacing. Helper classes like this
-allow us to keep Obsidian scripts terse and expressive.
+This example makes use of Obsidian's built-in `ShapeGrid` class. This is a
+special kind of `Group` which knows how to generate the necessary constraints to
+arrange shapes into rows and columns with uniform spacing. Helper classes like
+this allow us to keep Obsidian scripts terse and expressive.
 
 Note that the canvas's width and height don't need to be specified explicitly -
 they'll be derived and converted to integers once the solver determines values
@@ -294,8 +294,8 @@ class GoBoard:
 This is a bit longer than the earlier examples, but I'm including it anyway to
 show how well Obsidian's idiomatic patterns hold up in this more complex
 context. Note how list comprehensions and helper functions like `evenly_spaced`
-help the code to remain terse and expressive. Here, too, there is a total lack
-of magic numbers.[^1]
+allow each section of the program to remain terse and expressive. Here, too,
+there is a total lack of magic numbers.[^1]
 
 [^1]: Aside, arguably, from the offsets on the Text anchor points - but getting text to look right always seems to take a little bit of magic :)
 
@@ -494,12 +494,11 @@ have [some convoluted semantics](https://stackoverflow.com/questions/3588776/how
 which only really make sense in the context of boolean comparisons.
 
 Another downside is that we lose the ability to actually use `==` in its
-intended way, to compare variables by value. Since Python objects are True by
-default, a conditional like `if smt_var_1 == smt_var_2:` will _always_ execute,
-even if the two variables are distinct. Similarly, by default
-`smt_var_1 != smt_var_2` would always be False for _any_ pair of free variables,
-since its default implementation is simply `return not self.__eq__(other)` and
-arbitrary objects are considered truthy by default.
+intended way: to compare variables by value. Since Python objects are True by
+default, a conditional like `if smt_var_1 == smt_var_2:` would _always_ execute,
+even if the two variables are distinct. Similarly, by default `smt_var_1 !=
+smt_var_2` would always be False for _any_ pair of free variables, since its
+default implementation is simply `return not self.__eq__(other)`.
 
 We could still compare by reference (e.g. `smt_var_1 is smt_var_2`) but this is
 fragile and makes us unnecessarily dependent on assumptions about our SMT
@@ -552,7 +551,7 @@ since our SMT solver library (`pySMT`) supports infix arithmetic (eg `var_1 =
 var_2 + 5`) and infix boolean conjunctions (eg `var_1 = var_2 & var_3`) already.
 
 `EQ` and `NE` accept any pySMT expression; they also accept `obsidian.Point`
-objects. `point_1 |EQ| point_2` is equivalent to `(point_1.x |EQ| point_2.x) &
+instances. `point_1 |EQ| point_2` is equivalent to `(point_1.x |EQ| point_2.x) &
 (point_1.y |EQ| point_2.y)`.
 
 Note that while we do lean on the `|` operator for this special behavior, we
@@ -560,18 +559,20 @@ don't have to override its default behavior to do so. This is because our
 special behavior is only triggered when one of `|`'s arguments is an `Infix`
 instance. Absent `Infix`, `|` behaves normally.
 
-You may be wondering why I chose `|`. The reason is simple: in Python's
-[operator precedence ordering](https://docs.python.org/3/reference/expressions.html#evaluation-order),
-`|` is the next operator after `==`, meaning that `var1 |EQ| var2` will obey the
-same operator precedence as `var1 == var1`.
+You may be wondering why we're using `|`. The reasons is simple: first, it looks
+cool; second, in Python's [operator precedence ordering](https://docs.python.org/3/reference/expressions.html#evaluation-order),
+`|` is the next operator after `==`, meaning that `var1 |EQ| var2` will a
+functionally equivalent order of operations to `var1 == var1` in practically all
+situations.
 
 There is one tiny limitation to this notation.
 
-Python allows programmers to write a three-way comparison `a == b == c` and
-evaluates this the way a novice programmer would expect, i.e. `(a == b) and (b
-== c)`, rather than evaluating it in the way programmers coming from a
-background in less helpful languages might expect, i.e. as `(a == b) == c`.
-Unfortunately `a |EQ| b |EQ| c` obeys the latter semantics, not the former.
+Python allows programmers to write three-way comparisons like `a == b == c`. The
+interpreter evaluates these the way a novice programmer would expect, i.e. `(a
+== b) and (b == c)`, rather than evaluating it in the way programmers coming
+from a background in less helpful languages might expect, i.e. as `(a == b) ==
+c`. Unfortunately `a |EQ| b |EQ| c` follows the latter semantics, not the
+former.
 
 The reason for this behavior is just that it keeps the implementation of `Infix`
 simple. If anyone is interested in working on lifting this limitation, I have
@@ -594,17 +595,17 @@ There are some tricks you can use to improve performance.
   for an animation), you can use a cache to speed things up; see
   `Canvas.render()`'s docstring for details.
 
-* Every constraint object comes with a `.simplify()` method, and simplifying
-  complex constraints may speed up your overall render time. If you're working
-  in Jupyter, you can use `%time` to benchmark any step in your script. This can
+* Every constraint object comes with a `.simplify()` method. Simplifying complex
+  constraints may speed up your overall render time. If you're working in
+  Jupyter, you can use `%time` to benchmark any step in your script, which can
   tell you whether or not your simplifications are helping. If you want to
   simplify a list of constraints, pass them to `pysmt.shortcuts.And` first.
 
 * If you are subclassing Group and making heavy use of your custom group's
   `bounds` attribute, you may see performance benefits from overriding the
-  default implementation. The default looks at every sub-shape's bounds and
-  takes `min`s and `max`es across them; you can likely find a simpler
-  representation for this data.
+  default implementation of `bounds. The default looks at every sub-shape's
+  bounds and takes `min`s and `max`es across them; you can likely find a simpler
+  way of deriving for this data.
 
 Before this project I'd never touched an SMT solver, so I'm sure there are all
 sorts of improvements that I've missed. I'd be really interested to get input
@@ -622,8 +623,14 @@ nontrivial constraints under `arrange.py`. Abstract helper groups like ShapeGrid
 live in `groups.py`. This layout is sort of ad-hoc, but it has worked so far.
 
 We're missing some pretty obvious features (e.g. arrows, arcs, a helper for
-multi-segment lines) but at some point down the road I would expect us to reach
-feature parity with SVG.
+multi-segment lines), mostly just because my free time is finite, but at some
+point down the road I would expect us to reach feature parity with SVG.
+
+In addition, it'd be cool to add more functionality to the shapes we have
+(for example, there's no reason why we couldn't, say, support vector math with
+Line instances - cross products could be useful for constructing perpendicular
+lines at arbitrary angles from the coordinate axes). Again, I've just been
+adding things as I need them, so there's plenty left to do here.
 
 ## Flexibility
 
@@ -632,31 +639,36 @@ idea to let the user override this behavior. I don't know enough about solvers
 to have strong opinions here, but would be very interested to hear other folks'
 takes on this.
 
-## svgDraw
+## drawSvg
 
 This library has everything we need, but it also has some eccentricities, and it
 lacks any API documentation beyond the repo's `README.md`. I know, that's not
 great. We could either bring in a different dependency if anyone knows another
 one with feature parity (including Jupyter rendering), or we could contribute
-some docs to `svgDraw`. I'd lean towards the latter option.
+some docs to `drawSvg`. I'd lean towards the latter option.
 
-Another note on `svgDraw`: currently, it positions the coordinate system's
+Another note on `drawSvg`: currently, it positions the coordinate system's
 origin in the canvas's bottom-left corner, with the positive y-direction
 pointing upwards. Obsidian follows the convention more commonly found in
 interactive graphics software, where the origin is in the top-left and the
 positive y-direction points downwards. This requires our renderers in
 `canvas.py` to finesse our y-coordinates somewhat for the sake of compatibility.
 
-`svgDraw` allows the user to move the origin, but not to invert the y-axis; it
+`drawSvg` allows the user to move the origin, but not to invert the y-axis; it
 would be nice if they supported that inversion and added a flag to apply all the
 necessary changes to convert from one coordinate system to the other. This isn't
 strictly needed - Obsidian's renderer can, and does, handle this on its own -
-but it would be a cool feature for `svgDraw` to have, and it would make
+but it would be a cool feature for `drawSvg` to have, and it would make
 Obsidian's code a lot cleaner, too.
+
+I also wonder (and, to be clear, this is nothing more than a gut feeling)
+whether drawSvg's render times could be sped up. This could be interesting to
+look at down the road, perhaps once we've reached the point of diminishing
+returns with Obsidian's own internal optimizations.
 
 ## pySMT
 
-`svgDraw` isn't the only library with eccentricities. `pySMT` has a minor bug
+`drawSvg` isn't the only library with eccentricities. `pySMT` has a minor bug
 which actually prevents our infix operators from working unless we patch it
 at runtime. The issue has to do with how Python handles operators like `|`. I
 won't go into the full details here - you can read about them [in the comment
@@ -669,8 +681,8 @@ can remove that weird patch from `obsidian.__init__`.
 ## Styling and Animation
 
 Currently, complex style information (e.g. gradients) has to be expressed
-through svgDraw's APIs. Ditto for animations: Obsidian can render individual
-frames, but collecting them into (say) a GIF requires importing from svgDraw. I
+through drawSvg's APIs. Ditto for animations: Obsidian can render individual
+frames, but collecting them into (say) a GIF requires importing from drawSvg. I
 haven't seen any benefit to wrapping this functionality, but something about
 exposing our dependencies to end user code seems strange, so I thought I'd call
 it out here.
@@ -698,6 +710,9 @@ blog post linked in the Preface).
 
 Some more interactive examples would be nice, as would examples of animations
 or examples with more complex styling.
+
+I've got plenty of ideas for examples of all complexity levels and would be
+happy to workshop examples with anyone who feels like making contributions here.
 
 # Conclusion
 

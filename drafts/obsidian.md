@@ -349,7 +349,7 @@ class Point(Shape):
         return Bounds(x, x, y, y)  # just a point!
 ```
 
-And here's `Rectangle`:
+And here's `Circle`:
 
 ```python
 @dataclass

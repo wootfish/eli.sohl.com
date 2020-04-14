@@ -2,15 +2,11 @@ function checkFancyEnabled() {
     var enabled = localStorage.getItem("enabled");
 
     if (enabled === null) {
-        enableFancy();
+        disableFancy();
         return true;
     }
 
-    if (enabled === "true") {
-        return true;
-    }
-
-    return false;
+    return (enabled === "true");
 }
 
 

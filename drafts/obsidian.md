@@ -21,12 +21,12 @@ my own mindset. I'm always surprised by how much effort is involved in simple
 tasks like aligning shapes, grouping them together, rearranging them, and so on.
 Drawing even simple figures becomes repetitive, tedious, and error-prone.
 
-Using these tools, the relationships between shapes usually end up being
-implicit, not explicit, and there always seems to come a point where I'll have
-to cover for the tool's shortcomings through ugly hacks like hard-coding
-positions that I've calculated by hand. The result always ends up feeling just
-barely good enough, and modifying it feels like playing jenga, where even the
-slightest movement could instantly break everything.
+Using these tools, the relationships between shapes often end up being implicit,
+not explicit, and there always seems to come a point where I'll have to cover
+for the tool's shortcomings through ugly hacks like hard-coding positions that
+I've calculated by hand. The result ends up feeling just barely good enough, and
+modifying it feels like playing jenga, where even the slightest movement could
+instantly break everything.
 
 What I want is a tool whose data model matches my mental model: a tool that
 works in terms of shapes and arrangements.
@@ -299,7 +299,7 @@ there is a total lack of magic numbers.[^1]
 
 [^1]: Aside, arguably, from the offsets on the Text anchor points - but getting text to look right always seems to take a little bit of magic :)
 
-Note also how the series of steps followed by `__init__` is just the same as how
+Note also how the series of steps followed in `__init__` is just the same as how
 one might draw a board by hand: mark the corners, identify the edges, distribute
 points evenly along each edge, form a grid by connecting opposite pairs of
 points with lines, place markings on certain grid intersections, then add
@@ -317,11 +317,22 @@ and figures can be rendered directly within the notebook. Not only that, but
 Jupyter provides widgets that can be used to manipulate render parameters. Look
 at this:
 
-(TODO)
+<video src="/assets/vid/interactive-board.mp4" controls loop muted></video>
 
-That's about as convenient as it gets.
+Note that _no modifications at all_ needed to be made to `go_board.py` to set up
+this video. The Jupyter notebook ([which you can view here](https://github.com/wootfish/obsidian/blob/master/examples/go_board_interactive.ipynb))
+simply `import`s `go_board`, wraps its methods with some interactive widgets,
+and returns the result. That's all you need to do.
+
+Why might you want this? Well, there comes a point in virtually every graphic
+design project where you'll be spending the vast majority of your time tweaking
+a handful of parameters and seeing how you like the results. The faster you can
+see and compare the results of those tweaks, the more productive you'll be - and
+it's hard to imagine getting much faster than what you see in the above video.
 
 # Design
+
+OK, now that you've seen Obsidian in action, let's take a look under the hood.
 
 ## Shapes
 
@@ -332,7 +343,7 @@ By default, `center` is simply computed as: `Point((left_edge + right_edge) / 2,
 
 Almost every class in Obsidian is a [dataclass](https://docs.python.org/3/library/dataclasses.html).
 In particular, all `Shape` subclasses should be dataclasses. The relevant idioms
-are on display in `obsidian/geometry.py`.
+are on display in [`obsidian/geometry.py`](https://github.com/wootfish/obsidian/blob/master/obsidian/geometry.py).
 
 For instance, here's how the `Point` class is defined:
 
@@ -375,7 +386,7 @@ variable from the SMT solver which can be used in any constraint.
 
 ## Groups
 
-A special type of `Shape` is the `Group`, which represents a collection of
+The `Group` is a special type of `Shape` representing a collection of other
 `Shape`s (potentially including other `Group`s). By default, a `Group` defines
 its bounds in terms of the `min`s and `max`es of its members' bounds.
 
@@ -383,10 +394,10 @@ its bounds in terms of the `min`s and `max`es of its members' bounds.
 `obsidian.symbols.XorSymbol`) or semi-structured shape containers (like
 `obsidian.shape.ShapeGrid`).
 
-## Canvas
+## Canvases
 
 When you want to render a `Group`, you put it on a `Canvas`. In the simplest
-case, this just looks like so:
+case, this looks like so:
 
 ```python
 group = Group([...], [...])
@@ -394,7 +405,7 @@ canvas = Canvas(group)
 canvas.save_png("/tmp/file.png")
 ```
 
-used this way, Canvas will:
+Used this way, Canvas will:
 
 * Set its own width and height as equal to `group`'s width and height
 
@@ -415,9 +426,10 @@ terms of the SMT solver's free variables (e.g. `width = group.bounds.width +
 10`).
 
 `Canvas.render()` offers keyword arguments for two different forms of caching:
-it can store a solved model, and it can keep a cache of free variables' values.
-These are very basic features that I've included to try to speed up complex
-renders. They're not fancy, but they help. See the docstring for details.
+it can store a solved model, and it can keep a cache of solved variables'
+values. These are very basic features that I've included to try to speed up
+complex renders. They're not fancy, but they help. See the docstring for
+details.
 
 
 ## Dependencies
@@ -438,7 +450,7 @@ now.[^2]
 
 ## Aligning Shapes
 
-Helper functions are provided for to help with aligning shapes. Each of these
+Some utility functions are provided to help with aligning shapes. Each of these
 functions generates a single, possibly complex constraint. For instance:
 
 ```python
@@ -447,8 +459,8 @@ def top_align(shapes):
     return And(Equals(shape.bounds.top_edge, s) for shape in shapes)
 ```
 
-This constrains all the shapes' top edges to the same (unknown) value,
-effectively setting them equal.
+This constrains all the shapes' top edges to the same value, effectively setting
+them equal to each other. This and `left_align` are used by `ShapeGrid`.
 
 ```python
 def evenly_spaced(start_point, end_point, shapes):
@@ -465,8 +477,8 @@ def evenly_spaced(start_point, end_point, shapes):
 ```
 
 This sets the `x` and `y` attributes of the objects in `shapes` such that the
-shapes are evenly distributed between `start_point` and `end_point`. You can see
-this function in action within `GoBoard.__init__()`.
+shapes are evenly distributed on a line between `start_point` and `end_point`.
+You can see this function in action within `GoBoard.__init__()`.
 
 ## Infix Operators
 
@@ -501,7 +513,7 @@ smt_var_2` would always be False for _any_ pair of free variables, since its
 default implementation is simply `return not self.__eq__(other)`.
 
 We could still compare by reference (e.g. `smt_var_1 is smt_var_2`) but this is
-fragile and makes us unnecessarily dependent on assumptions about our SMT
+fragile and leaves us inconveniently dependent on assumptions about our SMT
 library's implementation.
 
 [^3]: This is, for instance, the option that Basalt appears to have chosen.
@@ -536,8 +548,8 @@ class Infix:
 ```
 
 This customizes the `|` operator, which has simpler semantics than `==` and is
-expected to return non-boolean values. This doesn't really define a new infix
-operator - evaluation proceeds like `(4 | mul) | 4`, with `|` as the infix
+expected to return non-boolean values. This doesn't really define any new infix
+operators - evaluation proceeds like `(4 | mul) | 4`, with `|` as the infix
 operator in both steps - but it allows us to write custom operators in a way
 which mimics infix notation.
 
@@ -547,8 +559,9 @@ returning something other than a `bool`.
 
 Obsidian defines infix operators for equality and inequality: `obsidian.EQ` and
 `obsidian.NE`. These are the only operators I've found myself needing so far,
-since our SMT solver library (`pySMT`) supports infix arithmetic (eg `var_1 =
-var_2 + 5`) and infix boolean conjunctions (eg `var_1 = var_2 & var_3`) already.
+since our SMT solver library (`pySMT`) already supports infix arithmetic (eg `var_1 =
+var_2 + 5`) and infix boolean conjunctions (eg `formula_1 = formula_2 &
+formula_3`).
 
 `EQ` and `NE` accept any pySMT expression; they also accept `obsidian.Point`
 instances. `point_1 |EQ| point_2` is equivalent to `(point_1.x |EQ| point_2.x) &
@@ -559,11 +572,12 @@ don't have to override its default behavior to do so. This is because our
 special behavior is only triggered when one of `|`'s arguments is an `Infix`
 instance. Absent `Infix`, `|` behaves normally.
 
-You may be wondering why we're using `|`. The reasons is simple: first, it looks
-cool; second, in Python's [operator precedence ordering](https://docs.python.org/3/reference/expressions.html#evaluation-order),
-`|` is the next operator after `==`, meaning that `var1 |EQ| var2` will a
-functionally equivalent order of operations to `var1 == var1` in practically all
-situations.
+You may be wondering why we're using `|`. Two reasons: first, it looks cool;
+second, in Python's [operator precedence ordering](https://docs.python.org/3/reference/expressions.html#evaluation-order),
+`|` is the next operator after `==`, meaning that your intuitions about operator
+precedence for `==` will (almost)[^4] always apply to `|EQ|` as well.
+
+[^4]: Here's the only difference: there are a handful of operators that hold equal precedence to `==` but take precedence over `|`. They are: `in`, `not in`, `is`, `is not`, `<`, `<=`, `>`, `>=`, `!=`. Fortunately, none of these operators tend to show up in the same expressions as `|EQ|` constraints, so this isn't something you ever really have to worry about.
 
 There is one tiny limitation to this notation.
 
@@ -589,9 +603,9 @@ Simple figures render instantly; complex ones may take longer. If you have a
 figure with thousands of shapes (and thus thousands of free variables), renders
 might take at least a few seconds.
 
-There are some tricks you can use to improve performance.
+Here are some tricks you can use to improve performance:
 
-* If you're rendering the same arrangement of shapes with different styles (eg
+* If you're rendering the same arrangement of shapes with different styles (e.g.
   for an animation), you can use a cache to speed things up; see
   `Canvas.render()`'s docstring for details.
 
@@ -603,9 +617,9 @@ There are some tricks you can use to improve performance.
 
 * If you are subclassing Group and making heavy use of your custom group's
   `bounds` attribute, you may see performance benefits from overriding the
-  default implementation of `bounds. The default looks at every sub-shape's
-  bounds and takes `min`s and `max`es across them; you can likely find a simpler
-  way of deriving for this data.
+  default implementation of `bounds`. The default looks at every sub-shape's
+  bounds and takes `min`s and `max`es across them; you can likely find a more
+  efficient way of deriving for this data.
 
 Before this project I'd never touched an SMT solver, so I'm sure there are all
 sorts of improvements that I've missed. I'd be really interested to get input
@@ -628,15 +642,15 @@ point down the road I would expect us to reach feature parity with SVG.
 
 In addition, it'd be cool to add more functionality to the shapes we have
 (for example, there's no reason why we couldn't, say, support vector math with
-Line instances - cross products could be useful for constructing perpendicular
-lines at arbitrary angles from the coordinate axes). Again, I've just been
-adding things as I need them, so there's plenty left to do here.
+Line instances, and I can think of a few situations where that could be really
+useful). Again, I've just been adding things as I need them, so there's plenty
+left to do here.
 
 ## Flexibility
 
 Currently we're letting `pySMT` decide what solver to use. It might be a good
 idea to let the user override this behavior. I don't know enough about solvers
-to have strong opinions here, but would be very interested to hear other folks'
+to have strong opinions here; I would be very interested to hear other folks'
 takes on this.
 
 ## drawSvg
@@ -661,10 +675,9 @@ strictly needed - Obsidian's renderer can, and does, handle this on its own -
 but it would be a cool feature for `drawSvg` to have, and it would make
 Obsidian's code a lot cleaner, too.
 
-I also wonder (and, to be clear, this is nothing more than a gut feeling)
-whether drawSvg's render times could be sped up. This could be interesting to
-look at down the road, perhaps once we've reached the point of diminishing
-returns with Obsidian's own internal optimizations.
+I also wonder whether drawSvg's render times could be sped up. This could be
+interesting to look at down the road, perhaps once we've reached the point of
+diminishing returns with Obsidian's own internal optimizations.
 
 ## pySMT
 
@@ -712,7 +725,7 @@ Some more interactive examples would be nice, as would examples of animations
 or examples with more complex styling.
 
 I've got plenty of ideas for examples of all complexity levels and would be
-happy to workshop examples with anyone who feels like making contributions here.
+happy to workshop these with anyone who feels like making a contribution.
 
 # Conclusion
 
@@ -722,7 +735,7 @@ power of modern SMT solvers to generate figures based on constraints which can
 be as simple or complex as you like. It is designed to be easy to use, easy to
 read, and easy to extend.
 
-[The full code base is open source](https://github.com/wootfish/obsidian).
+[The full codebase is open source](https://github.com/wootfish/obsidian).
 Contributions are invited, and if you found this interesting, feel free to
 [get in touch](https://eli.sohl.com/contact)!
 

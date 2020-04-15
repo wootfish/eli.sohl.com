@@ -299,17 +299,24 @@ there is a total lack of magic numbers.[^1]
 
 [^1]: Aside, arguably, from the offsets on the Text anchor points - but getting text to look right always seems to take a little bit of magic :)
 
-Note also how the series of steps followed in `__init__` is just the same as how
-one might draw a board by hand: mark the corners, identify the edges, distribute
-points evenly along each edge, form a grid by connecting opposite pairs of
-points with lines, place markings on certain grid intersections, then add
-annotations on the edges of the board.
+Interestingly, the series of steps followed in `__init__` is just the same as
+how one might draw a board by hand: mark the corners, identify the edges,
+distribute points evenly along each edge, form a grid by connecting opposite
+pairs of points with lines, place markings on certain grid intersections, then
+add annotations on the edges of the board.
 
-This class's `__init__` method accepts a number of parameters. Finding the ideal
-values for these parameters is an iterative process; we pick some values, render
-them, open the rendered file, then possibly make changes based on what we see,
-at which point the process repeats. The tighter we can make this loop, the
-faster we can iterate and the better our results will be. Enter Jupyter.
+The fact that this process aligns perfectly with how we might describe (or even
+imagine) the layout of a Go board is a strong indicator that we've found a
+system which closely mirrors our mental models.
+
+What's more, since this description is generic, it is also flexible. It works
+perfectly well for traditional board sizes (9x9, 13x13, 19x19), but it is by no
+means limited to them. In fact, offering a class which supports (say) arbitrary
+row and column counts _is exactly as easy_ as supporting the most common sizes.
+
+As a result, this class's `__init__` method accepts a number of parameters.
+Finding the ideal values for these parameters is an iterative process. How can
+we iterate as quickly and easily as possible? Enter Jupyter.
 
 If you haven't used Jupyter before, you're missing out. Jupyter's interface is
 great for the sort of interactive coding you do when drawing Obsidian figures,
@@ -319,16 +326,16 @@ at this:
 
 <video src="/assets/vid/interactive-board.mp4" controls loop muted></video>
 
-Note that _no modifications at all_ needed to be made to `go_board.py` to set up
-this video. The Jupyter notebook ([which you can view here](https://github.com/wootfish/obsidian/blob/master/examples/go_board_interactive.ipynb))
-simply `import`s `go_board`, wraps its methods with some interactive widgets,
-and returns the result. That's all you need to do.
+Note that `go_board.py` required _no modifications whatsoever_ in order for this
+to work. The Jupyter notebook ([which you can view here](https://github.com/wootfish/obsidian/blob/master/examples/go_board_interactive.ipynb))
+simply starts with `import go_board`, wraps `go_board`'s methods with some
+interactive widgets, and returns the result. That's all you need to do.
 
-Why might you want this? Well, there comes a point in virtually every graphic
-design project where you'll be spending the vast majority of your time tweaking
-a handful of parameters and seeing how you like the results. The faster you can
-see and compare the results of those tweaks, the more productive you'll be - and
-it's hard to imagine getting much faster than what you see in the above video.
+Why might you want this? Well, in practically every graphic design project,
+there comes a point where you're spending most of your time tweaking a handful
+of parameters and seeing how you like the results. The faster you can see and
+compare the results of those tweaks, the more productive you'll be - and it's
+hard to imagine getting much faster than this.
 
 # Design
 

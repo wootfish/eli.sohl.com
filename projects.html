@@ -22,6 +22,27 @@ function do_toggle(div_id) {
 
     <hr>
 
+    <h2 class="project-row" onclick="do_toggle('#obsidian-details');">
+        obsidian <span>+</span>
+    </h2>
+    <div id="obsidian-details" class="display-none">
+        <p>
+        Obsidian is a constraint-based system for graphics programming. It lets
+        you define groups of shapes, specify relations between them, style them
+        in any way supported by the SVG format, and render them from that
+        information alone.
+        </p>
+
+        <p>
+        This is a new project, and it is very much a work in progress, but the
+        early results are very promising. You can read about the project
+        <a href="{% post_url 2020-04-14-obsidian %}">here</a>, and you can
+        read its source code <a href="https://github.com/wootfish/obsidian">here</a>.
+        </p>
+    </div>
+
+    <hr>
+
     <h2 class="project-row" onclick="do_toggle('#theseus-details');">
         theseus <span>+</span>
     </h2>

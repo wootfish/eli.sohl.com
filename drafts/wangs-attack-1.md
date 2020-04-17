@@ -90,14 +90,14 @@ one-block messages here.[^2]
 
 [^2]: Once you can find one-block collisions, the Merkle-Damgård construction makes it easy to turn these into multi-block collisions by simply appending identical message blocks to both messages.
 
-The message block is broken up into sixteen consecutive 32-bit chunks, denoted
+The message block is broken up into sixteen consecutive 32-bit words, denoted
 by $$m_0, m_{1}, ..., m_{15}$$.
 
 The message block is mixed with the state through a series of three rounds. Each
 round consists of sixteen steps; each step modifies one of the four state
-variables as a function of the whole state plus a message chunk $$m_k$$.
+variables as a function of the whole state plus a message word $$m_k$$.
 
-Each message chunk is used exactly once per round. Each of the three rounds uses
+Each message word is used exactly once per round. Each of the three rounds uses
 a different round function. All three round functions have simple algebraic
 representations.
 
@@ -107,7 +107,7 @@ Here's what the full process for hashing one block looks like:
 
 In that figure, the 32 bits of each intermediate MD4 state are represented
 across consecutive rows of the grid. You can see the order in which message
-chunks are mixed into the state. The dashed rectangle indicates which previous
+words are mixed into the state. The dashed rectangle indicates which previous
 states are involved in computing the next state at any given step.
 
 The final MD4 hash value is a function of the last four rows of this state grid.
@@ -123,43 +123,56 @@ better term) implementation details.
 As a reference for these details, you can find my full implementation of MD4
 [here](https://github.com/wootfish/cryptopals/blob/master/challenge_30.py);
 within that codebase, all three rounds are calculated [here](https://github.com/wootfish/cryptopals/blob/master/challenge_30.py#L66).
-The most relevant parts are excerpted below.
+The most relevant aspects of the algorithm are also summarized below.
 
-Here's what the round functions look like. In the round functions below, `a, b,
-c, d` are the four state variables, `m` is a list of 32-bit message chunks, `k`
-is the index within `m` of the message chunk to use, and `s` is a number of bits
-to left-rotate the final result by.
+Let's start by defining three simple boolean functions, $$F, G, H$$. These are
+used by our round functions.
 
-```python
-def F(x: int, y: int, z: int) -> int: return (x & y) | ((x ^ 0xFFFFFFFF) & z)
-def G(x: int, y: int, z: int) -> int: return (x & y) | (x & z) | (y & z)
-def H(x: int, y: int, z: int) -> int: return x ^ y ^ z
+$$
+\begin{align}
+F(x, y, z) &= (x \land y) \lor (\lnot x \land z)  \\
+G(x, y, z) &= (x \land y) \lor (x \land z) \lor (y \land z)  \\
+H(x, y, z) &= x \oplus y \oplus z
+\end{align}
+$$
 
-def r1(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
-    val = (a + F(b, c, d) + m[k]) % (1 << 32)
-    return leftrotate(val, s)
+Trivial collisions exist for all three of these functions. The paper lists these
+on page 5:
 
-def r2(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
-    val = (a + G(b, c, d) + m[k] + 0x5A827999) % (1 << 32)
-    return leftrotate(val, s)
+[![A screenshot from page 5 of the paper showing Propositions 1 through 3.](/assets/img/md4-bool-collisions.png){: .img-center }](/assets/img/md4-bool-collisions.png)
 
-def r3(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
-    val = (a + H(b, c, d) + m[k] + 0x6ED9EBA1) % (1 << 32)
-    return leftrotate(val, s)
-```
+These collisions are essential to the theory of the attack (though not to its
+implementation). This will be covered below when we discuss state differentials.
+For now, all you need to know is that $$F, G, H$$ are used by the round
+functions $$r_1, r_2, r_3$$ respectively.
 
-The functions `F, G, H` might look bizarre; luckily, we don't need to worry
-about how they work at all.
+Here's what those round functions look like. As above, $$a, b, c, d$$ are our
+four state variables. $$M = (m_0, m_1, ..., m_15)$$ is a fixed 512-bit message.
+$$k$$ is an index into $$M$$, and $$s$$ is an amount to left-rotate by.
 
-Note that within each of `r1`, `r2`, and `r3`, after the four state variables
-`a, b, c, d` are mixed together into a single value, the message chunk `m[k]` is
-added to the result and wrapped with a modulus, and the result is `leftrotate`d.
-These operations are both invertable, meaning that for any given arguments `a,
-b, c, d, k, s` and desired output, a simple algebraic method for determining the
-required value of `m[k]` exists. This gives us almost[^3] full control over the
-outputs of `r1`, `r2`, and `r3`.
+All additions are performed modulo $$2^{32}$$.
 
-[^3]: "Almost" because while we can control any individual round function's return value, we cannot trivially do so without side effects.
+$$
+\begin{align}
+r_1(a, b, c, d, k, s) &= (a + F(b, c, d) + m_k) \lll s \\
+r_2(a, b, c, d, k, s) &= (a + G(b, c, d) + m_k + \texttt{5A827999}) \lll s \\
+r_3(a, b, c, d, k, s) &= (a + H(b, c, d) + m_k + \texttt{6ED9EBA1}) \lll s
+\end{align}
+$$
+
+In these definitions, $$\lll$$ denotes the 32-bit left-rotate operation.
+
+Within each of $$r1$$, $$r2$$, and $$r3$$, after the four state variables $$a,
+b, c, d$$ are mixed together into a single value, the message word $$m[k]$$ is
+added in (mod $$2^{32}$$) and the result is left-rotated.
+
+Left-rotation and modulo addition are both invertable operations when one of
+their operands is known. This means that for any given arguments $$a, b, c, d, k,
+s$$ and any desired result for the round, a simple algebraic method exists for
+determining a value of $$m_k$$ which will produce that result. This gives us
+almost[^3] full control over the outputs of $$r1$$, $$r2$$, and $$r3$$.
+
+[^3]: "Almost" because while we can control any individual round function's return value, we cannot trivially do so without side effects. This is not an issue when manipulating $$r_1$$, but it will factor into our analysis when we move on to later rounds.
 
 Now, here's how the round functions are applied to compute the hash function's
 intermediate states.
@@ -184,20 +197,21 @@ a = r3(a,b,c,d,1,3,m); d = r3(d,a,b,c, 9,9,m); c = r3(c,d,a,b,5,11,m); b = r3(b,
 a = r3(a,b,c,d,3,3,m); d = r3(d,a,b,c,11,9,m); c = r3(c,d,a,b,7,11,m); b = r3(b,c,d,a,15,15,m)
 ```
 
-This code demonstrates the order in which message blocks are used in each step
-(this is the first integer argument in each of the above calls), as well as each
-step's argument to `leftrotate` (this is each call's second integer argument).
+This code demonstrates a few important details of the algorithm's design: first,
+the order in which previous intermediate states are passed to each invocation of
+the round function; second, the order in which message blocks are used in each
+round; third, the values of $$s$$ used in each call to the round functions.
 
 In the code block above, intermediate states are grouped into rows of four.
 Besides just looking nice, this mimics the paper's notation. This notation
 denotes e.g. the first state on the first row as $$a_1$$, the third state on the
 fourth row as $$c_4$$, and so on. $$a_0, b_0, c_0, d_0$$ denote the values to
-which the four state variables `a, b, c, d` are initialized.
+which the four state variables $$a, b, c, d$$ are initialized.
 
 The paper uses an extension of this notation to denote individual bits within
 states: for instance, $$c_{4,1}$$ refers to $$c_4$$'s least significant bit,
 $$d_{2,14}$$ refers to $$d_2$$'s 14th bit counting from the least significant
-end, $$b_{9,32}$$ is $$b_9$$'s 32nd-least significant bit (i.e. its most
+end, $$b_{9,32}$$ is $$b_9$$'s most significant bit (i.e. its 32nd-least
 significant bit), and so on.
 
 This notation is important because it is used to express all of the paper's
@@ -211,8 +225,8 @@ A quick note on terminology: The original paper prefers the term _conditions_
 over _constraints_ when discussing the rules it defines for MD4's intermediate
 states. _Conditions_ is more in line with the attack's theoretical
 underpinnings, but I feel that _constraints_ is more reflective of how these
-rules are used when carrying out the attack. This post uses the two terms more
-or less interchangeably.
+rules are used when carrying out the attack. This post uses the two terms
+interchangeably.
 
 ## Defining the Attack
 
@@ -224,24 +238,28 @@ of sufficient conditions, but they do come close. Here is the relevant table
 [![Table 6: A Set of Sufficient Conditions for Collisions of MD4](/assets/img/wang-table-6.png){: .img-center }](/assets/img/wang-table-6.png)
 
 This may look like a lot, but if you stare at it for long enough you'll start to
-notice patterns. Nearly all of the conditions fall into three broad categories:
+notice patterns. Nearly all of the constraints fall into three broad categories:
 requiring that certain bits within intermediate states are either 0, 1, or equal
 to the bit at the same index in a prior state (almost always the _immediately_
-prior state). The only exceptions to this categorization are two conditions on
-$$c_6$$, namely $$c_{6,30} = d_{6,30}+1$$ and $$c_{6,32} = d_{6,32}+1$$.
+prior state). We can thus fit the bulk of these constraints into a three-part
+taxonomy: we have _zero constraints_, _one constraints_, and _equality
+constraints_. The only exceptions to this taxonomy are two constraints on
+$$c_6$$, namely $$c_{6,30} = d_{6,30}+1$$ and $$c_{6,32} =
+d_{6,32}+1$$.
 
-The bulk of these conditions apply to first-round intermediate states. According
-to Wang et al., satisfying the first-round conditions (i.e. everything up
+The bulk of these constraints apply to first-round intermediate states. According
+to Wang et al., satisfying the first-round constraints (i.e. everything up
 through $$b_4$$) is enough to produce a collision with probability $$2^{-25}$$.
-If _all_ the conditions are satisfied, then "the probability can be among
+If _all_ the constraints are satisfied, then "the probability can be among
 $$2^{-6} \sim 2^{-2}$$." This sounds pretty good, but don't get too excited just
 yet.
 
 If you'll permit me a paragraph of editorialization: The fact that Wang et al.
-give such an imprecise for this probability may imply that they were unable to
-measure it directly. If true, this in turn would imply that even they could not
-find a methodology for enforcing _all_ of their conditions. They likely got
-close, but how close is anyone's guess.
+give such a broad range for the attack's success rate ("somewhere between 25%
+and 1.5%!") may imply that they were unable to measure it directly. If true,
+this would imply that even they did not have a full methodology for enforcing
+_all_ of their conditions. They likely got close, but how close is anyone's
+guess.
 
 With that in mind, let's see how close _we_ can get.
 
@@ -250,8 +268,7 @@ The idea for the whole attack is something like this:
 Generate a random input message; then, compute all the intermediate states
 generated by hashing this message; in the process of computing these states,
 derive and perform the message modifications necessary for these states to
-satisfy as many of the conditions from Table 6 as possible. It turns out to be
-possible to do all this with just one pass through the hash function.
+satisfy as many of the conditions from Table 6 as possible.
 
 Wang et al. simply call this "message modification", which is nice and
 alliterative but also a little generic. We can do better: let's call this
@@ -259,8 +276,7 @@ message modification method a _message massage_.
 
 Massaging the message to satisfy some of Wang et al.'s conditions greatly
 increases the likelihood that $$H(m) = H(m \oplus D)$$. The more conditions
-satisfied, the higher the probability of success. But what does this message
-massage look like?
+satisfied, the higher the probability of success.
 
 ## Massaging the Message: Round One
 
@@ -272,13 +288,13 @@ the list.
 
 First, modify $$a_1$$ so that the condition $$a_{1,7} = b_{0,7}$$ is met. Then,
 derive the message chunk required to produce this modified $$a_1$$. To do this,
-we need to solve the round function `r1` for `m[k]`, like so:
+we need to solve the round function $$r_1$$ for $$m_k$$, like so:
 
 $$
 \begin{align}
-r_1(a, b, c, d, k, s, m) &= (a + F(b, c, d) + m_k) \lll s \\
-r_1(a, b, c, d, k, s, m) \ggg s &= a + F(b, c, d) + m_k \\
-(r_1(a, b, c, d, k, s, m) \ggg s) - a - F(b, c, d) &= m_k \\
+r_1(a, b, c, d, k, s) &= (a + F(b, c, d) + m_k) \lll s \\
+r_1(a, b, c, d, k, s) \ggg s &= a + F(b, c, d) + m_k \\
+(r_1(a, b, c, d, k, s) \ggg s) - a - F(b, c, d) &= m_k \\
 \end{align}
 $$
 
@@ -288,7 +304,7 @@ here's $$a_1$$:
 
 $$
 \begin{align}
-a_1 &= r_1(a_0, b_0, c_0, d_0, 0, 3, m) \\
+a_1 &= r_1(a_0, b_0, c_0, d_0, 0, 3) \\
 a_1 &= (a_0 + F(b_0, c_0, d_0) + m_0) \lll 3 \\
 m_0 &= (a_1 \ggg 3) - a_0 - F(b_0, c_0, d_0) \\
 \end{align}
@@ -298,15 +314,15 @@ You can apply this just as easily for any other intermediate state, say $$c_3$$:
 
 $$
 \begin{align}
-c_3 &= r_1(c_2, d_2, a_2, b_2, 10, 11, m) \\
+c_3 &= r_1(c_2, d_2, a_2, b_2, 10, 11) \\
 c_3 &= (c_2 + F(d_2, a_2, b_2) + m_{10}) \lll 11 \\
 m_{10} &= (c_3 \ggg 11) - c_2 - F(d_2, a_2, b_2) \\
 \end{align}
 $$
 
-It should be clear that this approach is applicable throughout round 1, meaning
-that we can follow this process to make message modifications ensuring that all
-our conditions on $$a_1, d_1, c_1, ..., b_4$$ are met.
+It should be clear that this approach is applicable for each state in round 1,
+meaning that we can follow this process to make message modifications ensuring
+that all our conditions on $$a_1, d_1, c_1, ..., b_4$$ are met.
 
 Massaging the message to enforce all the round one conditions is enough to bring
 us to a success probability of roughly $$2^{-25}$$. That's not bad, but we can
@@ -314,21 +330,21 @@ do better - at the cost of some added complexity.
 
 #### Massaging the Message: $$a_5$$
 
-One thing I've glossed over so far: whenever we change an intermediate state, we
-are also implicitly changing each subsequent intermediate state. For instance,
-changing $$c_3$$ also implicitly changes $$b_3$$, $$a_4$$, $$d_4$$, $$c_4$$,
-$$b_4$$, etc. Of course, the preceding states $$d_3$$, $$a_3$$, $$b_2$$,
-$$c_2$$, $$d_2$$, etc, are all unchanged.
+One thing I've glossed over so far: whenever we change an intermediate state,
+this change has side effects on each subsequent intermediate state. For
+instance, changing $$c_3$$ also implicitly changes $$b_3$$, $$a_4$$, $$d_4$$,
+$$c_4$$, $$b_4$$, etc. Of course, the preceding states $$d_3$$, $$a_3$$,
+$$b_2$$, $$c_2$$, $$d_2$$, etc, are all unchanged.
 
 This is why our round one constraints have to be enforced in order: otherwise,
 they would run the risk of overwriting each other.
 
 When we get to round two, our process for deriving a new $$m_k$$ based on our
 desired modifications still works, but with a caveat: any change we make will
-propogate backward into round 1. For example, $$a_5$$ depends on $$m_0$$, but so
-does $$a_1$$ -- so if we modify $$m_0$$ to enforce conditions on $$a_5$$, we'll
-end up changing $$a_1$$ as well. This change will then propogate forward to
-$$d_1, c_1, b_1, a_2, b_2$$, and so on, undoing all our hard work as it goes.
+propogates backward into round 1. For example, $$a_5$$ depends on $$m_0$$, but
+so does $$a_1$$ -- so if we modify $$m_0$$ to enforce conditions on $$a_5$$,
+we'll end up changing $$a_1$$ as well. This change will then propogate forward
+to $$d_1, c_1, b_1, a_2, b_2$$, and so on, undoing all our hard work as it goes.
 
 How can we prevent this? I'm glad you asked. Take a look at this diagram.
 
@@ -352,11 +368,12 @@ state.[^4] The change to $$a_1$$, however, will have to be dealt with.
 First, there is the possibility that our change to $$m_1$$ modified $$a_1$$ in
 such a way that our conditions on $$a_1$$ are no longer satisfied. Some
 second-round conditions are more likely than others to mess up first-round
-conditions; for whatever reason, the conditions for $$a_5$$ seem to be stable.
+conditions; for whatever reason, the conditions for $$a_5$$ and $$a_1$$ seem to
+coexist well.
 
 If we _were_ to find our first-round constraints invalidated by our second-round
-message massage, that would be a big problem. See the sections on $$d_5$$ and
-$$a_6$$ for a couple ideas of what effective solutions might look like.
+message massage, that would be a big problem. See the section on $$d_5$$ for an
+example of one effective solution.
 
 If the conditions on $$a_1$$ are still satisfied, we can move on to the next
 step: containing the disruption caused by changing $$a_1$$'s value. This is
@@ -369,9 +386,9 @@ Recall that we can derive the message modification necessary to set any
 intermediate state to any value (albeit not without side effects). If we've
 saved the old values of $$d_1, c_1, b_1, a_2$$, we can just re-evaluate our
 equation with the new value of $$a_1$$ to derive new message blocks $$m_2, m_3,
-m_4, m_5$$ which will produce the old values of $$d_1, c_1, b_1, a_2$$. Since
-these are $$a_1$$'s only direct dependencies, preventing them from changing
-prevents any further changes from propogating through round 1.
+m_4, m_5$$ which will cause $$d_1, c_1, b_1, a_2$$ to evaluate to their old
+values. Since these are $$a_1$$'s only direct dependencies, preventing them from
+changing prevents any further changes from propogating through round 1.
 
 Of course, making these changes to $$m_2, m_3, m_4, m_5$$ will create an even
 greater ripple effect, disrupting other states in round 2. This is shown in the
@@ -397,29 +414,30 @@ and will happen, so whenever we modify a state that appears in another state's
 equality constraints we have to make sure that these equalities still hold.
 
 As it happens, our modifications to $$a_{2}$$ don't tend to disrupt
-$$a_{2,19}$$. When we move on to massaging $$d_5$$ and $$a_6$$, though, we will
+$$a_{2,19}$$. When we move on to massaging $$d_5$$ and beyond, though, we will
 have to take this into consideration.
 
 #### Massaging the Message: $$d_5$$
 
 Moving right along: Our next task is to massage $$d_5$$. This state takes
-$$m_4$$ as input, and $$m_4$$ is also used by $$a_2$$.
+$$m_4$$ as input; $$m_4$$ is also used by $$a_2$$.
 
 The considerations discussed above in the context of $$a_5$$ apply here as well,
 but we have an additional challenge to overcome: our changes to $$d_5$$ have a
-tendency to disrupt our earlier changes to $$a_2$$. This cuts both ways: if we
-re-massage $$a_2$$, our changes are also likely to break the constraints for
-$$d_5$$. The method we have been using thus far for satisfying sets of
+tendency to disrupt our earlier changes to $$a_2$$. The reverse is true as well:
+if we re-massage $$a_2$$, our changes are also likely to break the constraints
+for $$d_5$$. The method we have been using thus far to satisfy sets of
 constraints can get either $$a_2$$ or $$d_5$$ to a known-good state, but as long
-as we are enforcing them separately, we are very unlikely to end up satisfying
-both of them at once.
+as we are enforcing these constraint sets separately, we are very unlikely to
+end up satisfying both of them at once.
 
-There are several possible solutions here; my preferred solution is to _combine_
-both sets of constraints. We will find a way of translating both of them from
-constraints on _states_ to constraints on _the corresponding message chunk
-itself_. This requires some careful bookkeeping, but it will allow us to enforce
-both sets of constraints at once, preventing them from conflicting with each
-other.
+There are several viable options here; my preferred solution, and by far the
+most efficient one of which I am aware, is to _combine_ both sets of
+constraints. We will find a way of translating both of them from constraints on
+_states_ to constraints on _the corresponding message word from which those
+states are derived_. This requires some careful bookkeeping, but it will allow
+us to enforce both sets of constraints at once, preventing them from conflicting
+with each other.
 
 Recall that the round functions `r1, r2` are defined like so:
 
@@ -504,12 +522,9 @@ still met.
 
 This method allows us to satisfy all of $$d_5$$'s constraints.
 
-## Massaging the Message: Further
-
 It is possible to massage the state further, but each step further adds new
 complications, and this post is already getting long, so we will stop here. See
-this post's sequel for some notes on my implementation of a message massage that
-goes as far as $$a_6$$.
+this post's sequel for some notes on my implementation of some further steps.
 
 ## Massaging the Message: Illustrated
 
@@ -534,7 +549,7 @@ Here are the state differentials for fifty random messages:
 
 (TODO)
 
-Here are the state differentials for fifty massaged messages:
+Here are the state differentials for fifty moderately massaged messages:
 
 (TODO)
 
@@ -552,19 +567,19 @@ fill a book; the short answer is that modern designs take greater pains to
 ensure dispersion of differentials through the function's full internal state.
 
 For instance, SHA-1 and SHA-2 use "message expansion" steps which expand the 16
-words of a message block into an input buffer of 80 and 64 words respectively.
-In both cases, the expansion step is designed so that changing any of the 16
-message chunks will result in a large number of changes in the expanded message.
-Message expansion takes place before the (expanded) message is mixed into the
-hash function's internal state. As a consequence, any small change to the
-message will produce many more (and more complex) changes to the internal state
-than in MD4.[^6]
+words of a message block into input buffers of 80 or 64 words respectively. In
+both cases, the expansion step is designed so that changing any of the 16
+message chunks will result in a large number of changes throughout the expanded
+message. Message expansion takes place before the (expanded) message is mixed
+into the hash function's internal state. As a consequence, any small change to
+the message will produce many more (and more complex) changes to the internal
+state than in MD4.[^6]
 
 [^6]: Though note that these measures are not automatically foolproof; see for example the recent chosen-prefix attack on SHA-1 (Leurent & Peyrin, 2020) ([PDF link](https://eprint.iacr.org/2020/014.pdf)).
 
-Another defense is to simply build a hash function around a different design
-primitive than the Merkle-Damgård construction; a good example here is SHA-3,
-which uses a radically different design based around a sponge function.
+Another defense is to simply build a hash function around something other than
+the Merkle-Damgård construction; a good example here is SHA-3, which uses a
+radically different design based around a sponge function.
 
 By definition, sponge function must provide effective dispersion of
 differentials in order for sponge constructions to work. This is nontrivial to
@@ -575,9 +590,9 @@ way all along.
 
 ## Conclusion
 
-That just about does it for the theory behind Wang's attack (and its defenses).
-Tune in next time for a discussion of how the attack might be implemented
-cleanly and efficiently in Python.
+That just about does it for the theory behind Wang's attack. Tune in next time
+for a discussion of how the attack might be implemented cleanly and efficiently
+in Python.
 
 
 <hr>

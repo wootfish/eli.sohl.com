@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="750" height="793" viewBox="0 -793 750 793">
+<defs>
+<marker markerWidth="6.0" markerHeight="6.0" viewBox="-0.1 -0.5 1.0 1.0" orient="auto" id="d0">
+<path d="M-0.1,0.5 L-0.1,-0.5 L0.9,0 Z" fill="#0011dd" />
+</marker>
+</defs>
+<rect x="25.5" y="-520.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="25.5" y="-500.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-480.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-460.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-440.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-420.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-400.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-380.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-360.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-340.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-320.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-300.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-280.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-260.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-240.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="25.5" y="-220.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M21.5,-517.5 L21.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M21.5,-532.5 L69.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M69.5,-532.5 L69.5,-517.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="45.5" y="-547.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">M</text>
+<text x="45.5" y="-510.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₀</text>
+<text x="45.5" y="-490.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁</text>
+<text x="45.5" y="-470.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₂</text>
+<text x="45.5" y="-450.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₃</text>
+<text x="45.5" y="-430.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₄</text>
+<text x="45.5" y="-410.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₅</text>
+<text x="45.5" y="-390.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₆</text>
+<text x="45.5" y="-370.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₇</text>
+<text x="45.5" y="-350.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₈</text>
+<text x="45.5" y="-330.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₉</text>
+<text x="45.5" y="-310.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₀</text>
+<text x="45.5" y="-290.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₁</text>
+<text x="45.5" y="-270.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₂</text>
+<text x="45.5" y="-250.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₃</text>
+<text x="45.5" y="-230.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₄</text>
+<text x="45.5" y="-210.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₅</text>
+<rect x="139.5" y="-717.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="139.5" y="-697.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-677.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-657.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-637.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-617.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-597.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-577.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-557.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-537.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-517.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-497.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-477.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-457.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-437.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-417.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M176.5,-725.5 L191.5,-725.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M191.5,-725.5 L191.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M191.5,-389.5 L176.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="196.5" y="-557.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r1</text>
+<text x="159.5" y="-709.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₁</text>
+<text x="159.5" y="-689.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₁</text>
+<text x="159.5" y="-669.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₁</text>
+<text x="159.5" y="-649.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₁</text>
+<text x="159.5" y="-629.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₂</text>
+<text x="159.5" y="-609.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₂</text>
+<text x="159.5" y="-589.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₂</text>
+<text x="159.5" y="-569.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₂</text>
+<text x="159.5" y="-549.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₃</text>
+<text x="159.5" y="-529.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₃</text>
+<text x="159.5" y="-509.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₃</text>
+<text x="159.5" y="-489.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₃</text>
+<text x="159.5" y="-469.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₄</text>
+<text x="159.5" y="-449.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₄</text>
+<text x="159.5" y="-429.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₄</text>
+<text x="159.5" y="-409.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₄</text>
+<rect x="139.5" y="-350.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="139.5" y="-330.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-310.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-290.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-270.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-250.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-230.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-210.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-190.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-170.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-150.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-130.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-110.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-90.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-70.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="139.5" y="-50.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M176.5,-358.5 L191.5,-358.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M191.5,-358.5 L191.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M191.5,-22.5 L176.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="196.5" y="-190.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r2</text>
+<text x="159.5" y="-342.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₅</text>
+<text x="159.5" y="-322.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₅</text>
+<text x="159.5" y="-302.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₅</text>
+<text x="159.5" y="-282.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₅</text>
+<text x="159.5" y="-262.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₆</text>
+<text x="159.5" y="-242.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₆</text>
+<text x="159.5" y="-222.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₆</text>
+<text x="159.5" y="-202.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₆</text>
+<text x="159.5" y="-182.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₇</text>
+<text x="159.5" y="-162.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₇</text>
+<text x="159.5" y="-142.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₇</text>
+<text x="159.5" y="-122.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₇</text>
+<text x="159.5" y="-102.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₈</text>
+<text x="159.5" y="-82.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₈</text>
+<text x="159.5" y="-62.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₈</text>
+<text x="159.5" y="-42.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₈</text>
+<path d="M134.5,-340.5 L70.5,-502.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M70.5,-510.5 L134.5,-699.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M17.5,-755.5 L17.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M17.5,-750.5 L200.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M200.5,-750.5 L200.5,-755.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="109.0" y="-770.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">step one</text>
+<rect x="234.5" y="-780.5" width="15.0" height="768.0" stroke-width="0" fill="#eeeeee" />
+<rect x="291.5" y="-520.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="291.5" y="-500.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-480.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-460.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-440.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-420.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-400.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-380.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-360.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-340.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-320.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-300.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-280.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-260.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-240.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="291.5" y="-220.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M287.5,-517.5 L287.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M287.5,-532.5 L335.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M335.5,-532.5 L335.5,-517.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="311.5" y="-547.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">M</text>
+<text x="311.5" y="-510.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₀</text>
+<text x="311.5" y="-490.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁</text>
+<text x="311.5" y="-470.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₂</text>
+<text x="311.5" y="-450.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₃</text>
+<text x="311.5" y="-430.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₄</text>
+<text x="311.5" y="-410.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₅</text>
+<text x="311.5" y="-390.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₆</text>
+<text x="311.5" y="-370.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₇</text>
+<text x="311.5" y="-350.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₈</text>
+<text x="311.5" y="-330.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₉</text>
+<text x="311.5" y="-310.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₀</text>
+<text x="311.5" y="-290.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₁</text>
+<text x="311.5" y="-270.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₂</text>
+<text x="311.5" y="-250.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₃</text>
+<text x="311.5" y="-230.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₄</text>
+<text x="311.5" y="-210.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₅</text>
+<rect x="405.5" y="-717.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="405.5" y="-697.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="405.5" y="-677.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="405.5" y="-657.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="405.5" y="-637.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="405.5" y="-617.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-597.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-577.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-557.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-537.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-517.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-497.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-477.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-457.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-437.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-417.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M442.5,-725.5 L457.5,-725.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M457.5,-725.5 L457.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M457.5,-389.5 L442.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="462.5" y="-557.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r1</text>
+<text x="425.5" y="-709.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₁</text>
+<text x="425.5" y="-689.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₁</text>
+<text x="425.5" y="-669.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₁</text>
+<text x="425.5" y="-649.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₁</text>
+<text x="425.5" y="-629.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₂</text>
+<text x="425.5" y="-609.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₂</text>
+<text x="425.5" y="-589.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₂</text>
+<text x="425.5" y="-569.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₂</text>
+<text x="425.5" y="-549.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₃</text>
+<text x="425.5" y="-529.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₃</text>
+<text x="425.5" y="-509.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₃</text>
+<text x="425.5" y="-489.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₃</text>
+<text x="425.5" y="-469.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₄</text>
+<text x="425.5" y="-449.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₄</text>
+<text x="425.5" y="-429.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₄</text>
+<text x="425.5" y="-409.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₄</text>
+<rect x="405.5" y="-350.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="405.5" y="-330.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-310.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-290.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-270.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-250.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-230.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-210.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-190.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-170.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-150.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-130.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-110.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-90.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-70.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="405.5" y="-50.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M442.5,-358.5 L457.5,-358.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M457.5,-358.5 L457.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M457.5,-22.5 L442.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="462.5" y="-190.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r2</text>
+<text x="425.5" y="-342.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₅</text>
+<text x="425.5" y="-322.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₅</text>
+<text x="425.5" y="-302.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₅</text>
+<text x="425.5" y="-282.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₅</text>
+<text x="425.5" y="-262.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₆</text>
+<text x="425.5" y="-242.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₆</text>
+<text x="425.5" y="-222.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₆</text>
+<text x="425.5" y="-202.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₆</text>
+<text x="425.5" y="-182.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₇</text>
+<text x="425.5" y="-162.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₇</text>
+<text x="425.5" y="-142.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₇</text>
+<text x="425.5" y="-122.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₇</text>
+<text x="425.5" y="-102.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₈</text>
+<text x="425.5" y="-82.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₈</text>
+<text x="425.5" y="-62.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₈</text>
+<text x="425.5" y="-42.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₈</text>
+<path d="M283.5,-755.5 L283.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M283.5,-750.5 L466.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M466.5,-750.5 L466.5,-755.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="375.0" y="-770.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">step two</text>
+<path d="M410.5,-707.5 L410.5,-691.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M415.5,-707.5 L415.5,-671.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M435.5,-707.5 L435.5,-651.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M440.5,-707.5 L440.5,-631.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<rect x="500.5" y="-780.5" width="15.0" height="768.0" stroke-width="0" fill="#eeeeee" />
+<rect x="557.5" y="-520.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="557.5" y="-500.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="557.5" y="-480.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="557.5" y="-460.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="557.5" y="-440.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="557.5" y="-420.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-400.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-380.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-360.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-340.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-320.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-300.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-280.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-260.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-240.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="557.5" y="-220.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M553.5,-517.5 L553.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M553.5,-532.5 L601.5,-532.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M601.5,-532.5 L601.5,-517.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="577.5" y="-547.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">M</text>
+<text x="577.5" y="-510.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₀</text>
+<text x="577.5" y="-490.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁</text>
+<text x="577.5" y="-470.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₂</text>
+<text x="577.5" y="-450.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₃</text>
+<text x="577.5" y="-430.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₄</text>
+<text x="577.5" y="-410.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₅</text>
+<text x="577.5" y="-390.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₆</text>
+<text x="577.5" y="-370.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₇</text>
+<text x="577.5" y="-350.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₈</text>
+<text x="577.5" y="-330.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₉</text>
+<text x="577.5" y="-310.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₀</text>
+<text x="577.5" y="-290.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₁</text>
+<text x="577.5" y="-270.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₂</text>
+<text x="577.5" y="-250.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₃</text>
+<text x="577.5" y="-230.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₄</text>
+<text x="577.5" y="-210.5" font-size="13.0" fill="#000000" text-anchor="middle" transform="translate(0,6.5)">m₁₅</text>
+<rect x="671.5" y="-717.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-697.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-677.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-657.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-637.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-617.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-597.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-577.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-557.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-537.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-517.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-497.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-477.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-457.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-437.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-417.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M708.5,-725.5 L723.5,-725.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M723.5,-725.5 L723.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M723.5,-389.5 L708.5,-389.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="728.5" y="-557.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r1</text>
+<text x="691.5" y="-709.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₁</text>
+<text x="691.5" y="-689.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₁</text>
+<text x="691.5" y="-669.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₁</text>
+<text x="691.5" y="-649.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₁</text>
+<text x="691.5" y="-629.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₂</text>
+<text x="691.5" y="-609.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₂</text>
+<text x="691.5" y="-589.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₂</text>
+<text x="691.5" y="-569.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₂</text>
+<text x="691.5" y="-549.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₃</text>
+<text x="691.5" y="-529.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₃</text>
+<text x="691.5" y="-509.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₃</text>
+<text x="691.5" y="-489.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₃</text>
+<text x="691.5" y="-469.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₄</text>
+<text x="691.5" y="-449.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₄</text>
+<text x="691.5" y="-429.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₄</text>
+<text x="691.5" y="-409.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₄</text>
+<rect x="671.5" y="-350.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#22ee22" />
+<rect x="671.5" y="-330.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="671.5" y="-310.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-290.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-270.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="671.5" y="-250.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-230.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-210.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-190.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="671.5" y="-170.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-150.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-130.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-110.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffff22" />
+<rect x="671.5" y="-90.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-70.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<rect x="671.5" y="-50.5" width="40.0" height="20.0" stroke-width="1" stroke="#000000" fill="#ffffff" />
+<path d="M708.5,-358.5 L723.5,-358.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M723.5,-358.5 L723.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M723.5,-22.5 L708.5,-22.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="728.5" y="-190.5" font-size="13.0" fill="#555555" text-anchor="left" transform="translate(0,6.5)">r2</text>
+<text x="691.5" y="-342.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₅</text>
+<text x="691.5" y="-322.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₅</text>
+<text x="691.5" y="-302.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₅</text>
+<text x="691.5" y="-282.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₅</text>
+<text x="691.5" y="-262.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₆</text>
+<text x="691.5" y="-242.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₆</text>
+<text x="691.5" y="-222.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₆</text>
+<text x="691.5" y="-202.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₆</text>
+<text x="691.5" y="-182.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₇</text>
+<text x="691.5" y="-162.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₇</text>
+<text x="691.5" y="-142.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₇</text>
+<text x="691.5" y="-122.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₇</text>
+<text x="691.5" y="-102.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">a₈</text>
+<text x="691.5" y="-82.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">d₈</text>
+<text x="691.5" y="-62.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">c₈</text>
+<text x="691.5" y="-42.5" font-size="14.0" fill="#000000" text-anchor="middle" transform="translate(0,7.0)">b₈</text>
+<path d="M549.5,-755.5 L549.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M549.5,-750.5 L732.5,-750.5" stroke-width="2" stroke="#bbbbbb" />
+<path d="M732.5,-750.5 L732.5,-755.5" stroke-width="2" stroke="#bbbbbb" />
+<text x="641.0" y="-770.5" font-size="13.0" fill="#555555" text-anchor="middle" transform="translate(0,6.5)">step three</text>
+<path d="M666.5,-687.5 L602.5,-498.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M666.5,-667.5 L602.5,-478.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M666.5,-647.5 L602.5,-458.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M666.5,-627.5 L602.5,-438.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M602.5,-490.5 L666.5,-268.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M602.5,-470.5 L666.5,-188.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M602.5,-450.5 L666.5,-108.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+<path d="M602.5,-430.5 L666.5,-328.5" stroke-width="1" stroke="#0011dd" marker-end="url(#d0)" />
+</svg>

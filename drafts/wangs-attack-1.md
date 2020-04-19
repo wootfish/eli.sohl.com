@@ -350,24 +350,22 @@ to $$d_1, c_1, b_1, a_2, b_2$$, and so on, undoing all our hard work as it goes.
 
 How can we prevent this? I'm glad you asked. Take a look at this diagram.
 
-(TODO REWORK WITH OBSIDIAN)
-
-[![Corrections for a5](/assets/img/wang-a5-adjustments.png){: .img-center }](/assets/img/wang-a5-adjustments.png)
+[![Corrections for a5](/assets/img/wang-a5-adjustments.svg){: .img-center }](/assets/img/wang-a5-adjustments.svg)
 
 This illustrates the process of correcting a second-round state, $$a_5$$. In
 this case, the process consists of three steps.
 
 The first step is shown in the leftmost section of the diagram, where $$a_5$$ is
-adjusted to meet our constraints and $$m_1$$ is modified to produce the new
+adjusted to meet our constraints and $$m_0$$ is modified to produce the new
 value of $$a_5$$. This change also alters the value of a previous state
-($$a_1$$) and a later state ($$a_9$$).
+($$a_1$$) and a later state ($$a_9$$, omitted from this diagram).
 
 We don't really care if $$a_9$$ changes, since we haven't massaged that
 state.[^4] The change to $$a_1$$, however, will have to be dealt with.
 
 [^4]: In fact, no constraints are specified for $$a_9$$ and so we won't be massaging it at all.
 
-First, there is the possibility that our change to $$m_1$$ modified $$a_1$$ in
+First, there is the possibility that our change to $$m_0$$ modified $$a_1$$ in
 such a way that our conditions on $$a_1$$ are no longer satisfied. Some
 second-round conditions are more likely than others to mess up first-round
 conditions; for whatever reason, the conditions for $$a_5$$ and $$a_1$$ seem to
@@ -411,9 +409,11 @@ Suppose we update $$a_{2}$$, and suppose further that we end up changing
 $$a_{2,19}$$ in the process. Afterwards, as described above, we carefully make
 sure to preserve the old value of $$d_2$$. Now, if $$a_{2,19} = d_{2,19}$$ prior
 to these changes, then $$a_{2,19} \ne d_{2,19}$$ afterwards. In other words,
-changing $$a_2$$ has the potential to break our constraints on $$d_2$$. This can
-and will happen, so whenever we modify a state that appears in another state's
-equality constraints we have to make sure that these equalities still hold.
+changing $$a_2$$ has the potential to break our constraints on $$d_2$$.
+
+This can and will happen with many of our equality constraints, so whenever we
+modify a state that appears in another state's equality constraints we have to
+make sure that these equalities still hold.
 
 As it happens, our modifications to $$a_{2}$$ don't tend to disrupt
 $$a_{2,19}$$. When we move on to massaging $$d_5$$ and beyond, though, we will
@@ -433,11 +433,11 @@ can get either $$a_2$$ or $$d_5$$ to a known-good state, but as long as we are
 enforcing these constraint sets separately, we are very unlikely to end up
 satisfying both of them at once.
 
-There are several viable options here; my preferred solution is to _combine_
-both sets of constraints. We will find a way of translating them from
-constraints on _states_ to constraints on _the corresponding message word from
-which those states are derived_. This requires some careful bookkeeping, but it
-will allow us to enforce both sets of constraints at once, preventing them from
+There are several viable options here. My preferred solution is to combine the
+two sets of constraints. We will find a way of translating them from constraints
+on _states_ to constraints on _the corresponding message word from which those
+states are derived_. This requires some careful bookkeeping, but it will allow
+us to enforce both sets of constraints simultaneously, preventing them from
 conflicting with each other.
 
 Recall that the round functions $$r_1, r_2$$ are defined like so:
@@ -449,18 +449,11 @@ r_2(a, b, c, d, k, s) &= (a + G(b, c, d) + m_k + \texttt{5A827999}) \lll s \\
 \end{align}
 $$
 
-The values of $$a, b, c, d$$ come from previous states, so we can treat them as
-constant. This allows us to simplify the round functions somewhat. First, we'll
-consolidate the functions' constant terms and denote these $$N_1$$ and $$N_2$$:
-
-$$
-\begin{align}
-N_1 &= a_1 + F(b_1, c_1, d_1) \\
-N_2 &= d_4 + G(a_5, b_4, c_4) + \mathtt{0x5A827999} \\
-\end{align}
-$$
-
-We can then rewrite the formulae for our intermediate states like so:
+The values of $$a, b, c, d$$ come from previous states, so within any individual
+state calculation we can take these values as constant. This allows us to
+simplify the round functions somewhat. We'll start by consolidating the round
+functions' constant terms; this will allow us to clean up the formulae for our
+intermediate states:
 
 $$
 \begin{align}
@@ -475,11 +468,11 @@ d_5 \ggg 5 &= N_2 + m_4
 \end{align}
 $$
 
-Through this equality we can translate constraints on $$a_2$$ and $$d_5$$ into
-constraints on $$N_1 + m_4$$ and $$N_2 + m_4$$ respectively.
+Through these final equalities, we can translate constraints on $$a_2$$ and
+$$d_5$$ into constraints on $$N_1 + m_4$$ and $$N_2 + m_4$$ respectively.
 
 We will adapt our earlier notation to denote specific bits within these sums,
-e.g. $$(N_2 + m_4)_5$$ for the 5th bit of this sum.
+e.g. $$(N_2 + m_4)_5$$ for the 5th bit of $$N_2 + m_4$$.
 
 Take the constraint $$a_{2,8} = 1$$. We can translate this as $$(N_1 + m_{k})_5
 = 1$$. Note that the original constraint's index of 8 becomes 5 after
@@ -529,14 +522,6 @@ This method allows us to satisfy all of $$d_5$$'s constraints.
 It is possible to massage the state further, but each further step adds new
 complications, and this post is already getting long, so we will stop here.
 
-## Massaging the Message: Illustrated
-
-Here are some massaged messages that produce collisions under the Wang
-differential $$D$$. The messages are included along with full, annotated
-illustrations of their intermediate MD4 states. Bits constrained to constant
-values are boxed; bits constrained to equality are connected by lines.
-
-(TODO)
 
 ## Tracking the State Differential
 

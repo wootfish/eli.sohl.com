@@ -43,12 +43,12 @@ beers, coffee, or your beverage of choice.
 
 This attack is a _differential attack_, meaning we as attackers are trying to
 find collisions between pairs of messages where the messages also `xor` to some
-fixed constant. That is to say, we want messages $$m_1, m_2$$ such that $$H(m_1)
-= H(m_2)$$ and $$m_1 \oplus m_2 = D$$ for some fixed differential $$D$$.
+fixed constant. That is to say, we want messages $$m, m'$$ such that $$H(m)
+= H(m')$$ and $$m \oplus m' = D$$ for some fixed differential $$D$$.
 
 This might sound like adding an unnecessary constraint -- and it is -- but it
-gives us a powerful way of reframing the problem. This definition makes $$m_2$$
-fully dependent on $$m_1$$ and $$D$$, so for the attack to succeed it suffices
+gives us a powerful way of reframing the problem. This definition makes $$m'$$
+fully dependent on $$m$$ and $$D$$, so for the attack to succeed it suffices
 to identify a set of messages $$S$$ such that if $$m \in S$$ then $$H(m) = H(m
 \oplus D)$$ with high probability.
 
@@ -147,7 +147,7 @@ For now, all you need to know is that $$F, G, H$$ are used by the round
 functions $$r_1, r_2, r_3$$ respectively.
 
 Here's what those round functions look like. As above, $$a, b, c, d$$ are our
-four state variables. $$M = (m_0, m_1, ..., m_15)$$ is a fixed 512-bit message.
+four state variables. $$M = (m_0, m_1, ..., m_{15})$$ is a fixed 512-bit message.
 $$k$$ is an index into $$M$$, and $$s$$ is an amount to left-rotate by.
 
 All additions are performed modulo $$2^{32}$$.
@@ -162,15 +162,15 @@ $$
 
 In these definitions, $$\lll$$ denotes the 32-bit left-rotate operation.
 
-Within each of $$r1$$, $$r2$$, and $$r3$$, after the four state variables $$a,
-b, c, d$$ are mixed together into a single value, the message word $$m[k]$$ is
-added in (mod $$2^{32}$$) and the result is left-rotated.
+Within each of $$r_1$$, $$r_2$$, and $$r_3$$, after the four state variables
+$$a, b, c, d$$ are mixed together into a single value, the message word $$m[k]$$
+is added in (mod $$2^{32}$$) and the result is left-rotated.
 
 Left-rotation and modulo addition are both invertable operations when one of
 their operands is known. This means that for any given arguments $$a, b, c, d, k,
 s$$ and any desired result for the round, a simple algebraic method exists for
 determining a value of $$m_k$$ which will produce that result. This gives us
-almost[^3] full control over the outputs of $$r1$$, $$r2$$, and $$r3$$.
+almost[^3] full control over the outputs of $$r_1$$, $$r_2$$, and $$r_3$$.
 
 [^3]: "Almost" because while we can control any individual round function's return value, we cannot trivially do so without side effects. This is not an issue when manipulating $$r_1$$, but it will factor into our analysis when we move on to later rounds.
 
@@ -254,12 +254,11 @@ If _all_ the constraints are satisfied, then "the probability can be among
 $$2^{-6} \sim 2^{-2}$$." This sounds pretty good, but don't get too excited just
 yet.
 
-If you'll permit me a paragraph of editorialization: The fact that Wang et al.
-give such a broad range for the attack's success rate ("somewhere between 25%
-and 1.5%!") may imply that they were unable to measure it directly. If true,
-this would imply that even they did not have a full methodology for enforcing
-_all_ of their conditions. They likely got close, but how close is anyone's
-guess.
+If I can editorialize for a moment: The fact that Wang et al. give such a broad
+range for the attack's success rate (between 25% and 1.5%) may imply that they
+were unable to measure it directly, suggesting that even they did not have a
+full methodology for enforcing _all_ of their conditions. They likely got close,
+but how close is anyone's guess.
 
 With that in mind, let's see how close _we_ can get.
 
@@ -277,6 +276,9 @@ message modification method a _message massage_.
 Massaging the message to satisfy some of Wang et al.'s conditions greatly
 increases the likelihood that $$H(m) = H(m \oplus D)$$. The more conditions
 satisfied, the higher the probability of success.
+
+The next couple sections outline the message massage methodology. After that,
+we'll take a look at the results of a successful massage.
 
 ## Massaging the Message: Round One
 
@@ -425,47 +427,51 @@ $$m_4$$ as input; $$m_4$$ is also used by $$a_2$$.
 The considerations discussed above in the context of $$a_5$$ apply here as well,
 but we have an additional challenge to overcome: our changes to $$d_5$$ have a
 tendency to disrupt our earlier changes to $$a_2$$. The reverse is true as well:
-if we re-massage $$a_2$$, our changes are also likely to break the constraints
-for $$d_5$$. The method we have been using thus far to satisfy sets of
-constraints can get either $$a_2$$ or $$d_5$$ to a known-good state, but as long
-as we are enforcing these constraint sets separately, we are very unlikely to
-end up satisfying both of them at once.
+if we re-massage $$a_2$$, our changes are likely to break the constraints for
+$$d_5$$. The method we have been using thus far to satisfy sets of constraints
+can get either $$a_2$$ or $$d_5$$ to a known-good state, but as long as we are
+enforcing these constraint sets separately, we are very unlikely to end up
+satisfying both of them at once.
 
-There are several viable options here; my preferred solution, and by far the
-most efficient one of which I am aware, is to _combine_ both sets of
-constraints. We will find a way of translating both of them from constraints on
-_states_ to constraints on _the corresponding message word from which those
-states are derived_. This requires some careful bookkeeping, but it will allow
-us to enforce both sets of constraints at once, preventing them from conflicting
-with each other.
+There are several viable options here; my preferred solution is to _combine_
+both sets of constraints. We will find a way of translating them from
+constraints on _states_ to constraints on _the corresponding message word from
+which those states are derived_. This requires some careful bookkeeping, but it
+will allow us to enforce both sets of constraints at once, preventing them from
+conflicting with each other.
 
-Recall that the round functions `r1, r2` are defined like so:
+Recall that the round functions $$r_1, r_2$$ are defined like so:
 
-```python
-def r1(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
-    val = (a + F(b, c, d) + m[k]) % (1 << 32)
-    return leftrotate(val, s)
+$$
+\begin{align}
+r_1(a, b, c, d, k, s) &= (a + F(b, c, d) + m_k) \lll s \\
+r_2(a, b, c, d, k, s) &= (a + G(b, c, d) + m_k + \texttt{5A827999}) \lll s \\
+\end{align}
+$$
 
-def r2(a: int, b: int, c: int, d: int, k: int, s: int, m: Sequence[int]) -> int:
-    val = (a + G(b, c, d) + m[k] + 0x5A827999) % (1 << 32)
-    return leftrotate(val, s)
-```
+The values of $$a, b, c, d$$ come from previous states, so we can treat them as
+constant. This allows us to simplify the round functions somewhat. First, we'll
+consolidate the functions' constant terms and denote these $$N_1$$ and $$N_2$$:
 
-The values of `a, b, c, d` come from previous states, so we can treat them as
-constant. This allows us to simplify the round functions somewhat. Let `N_1` and
-`N_2` denote consolidated constants for `r1` and `r2`, respectively. We can then
-rewrite the formulae for our intermediate states like so:
+$$
+\begin{align}
+N_1 &= a_1 + F(b_1, c_1, d_1) \\
+N_2 &= d_4 + G(a_5, b_4, c_4) + \mathtt{0x5A827999} \\
+\end{align}
+$$
+
+We can then rewrite the formulae for our intermediate states like so:
 
 $$
 \begin{align}
 N_1 &= a_1 + F(b_1, c_1, d_1) \\
 N_2 &= d_4 + G(a_5, b_4, c_4) + \mathtt{0x5A827999} \\
 \\
-a_2 &= (N_1 + m_k) \lll 3 \\
-d_5 &= (N_2 + m_k) \lll 5 \\
+a_2 &= (N_1 + m_4) \lll 3 \\
+d_5 &= (N_2 + m_4) \lll 5 \\
 \\
-a_2 \ggg 3 &= N_1 + m_k \\
-d_5 \ggg 5 &= N_2 + m_k
+a_2 \ggg 3 &= N_1 + m_4 \\
+d_5 \ggg 5 &= N_2 + m_4
 \end{align}
 $$
 
@@ -473,16 +479,14 @@ Through this equality we can translate constraints on $$a_2$$ and $$d_5$$ into
 constraints on $$N_1 + m_4$$ and $$N_2 + m_4$$ respectively.
 
 We will adapt our earlier notation to denote specific bits within these sums,
-e.g. $$(N_2 + m_4)_5$$ for the 5th bit of this sum. Note that $$(N_2 + m_4)_5$$
-is not equivalent to $$N_{2,5} + m_{4,5}$$ since $$(N_2 + m_4)_5$$ has the
-potential to be altered by carries from the sums of lower-order bits.
+e.g. $$(N_2 + m_4)_5$$ for the 5th bit of this sum.
 
 Take the constraint $$a_{2,8} = 1$$. We can translate this as $$(N_1 + m_{k})_5
 = 1$$. Note that the original constraint's index of 8 becomes 5 after
 translation. Indices of $$a_2$$'s constraints need to be adjusted by 3, as
 shown; indices for $$d_5$$'s constraints need to be adjusted by 5. This is to
-compensate for the round functions' bit rotations. Aside from this caveat, the
-translation process is pretty simple.
+compensate for the round functions' bit rotations. The rest of the translation
+process is pretty simple.
 
 The full list of translated constraints is as follows.
 
@@ -522,9 +526,8 @@ still met.
 
 This method allows us to satisfy all of $$d_5$$'s constraints.
 
-It is possible to massage the state further, but each step further adds new
-complications, and this post is already getting long, so we will stop here. See
-this post's sequel for some notes on my implementation of some further steps.
+It is possible to massage the state further, but each further step adds new
+complications, and this post is already getting long, so we will stop here.
 
 ## Massaging the Message: Illustrated
 

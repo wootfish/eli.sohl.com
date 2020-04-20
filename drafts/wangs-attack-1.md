@@ -491,7 +491,7 @@ $$d_5$$ into constraints on $$N_1 + m_4$$ and $$N_2 + m_4$$ respectively.
 We will adapt our earlier notation to denote specific bits within these sums,
 e.g. $$(N_2 + m_4)_5$$ for the 5th bit of $$N_2 + m_4$$.
 
-Take the constraint $$a_{2,8} = 1$$. We can translate this as $$(N_1 + m_{k})_5
+Take the constraint $$a_{2,8} = 1$$. We can translate this as $$(N_1 + m_{4})_5
 = 1$$. Note that the original constraint's index of 8 becomes 5 after
 translation. Indices of $$a_2$$'s constraints need to be adjusted by 3, as
 shown; indices for $$d_5$$'s constraints need to be adjusted by 5. This is to

@@ -579,9 +579,9 @@ include blog-gif.html
 name="/assets/img/wang/md4-differential-colliding"
 %}
 
-Recall that we earlier proved that two states whose last four rows have a
-differential of 0 will produce collisions. We can see that this is indeed the
-case for all of our colliding messages.
+Recall that we showed earlier that two messages will collide when their state
+grids' last four rows have a differential of 0. We can see that this is indeed
+the case for all of our colliding messages.
 
 I haven't gone through the whole process of proving this differential path's
 validity, but I believe the proof would make heavy use of the boolean function

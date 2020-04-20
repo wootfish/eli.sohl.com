@@ -537,7 +537,7 @@ still met.
 This method allows us to satisfy all of $$d_5$$'s constraints.
 
 It is possible to massage the state further, but each further step adds new
-complications, and this post is already getting long, so we will stop here.
+complications and this post is already getting long.
 
 
 ## Tracking the State Differential
@@ -579,10 +579,9 @@ include blog-gif.html
 name="/assets/img/wang/md4-differential-colliding"
 %}
 
-Recall that the final MD4 hash value is derived from the last four rows of these
-state grids. Thus, two messages whose state grids' final rows are equal (i.e.
-have 0 differential) will have equal MD4 hashes; we can see that this is true
-for all our collisions.
+Recall that we earlier proved that two states whose last four rows have a
+differential of 0 will produce collisions. We can see that this is indeed the
+case for all of our colliding messages.
 
 I haven't gone through the whole process of proving this differential path's
 validity, but I believe the proof would make heavy use of the boolean function

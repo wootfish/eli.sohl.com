@@ -31,12 +31,14 @@ Eventually I gave in and started searching for blog posts on the attack; the few
 I found were not much help. These are written to be the posts I wish I'd found.
 I had only meant to write one post, but it was getting pretty long so I decided
 to break it up into two parts: this one, on the theory of the attack, followed
-by a forthcoming second part which details an efficient implementation of the
-attack in Python.
+by a forthcoming second part detailing an efficient implementation of the attack
+in Python.
 
-I hope someone finds these posts useful or at least interesting. If they aren't
-detailed enough for you, come on out to Seattle and we'll go through it over
-beers, coffee, or your beverage of choice.
+They say you don't understand something until you can teach it, so these posts
+are my way of proving to myself that I understand Wang's attack. I hope someone
+finds them useful or at least interesting. If they aren't detailed enough for
+you, come on out to Seattle and we'll go through it over beers, coffee, or your
+beverage of choice.
 
 
 ## The Basic Idea
@@ -55,12 +57,12 @@ to identify a set of messages $$S$$ such that if $$m \in S$$ then $$H(m) = H(m
 Wang's attack consists of a definition for one such differential $$D$$ and a
 method for arriving at likely elements of the corresponding message set $$S$$.
 
-The attack's supporting theory is an analysis of how certain differentials
-spread through MD4's internal state. Supported by a set of simple collisions in
-the hash function's round functions, this analysis culminates in a set of
-(nearly) sufficient conditions for differentials in different parts of the
-message to "cancel each other out" like waves coming together and destructively
-interfering.
+The attack's supporting theory is centered around an analysis of how certain
+differentials spread through MD4's internal state. Supported by a set of simple
+collisions in the hash function's round functions, this analysis culminates in a
+set of (nearly) sufficient conditions for differentials in different parts of
+the message to "cancel each other out" like waves coming together and
+destructively interfering.
 
 The result of this analysis is a characterization of the message set $$S$$,
 which is defined by a set of more than one hundred conditions on the hash

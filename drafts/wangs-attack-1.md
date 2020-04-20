@@ -105,7 +105,11 @@ representations.
 
 Here's what the full process for hashing one block looks like:
 
-[![Animated GIF of a 32x48 grid of gray squares being filled in row-by-row](/assets/img/md4-states.gif){: .img-center }](/assets/img/md4-states.gif)
+{%
+include blog-image.md
+image="/assets/img/wang/md4-states.gif"
+description="Animated GIF of a 32x48 grid of gray squares being filled in row-by-row"
+%}
 
 In that figure, the 32 bits of each intermediate MD4 state are represented
 across consecutive rows of the grid. You can see the order in which message
@@ -141,12 +145,15 @@ $$
 Trivial collisions exist for all three of these functions. The paper lists these
 on page 5:
 
-[![A screenshot from page 5 of the paper showing Propositions 1 through 3.](/assets/img/md4-bool-collisions.png){: .img-center }](/assets/img/md4-bool-collisions.png)
+{%
+include blog-image.md
+image="/assets/img/wang/md4-bool-collisions.png"
+description="A screenshot from page 5 of the paper showing Propositions 1 through 3."
+%}
 
-These collisions are essential to the theory of the attack (though not to its
-implementation). This will be covered below when we discuss state differentials.
-For now, all you need to know is that $$F, G, H$$ are used by the round
-functions $$r_1, r_2, r_3$$ respectively.
+These collisions are important to the theory of the attack (though not to its
+implementation). For now, all you need to know is that $$F, G, H$$ are used by
+the round functions $$r_1, r_2, r_3$$ respectively.
 
 Here's what those round functions look like. As above, $$a, b, c, d$$ are our
 four state variables. $$M = (m_0, m_1, ..., m_{15})$$ is a fixed 512-bit message.
@@ -237,7 +244,11 @@ intermediate states. Despite what the paper says, these do not quite form a set
 of sufficient conditions, but they do come close. Here is the relevant table
 (from page 16 of the paper):
 
-[![Table 6: A Set of Sufficient Conditions for Collisions of MD4](/assets/img/wang-table-6.png){: .img-center }](/assets/img/wang-table-6.png)
+{%
+include blog-image.md
+image="/assets/img/wang/wang-table-6.png"
+description="Table 6: A Set of Sufficient Conditions for Collisions of MD4"
+%}
 
 This may look like a lot, but if you stare at it for long enough you'll start to
 notice patterns. Nearly all of the constraints fall into three broad categories:
@@ -352,7 +363,11 @@ to $$d_1, c_1, b_1, a_2, b_2$$, and so on, undoing all our hard work as it goes.
 
 How can we prevent this? I'm glad you asked. Take a look at this diagram.
 
-[![Corrections for a5](/assets/img/wang-a5-adjustments.svg){: .img-center }](/assets/img/wang-a5-adjustments.svg)
+{%
+include blog-image.md
+image="/assets/img/wang/wang-a5-adjustments.svg"
+description="Corrections for a5"
+%}
 
 This illustrates the process of correcting a second-round state, $$a_5$$. In
 this case, the process consists of three steps.
@@ -535,19 +550,44 @@ Recall that MD4's final result is computed from the last four internal states;
 as a corollary, if the last four rows of two messages' state differential are
 all 0 then those two messages form a collision.
 
-Here are the state differentials for fifty random messages:
+Here are the state differentials for one hundred random messages (hover to
+animate):
 
-(TODO)
+{%
+include blog-gif.html
+name="/assets/img/wang/md4-differential-random"
+%}
 
-Here are the state differentials for fifty moderately massaged messages:
+You can see exactly where the first message differentials are introduced, and
+the resulting state differential, in the second and third rows of round one.
+These early divergences quickly compound on themselves, and soon the
+differential has diffused throughout the entire state.
 
-(TODO)
+Here are the state differentials for one hundred moderately massaged messages
+(again, hover to animate):
 
-And finally, here are the state differentials for fifty collisions:
+{%
+include blog-gif.html
+name="/assets/img/wang/md4-differential-massaged"
+%}
 
-(TODO)
+And finally, here are the state differentials for one hundred collisions
+(hover):
 
-TODO UNPACK AND DISCUSS.
+{%
+include blog-gif.html
+name="/assets/img/wang/md4-differential-colliding"
+%}
+
+Recall that the final MD4 hash value is derived from the last four rows of these
+state grids. Thus, two messages whose state grids' final rows are equal (i.e.
+have 0 differential) will have equal MD4 hashes; we can see that this is true
+for all our collisions.
+
+I haven't gone through the whole process of proving this differential path's
+validity, but I believe the proof would make heavy use of the boolean function
+collisions described above since those give you conditions under which any
+round's differentials will fail to propogate forward.
 
 ## Countermeasures
 
@@ -565,7 +605,7 @@ into the hash function's internal state. As a consequence, any small change to
 the message will produce many more (and more complex) changes to the internal
 state than in MD4.[^6]
 
-[^6]: Though note that these measures are not automatically foolproof; see for example the recent chosen-prefix attack on SHA-1 (Leurent & Peyrin, 2020) ([PDF link](https://eprint.iacr.org/2020/014.pdf)).
+[^6]: Note, though, that these measures are not automatically foolproof; see for example the recent chosen-prefix attack on SHA-1 (Leurent & Peyrin, 2020) ([PDF link](https://eprint.iacr.org/2020/014.pdf)).
 
 Another defense is to simply build a hash function around something other than
 the Merkle-Damgård construction; a good example here is SHA-3, which uses a

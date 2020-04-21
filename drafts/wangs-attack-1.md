@@ -307,9 +307,9 @@ we need to solve the round function $$r_1$$ for $$m_k$$, like so:
 
 $$
 \begin{align}
-r_1(a, b, c, d, k, s) &= (a + F(b, c, d) + m_k) \lll s \\
-r_1(a, b, c, d, k, s) \ggg s &= a + F(b, c, d) + m_k \\
-(r_1(a, b, c, d, k, s) \ggg s) - a - F(b, c, d) &= m_k \\
+r_1(a, b, c, d, k, s) = (a + F(b, c, d) + m_k) \lll s \\
+r_1(a, b, c, d, k, s) \ggg s = a + F(b, c, d) + m_k \\
+(r_1(a, b, c, d, k, s) \ggg s) - a - F(b, c, d) = m_k \\
 \end{align}
 $$
 

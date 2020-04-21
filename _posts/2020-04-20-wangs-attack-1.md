@@ -2,7 +2,7 @@
 layout: post
 title: Wang's Attack in Theory
 mathjax: true
-image: '/assets/img/wang/md4-states.gif'
+image: '/assets/img/wang/wang-a5-adjustments.png'
 ---
 
 

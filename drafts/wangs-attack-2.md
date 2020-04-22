@@ -556,8 +556,7 @@ with $$a_6$$. If successful, this would let us drop the constraint checks and
 the `while` loop, which would improve the script's overall hash rate. Maybe
 someday I'll try that. Or maybe you will :-)
 
-This is enough of a massage to generate a few collisions per minute. 
-
+Anyway, this much of a massage is enough to produce a few collisions per minute.
 Past this point, side effects get _really_ tricky to manage, so we'll stop here.
 
 # Conclusion

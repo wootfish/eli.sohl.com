@@ -4,6 +4,7 @@ title: Wang's Attack in Practice
 mathjax: true
 ---
 
+
 [Last time, we discussed Wang's attack in theory]({% post_url 2020-04-20-wangs-attack-1 %}).
 Now let's work through the implementation. This is tricky, but with a little
 finesse we can get it looking pretty good. The end result will be a script that
@@ -572,11 +573,14 @@ to _implement_ the attack are relatively unchanged. The core ideas in this blog
 post can be applied to more recent differential attacks on MD4 and related
 functions more or less directly.
 
+If you're curious what it looks like when all the code from this example is put
+together, my take on Wang's attack can be found [here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
+
 I'm measuring a success probability of about $$2^{-17.3}$$ using the techniques
 described in this post. With my Python implementation running in a Qubes VM on a
 ThinkPad T420s, I see a rate of about three collisions per minute.
 
-And frankly, after how much work this attack took, three collisions per minute is
-more than enough for me.
+And frankly, after how much work this attack took, three collisions per minute
+is fast enough for me.
 
 <hr>

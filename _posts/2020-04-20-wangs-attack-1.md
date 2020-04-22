@@ -45,15 +45,18 @@ beverage of choice.
 ## The Basic Idea
 
 This attack is a _differential attack_, meaning we as attackers are trying to
-find collisions between pairs of messages where the messages also `xor` to some
-fixed constant. That is to say, we want messages $$m, m'$$ such that $$H(m)
-= H(m')$$ and $$m \oplus m' = D$$ for some fixed differential $$D$$.
+find collisions between pairs of messages where the messages also share a fixed
+difference.
+
+Differential attacks commonly use `xor` difference, but in this attack we are
+interested in arithmetic difference; that is to say, we want messages $$m, m'$$
+such that $$H(m) = H(m')$$ and $$m' - m = D$$ for some fixed differential $$D$$.
 
 This might sound like adding an unnecessary constraint -- and it is -- but it
 gives us a powerful way of reframing the problem. This definition makes $$m'$$
 fully dependent on $$m$$ and $$D$$, so for the attack to succeed it suffices
 to identify a set of messages $$S$$ such that if $$m \in S$$ then $$H(m) = H(m
-\oplus D)$$ with high probability.
++ D)$$ with high probability.
 
 Wang's attack consists of a definition for one such differential $$D$$ and a
 method for arriving at likely elements of the corresponding message set $$S$$.
@@ -288,7 +291,7 @@ alliterative but also a little generic. We can do better: let's call this
 message modification method a _message massage_.
 
 Massaging the message to satisfy some of Wang et al.'s conditions greatly
-increases the likelihood that $$H(m) = H(m \oplus D)$$. The more conditions
+increases the likelihood that $$H(m) = H(m + D)$$. The more conditions
 satisfied, the higher the probability of success.
 
 The next couple sections outline the message massage methodology. After that,
@@ -543,9 +546,9 @@ complications and this post is already getting long.
 
 ## Tracking the State Differential
 
-In order to see if our collision is working, we look at the `xor`s of the two
-messages' intermediate hash states. This shows us where state differentials are
-introduced, as well as (hopefully) where they disappear.
+In order to see if our collision is working, we look at the `xor` difference of
+the two messages' intermediate hash states. This shows us where state
+differentials are introduced, as well as (hopefully) where they disappear.
 
 Recall that MD4's final result is computed from the last four internal states;
 as a corollary, if the last four rows of two messages' state differential are
@@ -584,10 +587,15 @@ Recall that we showed earlier that two messages will collide when their state
 grids' last four rows have a differential of 0. We can see that this is indeed
 the case for all of our colliding messages.
 
-I haven't gone through the whole process of proving this differential path's
-validity, but I believe the proof would make heavy use of the boolean function
-collisions described above since those give you conditions under which any
-round's differentials will fail to propogate forward.
+The paper states (on page 7) that _it is clear that the collision differential
+consists of two internal collisions respectively from 2-25 steps and 36-41
+steps_. I think it's kind of cool how the above graphic allows us to visually
+confirm this.
+
+I haven't gone through the whole process of proving these internal collisions'
+validity, but if I were to do so my proof strategy would make heavy use of the
+boolean function collisions described above, since those give you conditions
+under which any round's differentials will fail to propogate forward.
 
 ## Countermeasures
 

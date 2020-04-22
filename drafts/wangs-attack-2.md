@@ -573,8 +573,8 @@ to _implement_ the attack are relatively unchanged. The core ideas in this blog
 post can be applied to more recent differential attacks on MD4 and related
 functions more or less directly.
 
-If you're curious what it looks like when all the code from this example is put
-together, my take on Wang's attack can be found [here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
+If you're curious what an implementation of Wang's attack might look like when
+these pieces are all put together, my take on the attack can be found [here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
 
 I'm measuring a success probability of about $$2^{-17.3}$$ using the techniques
 described in this post. With my Python implementation running in a Qubes VM on a

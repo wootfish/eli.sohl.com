@@ -55,8 +55,8 @@ such that $$H(m) = H(m')$$ and $$m' - m = D$$ for some fixed differential $$D$$.
 This might sound like adding an unnecessary constraint -- and it is -- but it
 gives us a powerful way of reframing the problem. This definition makes $$m'$$
 fully dependent on $$m$$ and $$D$$, so for the attack to succeed it suffices
-to identify a set of messages $$S$$ such that if $$m \in S$$ then $$H(m) = H(m
-+ D)$$ with high probability.
+to identify a set of messages $$S$$ such that if $$m \in S$$ then
+$$H(m) = H(m + D)$$ with high probability.
 
 Wang's attack consists of a definition for one such differential $$D$$ and a
 method for arriving at likely elements of the corresponding message set $$S$$.

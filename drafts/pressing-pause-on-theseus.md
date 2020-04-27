@@ -5,7 +5,7 @@ title: Pressing Pause on Theseus
 
 
 I'll get right to the point. I'm putting the Theseus project on indefinite
-hiaitus pending interested collaborators.
+hiatus pending interested collaborators.
 
 I still believe in the project's importance and potential. There are powerful
 ideas in here that I have not seen anywhere else. I don't expect non-experts to
@@ -70,7 +70,7 @@ can't keep working on it alone.
 
 I do still have some interesting unpublished results that I will be writing up
 for this blog whenever I find the time. But my main hope for placing Theseus on
-hiaitus is to reclaim my free time (which this project has almost completely
+hiatus is to reclaim my free time (which this project has almost completely
 consumed for the last several years), so it might be a while.
 
 I really care about Theseus, and I don't want it to be over. That said, I am

@@ -271,7 +271,7 @@ If _all_ the constraints are satisfied, then "the probability can be among
 $$2^{-6} \sim 2^{-2}$$." This sounds pretty good, but don't get too excited just
 yet.
 
-If I can editorialize for a moment: The fact that Wang et al. give such a broad
+If I may editorialize for a moment: The fact that Wang et al. give such a broad
 range for the attack's success rate (between 25% and 1.5%) may imply that they
 were unable to measure it directly, suggesting that even they did not have a
 full methodology for enforcing _all_ of their conditions. They likely got close,

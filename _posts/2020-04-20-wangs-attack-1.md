@@ -55,8 +55,8 @@ such that $$H(m) = H(m')$$ and $$m' - m = D$$ for some fixed differential $$D$$.
 This might sound like adding an unnecessary constraint -- and it is -- but it
 gives us a powerful way of reframing the problem. This definition makes $$m'$$
 fully dependent on $$m$$ and $$D$$, so for the attack to succeed it suffices
-to identify a set of messages $$S$$ such that if $$m \in S$$ then $$H(m) = H(m
-+ D)$$ with high probability.
+to identify a set of messages $$S$$ such that if $$m \in S$$ then
+$$H(m) = H(m + D)$$ with high probability.
 
 Wang's attack consists of a definition for one such differential $$D$$ and a
 method for arriving at likely elements of the corresponding message set $$S$$.
@@ -271,7 +271,7 @@ If _all_ the constraints are satisfied, then "the probability can be among
 $$2^{-6} \sim 2^{-2}$$." This sounds pretty good, but don't get too excited just
 yet.
 
-If I can editorialize for a moment: The fact that Wang et al. give such a broad
+If I may editorialize for a moment: The fact that Wang et al. give such a broad
 range for the attack's success rate (between 25% and 1.5%) may imply that they
 were unable to measure it directly, suggesting that even they did not have a
 full methodology for enforcing _all_ of their conditions. They likely got close,

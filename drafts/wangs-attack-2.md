@@ -9,9 +9,9 @@ mathjax: true
 Now let's cover the implementation.
 
 [Cryptopals Set 7](https://cryptopals.com/sets/7) calls Wang's attack "as
-difficult as anything we've done [across the first 7 sets of challenges]". I
-would not disagree.[^1] It's a tricky challenge, but if we take the right
-approach we can get it to read clearly and run fast. The end result is a script
+difficult" as anything in those first 7 sets of challenges. I would not
+disagree.[^1] It's a tricky challenge, but if we take the right approach we can
+get the attack code to read clearly and run fast. The end result is a script
 that continuously generates MD4 collisions at a rate of several per minute.
 
 [^1]: Although an honorable mention goes to challenge 48, which covers Bleichenbacher's attack on RSA with PKCS 1.5. I'd rate Wang's attack as more difficult overall, but the two attacks do require comparably psychotic levels of attention to detail.
@@ -57,11 +57,11 @@ message words $$m_{0}, ..., m_{15}$$ in order. I'm calling it `X` rather than
 `M` to avoid implied associations with any fixed message value, because `X`'s
 contents will change over the course of the message massage.
 
-One thing that might seem odd to the seasoned reader: rather than simply passing
-in message words `X[k]` to our round functions, we're passing both `X` and `k`
-separately. This might seem unnecessary - and strictly speaking, it is - but
-having a reference to `X` inside the round function enables a cool trick in our
-round 1 massage, as you will see shortly.
+One thing that might seem odd to seasoned readers: rather than passing message
+words `X[k]` to our round functions, we're passing both `X` and `k` separately.
+This might seem unnecessary - and strictly speaking, it is - but having a
+reference to `X` inside the round function enables a cool trick in our round 1
+massage, as you will see shortly.
 
 Continuing our review, here's how MD4 computes all three rounds for each message
 block:
@@ -86,19 +86,18 @@ a = r3(a,b,c,d,1,3,X); d = r3(d,a,b,c, 9,9,X); c = r3(c,d,a,b,5,11,X); b = r3(b,
 a = r3(a,b,c,d,3,3,X); d = r3(d,a,b,c,11,9,X); c = r3(c,d,a,b,7,11,X); b = r3(b,c,d,a,15,15,X)
 ```
 
-This may look pretty arbitrary. That’s fine; I’m not going to try to convince
-you that it isn’t. The main reason I included this code is because it shows the
-values of `k` and `s` used by each intermediate state. We'll need these values
-in order to perform our massage.
+This may look pretty arbitrary. That’s fine; I won't try to convince you that it
+isn’t. I included this code because it shows the values of `k` and `s` used at
+each intermediate state. We'll need these values for our massage.
 
 # Defining Constraints
 
-The core of Wang's attack is a large list of constraints on the hash function's
-intermediate states. Nearly all the attack's constraints fall into one of three
-types: _zero constraints_, _one constraints_, and _equality constraints_. This
-taxonomy suffices for all the constraints we will be implementing.
+The core of Wang's attack is a list of constraints on MD4's intermediate states.
+Nearly all of these constraints fall into one of three types: _zero
+constraints_, _one constraints_, and _equality constraints_. This taxonomy
+suffices for all the constraints we will be implementing.
 
-For reference, here's the table of constraints:
+For reference, here is the list of constraints:
 
 {%
 include blog-image.md
@@ -127,9 +126,9 @@ class ZeroConstraint:
 This is simple enough, and you can write similar classes for each other type of
 constraint.
 
-Already, though, some potential improvements present themselves. First, we can
-improve the `check()` and `massage()` methods' clarity and performance by
-precomputing the masks they use, like so:
+Already, though, some potential improvements present themselves. For instance,
+we can improve the `check()` and `massage()` methods' performance by
+precomputing the masks they use like so:
 
 ```python
 class ZeroConstraint:
@@ -145,13 +144,13 @@ class ZeroConstraint:
         return word & self.mask_inv
 ```
 
-Also: when a state is subject to multiple constraints of the same type (e.g.
-zero constraints on several indices), we might as well enforce those constraints
-simultaneously. Let's implement this by making `__init__` accept a variable
-number of indices, not just one.
+Another idea: when a state is subject to multiple constraints of the same type
+(e.g. zero constraints on several indices), we might as well enforce those
+constraints simultaneously. Let's implement this by making `__init__` accept a
+variable number of indices, not just one.
 
-While we're at it, we'll want our other constraint types to support that same
-pattern, so let's pull that logic out into a superclass and subclass it:
+We'll want our other constraint types to support that same pattern, so while
+we're at it let's pull that logic out into a superclass and subclass it.
 
 ```python
 class Constraint:
@@ -187,10 +186,16 @@ class Eqs(Constraint):
         return (word_1 & self.mask_inv) | (word_2 & self.mask)
 ```
 
-You'll notice that `Eqs.check()` and `Eqs.massage()` both take two arguments,
-because the corresponding constraints involve two states. `Eqs.massage()`
-returns a massaged version of the first state passed to it, with the applicable
-bits massaged to equality with the second state.
+The above methods rely on two properties: `word & mask` sets bits in `word` to 0
+wherever the corresponding bits in `mask` are 0, and `word | mask` sets bits in
+`word` to 1 wherever `mask` is 1. If any of the above code seems esoteric, this
+might be a good time to [brush up on the basics](https://wiki.python.org/moin/BitwiseOperators)
+of bitwise operations.
+
+You'll notice that `Eqs.check()` and `Eqs.massage()` both take two arguments.
+This is because the corresponding constraints all involve pairs of states. In
+`Eqs.massage()`, the first state is the one that gets massaged; the constrained
+bits are first zeroed, then set to equality with the second state.
 
 I've added optional, unused extra arguments to the `check()` and `massage()`
 methods for `Zeros` and `Ones` as well, to keep the method signatures
@@ -199,41 +204,8 @@ it allows us to massage constraints of all three types in the same loop without
 having to keep track of which constraint type we're dealing with on any given
 iteration.
 
-Let's pause for a moment to articulate the bitwise logic used by these classes.
-Depending on your level of familiarity with bitwise operations, this might be a
-good time to [brush up on the basics](https://wiki.python.org/moin/BitwiseOperators)
-before continuing. If you found the class definitions above to be
-self-explanatory, feel free to skip forward to the definition of `round_1`
-below.
-
-* `mask` is an int with 1 bits wherever we have `ind`s and 0 bits everywhere else.
-  For example, if `inds = [0, 3, 6, 31]`, then `mask = 0b10000000000000000000000001001001`.
-
-* `mask_inv` is the inversion of `mask`: it has 0s where `mask` has 1s and it
-  has 1s where `mask` has 0s. So if `inds = [0, 3, 6]`, then `mask_inv = 0b01111111111111111111111110110110`.
-
-* `Zeros.check()` computes `word & mask` and relies on the fact that this value
-  will be 0 if and only if `word` is 0 at all bits set in `mask`.
-
-* `Zeros.massage()` uses `word & mask_inv` to ensure that all bits set in `mask`
-  are zeroed and all other bits are left unchanged.
-
-* `Ones.check()` tests whether `word & mask == mask`; this test is True if and
-  only if `word` is 1 wherever `mask` is 1.
-
-* `Ones.massage()` simply returns `word | mask`, ensuring all bits set in `mask`
-  are set in the returned value.
-
-* `Eqs.check()` derives versions of `word_1` and `word_2` with all irrelevant
-  bits zeroed by computing `word_1 & mask` and `word_2 & mask`, then checks
-  whether these new words are equal.
-
-* `Eqs.massage()` massages `word_1` by first zeroing all relevant bits with
-  `word & mask_inv`, then setting those bits to 1 if and only if they are set to
-  1 in `word_2`. The full expression is `(word_1 & mask_inv) | (word_2 & mask)`.
-
-Now that we've defined and discussed these classes, let's express the attack's
-round-one constraints in terms of them:
+Now that we've defined these classes, let's express the attack's round-one
+constraints in terms of them:
 
 ```python
 round_1 = [[Eqs(6)],
@@ -345,13 +317,13 @@ bytes and return it:
     return b''.join(struct.pack("<I", word) for word in X)
 ```
 
-That's right - that really is all it takes.
+That's right - for round one, that really is all it takes.
 
 # Applying the Message Differential
 
-The `massage` function we just wrote takes an arbitrary length-64 bytestring and
-turns it into a promising candidate message `M`. Before we can check whether `M`
-is part of a collision, we have to be able to compute `M'`, aka `M + D`.
+We just wrote a `massage` function which takes an arbitrary length-64 bytestring
+and turns it into a promising candidate message `M`. Before we can check whether
+`M` is part of a collision, we have to be able to compute `M'`, aka `M + D`.
 
 The differential modifies three message words. We can encode these words'
 indices and their internal differentials like so:
@@ -362,7 +334,7 @@ DIFFERENTIALS = ((1, 1 << 31),
                  (12, -(1 << 16)))
 ```
 
-Then applying the differential becomes as simple as this:
+Then applying the differential is straightforward:
 
 ```python
 def apply_differential(m):
@@ -373,6 +345,13 @@ def apply_differential(m):
     m_prime = b''.join(words)
     return m_prime
 ```
+
+You might be wondering why `DIFFERENTIALS` is a nested tuple, not a dictionary.
+Granted, it would be natural to define it as `{1: 1 << 32, ...}`, and that
+definition would read quite well, its usage would not. We don't want to look
+indices up in this data structure; we just want to loop over its pairs of
+values. By storing the differential as pairs of values, we avoid having to call
+`.items()` on it. That has benefits for both performance and clarity.
 
 # Finding Collisions
 
@@ -402,7 +381,12 @@ After trying a bunch of other options, I'm pretty sure that
 
 [^3]: Or any other length, not just 64 bytes, naturally. For n bytes, precompute `8*n` and use `random.getrandbits(8*n).to_bytes(n, 'big')`. My performance tests did not indicate any significant difference between using 'big' or 'little' here, but YMMV.
 
-[^4]: Not cryptographically secure - but in this case it doesn't have to be!
+[^4]: Not cryptographically secure randomness - but in this case it doesn't have to be!
+
+You can speed up `find_collisions()` by using a crypto library's binding for
+`md4` (e.g. `pycrypto`'s `Crypto.Hash.MD4`). This will likely run much faster
+than any Python-native implementation, which is important since our hot loop
+runs `md4` at least twice per iteration.
 
 There's another potential speedup that I've skipped implementing here because I
 feel like the code reads better without it. If you're curious, though, I've
@@ -410,7 +394,7 @@ sketched the idea out in the following footnote.[^5]
 
 [^5]: Here's the idea: Currently, within `find_collisions`, both `massage` and `apply_differential` take a message as a bytestring, break it into chunks, call `struct.unpack` on the chunks, manipulate them, then `struct.pack` the result. An alternative implementation could simply generate our input message as a list of ints, rewrite `massage` and `apply_differential` to operate on that list directly, and only `pack` it back to a bytestring when we're ready to try a collision. This would likely run a little faster; personally, though, I think it might be harder to read. But hey - maybe this can be how you write a version of the attack that outperforms mine :-)
 
-Then, all we have to do is run this function and print what it yields.
+Once we have this function, we can just loop over it and print what it yields.
 
 ```python
 if __name__ == "__main__":
@@ -427,37 +411,34 @@ if __name__ == "__main__":
         print()
 ```
 
-You can speed up `find_collisions()` by using a crypto library's binding for
-`md4` (e.g. `pycrypto`'s `Crypto.Hash.MD4`). This will likely run much faster
-than any Python-native implementation, which is important since our hot loop
-runs `md4` twice per iteration.
-
 Using this algorithm for a full round-1 massage, I measured a per-trial success
 probability of appx $$2^{-25}$$. With just these constraints my implementation
 was finding about one collision per day. At that rate the attack is actually
-practical, so this is a good time to test your attack code.
+practical, making this a good time to test your attack code.
 
 # Massaging Constraints: Round 2
 
 Let's talk about how to get from one collision per day to several per minute.
 
-Unfortunately, this part of the massage will end up being a little less terse
-than round one. Two reasons: the constraints more more varied, and (unlike in
-round one) we have to worry about cleaning up any side effects we cause.
+This part of the massage will end up being somewhat less terse than round one.
+Two reasons: the constraints are more varied, and we have to start cleaning up
+side effects.
 
-Let's write a helper function for inverting `r1` to find the message word that
-produces a given state. We'll feed it with the index of the message word, plus
-the `leftrotate` shift amount for the given step. It can get everything else
-that it needs to know from the state log:
+Let's write a helper function for cleaning up side effects. This will find the
+message word that produces a given round-1 state. It works by inverting `r1`.
+We'll give it the index of the message word, the `leftrotate` shift amount for
+the given step, and our state log (passed in as `s` to keep our one-liner
+narrow).
 
 ```python
-    def r1_inv(k, rot):
-        # returns a message value tailored to produce the expected intermediate state
-        return (rrot(state_log[k+4], rot) - state_log[k] - F(state_log[k+3], state_log[k+2], state_log[k+1])) % MODULUS
+    # returns a message value tailored to produce the expected intermediate state
+    def r1_inv(k, rot, s):
+        return (rrot(s[k+4], rot) - s[k] - F(s[k+3], s[k+2], s[k+1])) % MODULUS
 ```
 
-This helper will simplify the process of containing side effects from our
-changes to any message word.
+When we make changes to any message word, we can prevent those changes from
+spreading through round one by using this function to update the following
+message words.
 
 Let's also define a `round_two` constraint list analogous to `round_one`. This
 is only a partial list of constraints, and it is not meant to be consumed
@@ -473,21 +454,21 @@ round_2 = [[Zeros(26), Ones(25, 28, 31), Eqs(18)],
            [Ones(28)]]
 ```
 
-Now let's take a look at how we massage some specific states.
+Now, here's how we massage some specific states.
 
 ## $$a_5$$
 
 $$a_5$$ is the first state in round two.
 
-First, we'll compute a preliminary value for $$a_5$$, then massage it and modify
-`X[0]` to produce the massaged state.
+We'll start by computing a preliminary value for $$a_5$$, then we'll massage it
+and modify `X[0]` to produce the massaged state.
 
 This change to `X[0]` will produce side effects back in round one. As described
 in the last post, we're going to end up changing words 0 through 4 of the
-message in order to contain these side effects and avoid perturbing our
-round-one states any more than absolutely necessary.
+message in order to contain those side effects and avoid perturbing our
+round-one states any more than is absolutely necessary.
 
-Here's the full massage step for $$a_5$$, the first state in round two:
+Here's the full massage step for $$a_5$$:
 
 ```python
     ######## a5
@@ -503,15 +484,15 @@ Here's the full massage step for $$a_5$$, the first state in round two:
     X[4] = r1_inv(4, 3)
 ```
 
-As noted in the last post, our constraints on $$a_1$$ and $$a_5$$ seem to tend
-not to conflict with each other. As a result, we can just compute a new value
-for $$a_1$$ and hold the next four intermediate states constant.
+As noted in the last post, our constraints on $$a_1$$ and $$a_5$$ tend not to
+conflict with each other. As a result, we can just compute a new value for
+$$a_1$$ and hold the next four intermediate states constant.
 
 ## $$d_5$$
 
-You'll recall from the last post that our methodology for massaging $$d_5$$ was
-somewhat more involved. The idea is to enforce all our constraints on $$m_4$$
-directly. See _Wang's Attack in Theory_ for an explanation of how this works.
+You'll recall that our methodology for massaging $$d_5$$ was somewhat more
+involved. The idea is to enforce all our constraints on $$m_4$$ directly. See
+_Wang's Attack in Theory_ for an explanation of how this works.
 
 Here is an implementation of this massage methodology:
 
@@ -556,17 +537,19 @@ This step is a little strange in that it initializes $$m_4$$ to 0 and then sets
 only the required bits; as a result, any unconstrained bits will default to 0.
 
 A particularly pedantic critic might point out that this limits us to sampling
-collisions from a proper subset of the full collision space. This is true, but
-the subset is big enough that we've still got more collisions than we'll ever
-need. Plus, I think the code reads better this way, and it runs marginally
-faster than the alternative.[^6]
+collisions from a proper subset of the full collision space.[^6] This is true -
+but it's a big subset, with more collisions than we'll ever need, so I'm not too
+concerned. Plus, I think the code reads better this way, and it runs marginally
+faster. It would be interesting to measure whether it influences the success
+probability by introducing any biases in later states.
 
 [^6]: The alternative would be to initialize m_4 to `random.getrandbits(32)`, zero all the bits we've got constraints on, then proceed as above. That's not too difficult, but I just don't feel like it's really _necessary_ either, and -- as I keep finding myself saying -- the code is simpler this way.
 
 
 # $$a_6$$
 
-We're just going to skip over $$c_5$$ and $$b_5$$ because they are finnicky.
+We're just going to skip over $$c_5$$ and $$b_5$$, as they are not easy to work
+with.
 
 $$a_6$$ is another state whose constraints can sometimes interfere with our
 round-one constraints. The failure rate is low but nonzero. My (somewhat lazy)
@@ -627,20 +610,20 @@ quickly. If you have a practical need for MD4 collisions, I'm not going to ask
 what you do for a living but I am going to suggest you look at some later
 research on the subject, e.g. Yu Sasaki et al., 2007 ([PDF link](https://www.iacr.org/archive/fse2007/45930331/45930331.pdf)).
 
-Later attacks identified new message differentials and new sets of sufficient
-conditions, but the basic concepts behind how to _implement_ the attack are
-relatively invariant. The core ideas in this blog post should transfer well to
-more recent differential attacks on MD4 and related functions.
+Later attacks identified new MD4 message differentials and new sets of
+sufficient conditions, but the basic concepts behind how to _implement_ the
+attack are relatively invariant. The core ideas in this blog post should
+transfer well to more recent differential attacks on MD4 and related functions.
 
 If you'd like to see what this attack looks like in practice, my take on it can
 be found [here](https://github.com/wootfish/cryptopals/blob/master/challenge_55.py).
 
 I'm measuring a success probability of about $$2^{-17.3}$$ using the techniques
-described in this post. Running my code in a Qubes VM on an old ThinkPad T420s,
-I'm measuring ~8000 trials per second and an average success rate of just over
-three collisions per minute.
+described in this post. Running in a Qubes VM on an old ThinkPad T420s, I'm
+measuring ~8000 trials per second and an average success rate of just over three
+collisions per minute.
 
 And frankly, after how much work this attack took, three collisions per minute
-is fast enough for me.
+is plenty for me.
 
 <hr>

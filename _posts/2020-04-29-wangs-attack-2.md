@@ -5,20 +5,21 @@ mathjax: true
 ---
 
 
-[Last time, we discussed Wang's attack in theory]({% post_url 2020-04-20-wangs-attack-1 %}).
+[Last time, we discussed the theory behind Wang's attack]({% post_url 2020-04-20-wangs-attack-1 %}).
 Now let's cover the implementation.
 
-[Cryptopals Set 7](https://cryptopals.com/sets/7) calls Wang's attack "as
-difficult" as anything in those first 7 sets of challenges. I would not
-disagree.[^1] It's a tricky challenge, but if we take the right approach we can
-get the attack code to read clearly and run fast. The end result is a script
-that continuously generates MD4 collisions at a rate of several per minute.
+The intro to [Cryptopals Set 7](https://cryptopals.com/sets/7) describes Wang's
+attack as being "as difficult as anything we've done" in those first seven sets
+of problems. I would not disagree.[^1] That said, if we take the right approach,
+our implementation can end up being both concise and performant, giving us a
+highly readable little script that continuously generates MD4 collisions at a
+rate of several per minute.
 
 [^1]: Although an honorable mention goes to challenge 48, which covers Bleichenbacher's attack on RSA with PKCS 1.5. I'd rate Wang's attack as more difficult overall, but the two attacks do require comparably psychotic levels of attention to detail.
 
-We'll be working in Python, because none of us have the time to write hard code
-like this in less helpful languages. No, it's not as fast as C, but it doesn't
-take years off your life either.
+We'll be working in Python, because no one has the time to write hard code like
+this in less helpful languages. No, it's not as fast as C, but it doesn't take
+years off your life either.
 
 The theory behind the attack was covered in [Wang's Attack in Theory]({% post_url 2020-04-20-wangs-attack-1 %}).
 That post covers the "what" and "why" of Wang's attack; this post covers the
@@ -29,7 +30,7 @@ That post covers the "what" and "why" of Wang's attack; this post covers the
 
 [Here is a full implementation of MD4 in Python](https://github.com/wootfish/cryptopals/blob/master/challenge_30.py).
 
-To review, here is how we define the boolean functions `F, G, H` and the round
+To review, this is how we define the boolean functions `F, G, H` and the round
 functions `r1, r2, r3`:
 
 ```python
@@ -63,8 +64,8 @@ This might seem unnecessary - and strictly speaking, it is - but having a
 reference to `X` inside the round function enables a cool trick in our round 1
 massage, as you will see shortly.
 
-Continuing our review, here's how MD4 computes all three rounds for each message
-block:
+Continuing our review, here is how MD4 computes all three rounds for each
+message block:
 
 ```python
 # round 1

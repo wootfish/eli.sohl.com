@@ -39,30 +39,32 @@ Choose an arbitrary address $$A$$. What is each node ID's distance from that add
 
 For convenience, let's consider these distances not as bitstrings but as integers on the range $$[0, 2^L-1]$$, and let's specify (without loss of generality) that $$D_1 < D_2 < \ldots < D_n$$.
 
-Under these definitions, $$D_i$$ is precisely the $$i$$'th [order statistic](https://en.wikipedia.org/wiki/Order_statistic) of $$D$$. The order statistics for discrete random variables are a pain to analyze, but it turns out we can simplify things by swapping out our discrete random variables for continuous ones, adding only a negligible error term in the process.
+Under these definitions, $$D_i$$ is precisely the $$i$$'th [order statistic](https://en.wikipedia.org/wiki/Order_statistic) of $$D$$.
+
+Discrete random variables' order statistics are a pain to analyze, but it turns out we can simplify things by swapping out our discrete random variables for continuous ones. This adds only a negligible error term.
 
 If we approximate $$D_1, \ldots, D_n$$ by the order statistics, in order, of a sample of $$n$$ uniform random variables, and we normalize these variables from $$[0, 2^L-1]$$ to $$[0, 1]$$, we end up with $$n$$ new random variables $$N = \{N_1, ..., N_n\}$$, where $$N_i \approx \frac{D_i}{2^L-1}$$.
 
-These normalized random variables $$N_i$$ can be shown to follow specific beta distributions. The parameterization is $$\alpha = i, \beta = n - i + 1$$. [The proof is on Wikipedia](https://en.wikipedia.org/wiki/Order_statistic#Order_statistics_sampled_from_a_uniform_distribution). Simplifying the expression for the beta distribution's mean under this parameterization yields $$\mathbf{E}[N_i] = \frac{i}{n+1}$$.
+These normalized random variables $$N_i$$ can be shown to follow specific beta distributions. The parameterization is $$\alpha = i, \beta = n - i + 1$$, and [the derivation is on Wikipedia](https://en.wikipedia.org/wiki/Order_statistic#Order_statistics_sampled_from_a_uniform_distribution). The beta distribution's mean under this parameterization is $$\mathbf{E}[N_i] = \frac{i}{n+1}$$.
 
-This is all we need: we can just rewrite $$\mathbf{E}[N_i] = \frac{i}{n+1}$$ as $$n = \frac{i}{\mathbf{E}[N_i]} - 1$$.
+See where I'm going with this? We can just rewrite $$\mathbf{E}[N_i] = \frac{i}{n+1}$$ as $$n = \frac{i}{\mathbf{E}[N_i]} - 1$$.
 
-Size-$$k$$ lookups allow us to gather samples for $$N_1$$ through $$N_k$$. Each sample for each one of those variables can be plugged into that equation to produce a network size estimate. Individual size estimates are somewhat noisy, but they can be combined to provide a stable, fairly accurate estimate for the value of $$n$$.
+Size-$$k$$ lookups allow us to sample $$N_1$$ through $$N_k$$. Each sample for each one of those variables can be plugged into that equation to produce a network size estimate. Individual size estimates are somewhat noisy, but they can be combined to provide a stable, accurate estimate for the value of $$n$$.
 
-The naive way to combine these estimates would be to take their average. For marginally more complexity, we can instead compute a least-squares fit to find a value of $$n$$ which minimizes error terms for any set of sampled values for $$N_1$$ through $$N_k$$. The formula is $$n = \frac{k(k+1)(2k+1)}{6 \sum_i i N_i} - 1$$. This least-squares fit method for estimating $$n$$ turns out to be significantly more precise than the naive method of averaging across individual estimates.
+The naive way to combine these estimates would be to take their average. For marginally more complexity, we can instead compute a least-squares fit to find a value of $$n$$ which minimizes error terms for any set of sampled values for $$N_1$$ through $$N_k$$. The formula simplifies to $$n = \frac{k(k+1)(2k+1)}{6 \sum_i i N_i} - 1$$.
 
-If you sample enough of these estimates and take their average, you can arrive at an arbitrarily accurate estimate of network size. Even with just a few estimates sampled, the accuracy is still very good.
+Both methods are accurate, but this least-squares fit method for estimating $$n$$ turns out to be more precise than the naive method of averaging across individual estimates.
+
+If your sample size is large enough, you can arrive at an arbitrarily accurate estimate of network size. Even with just a few estimates sampled, the accuracy is still very good.
 
 Recall also that these estimates can be computed in parallel, since they only depend on the results of independent address lookups (which can also be run in parallel). This means that the estimate's accuracy can be improved (by adding more independent lookups) without slowing it down at all.
 
 
 # Experimental Validation
 
-OK, that sounds too easy, right? Let's see if it works. We'll start by running some tests on simulated networks. The goal here is to see if our statistical models predict these simulations' behavior correctly.
+OK, that sounds too easy, right? Let's check our math by running some tests on simulated networks. The goal here is to see if our statistical models predict these simulations' behavior correctly.
 
-For these simulations, we'll be using $$L = 25$$ and $$k = 8$$. Using a small value for $$L$$ improves performance and does not have a significant impact on our results.
-
-Here are measurements for the distributions of $$N_1$$ through $$N_8$$, with the model's corresponding beta distributions superimposed. 
+Here are measurements for the distributions of $$N_1$$ through $$N_8$$ for a network with $$n = 1000$$ peers. The model's predicted beta distributions are superimposed in orange.
 
 {%
 include blog-image.md
@@ -70,7 +72,7 @@ image="/assets/img/dht/beta_1000.svg"
 description="A number of beta curves superimposed over histograms. The curves and bars match each other very closely."
 %}
 
-Those are for a network with $$n = 1000$$ peers. Here is a version of that same chart for $$n = 10$$:
+Here is a version of that same chart for $$n = 10$$ peers (an extreme case):
 
 {%
 include blog-image.md
@@ -82,7 +84,7 @@ And here is $$n = 100000$$.
 
 {%
 include blog-image.md
-image="/assets/img/dht/beta_100000.svg"
+image="/assets/img/dht/beta_100000.png"
 description="A number of beta curves superimposed over histograms. The histograms have some noise in them, but still match the curves closely."
 %}
 

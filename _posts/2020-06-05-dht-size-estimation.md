@@ -63,7 +63,7 @@ $$
 e(n) = \sum\limits_{i=1}^{k}(N_i - \frac{i}{n+1})^2
 $$
 
-This is an upward-facing parabola, so we'll minimize it by setting the derivative equal to zero and solving.
+We'll minimize this by setting the derivative equal to zero and solving.
 
 $$
 \begin{align}

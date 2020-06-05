@@ -169,11 +169,9 @@ The size estimates' distribution is somewhat asymmetric; as a result, each estim
 
 Averages over large numbers of lookups seem to converge to the [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution). This is a straightforward consequence of the [central limit theorem](https://en.wikipedia.org/wiki/Central_limit_theorem). This implies that while the estimates' distribution may be asymmetric, the distribution to which it converges is symmetric, and thus the distribution's mean eventually does converge with its mode.
 
-The technique seems to work much better on large networks than on small ones. This makes sense: the intuition is that inserting more evenly distributed node IDs reduces the variances of our distance variables, thus lowering the amount of noise in our estimate.
+The technique seems to work much better on large networks than on small ones. Note in particular how in the "100 lookups" and "2000 lookups" columns in the table above, the error percentages monotonically decrease as network size increases. This suggests that for a sufficiently large, fixed number of queries, increasing the network size measurably improves this method's accuracy. This makes sense: the intuition is that inserting more evenly distributed node IDs reduces the variances of our distance variables, thus lowering the amount of noise in our estimate.
 
 For very small networks, it may be just as effective to produce size estimates through traditional methods. However, for networks of any substantial size, the method given here is likely to be faster and more accurate.
-
-Note in particular how in the "100 lookups" and "2000 lookups" columns in the table above, the error percentages monotonically decrease as network size increases. This suggests that for a sufficiently large, fixed number of queries, increasing the network size measurably improves this method's accuracy.
 
 
 # Detecting Sybil Attacks

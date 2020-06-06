@@ -47,9 +47,9 @@ Discrete random variables' order statistics are a pain to analyze, but it turns 
 
 If we approximate $$D_1, \ldots, D_n$$ by the order statistics, in order, of a sample of $$n$$ uniform random variables, and we normalize these variables from $$[0, 2^L-1]$$ to $$[0, 1]$$, we end up with $$n$$ new random variables $$N = \{N_1, ..., N_n\}$$ where $$N_i \approx \frac{D_i}{2^L-1}$$.
 
-These normalized random variables $$N_i$$ can be shown to follow specific beta distributions. The parameterization is $$\alpha = i, \beta = n - i + 1$$, and [the derivation is on Wikipedia](https://en.wikipedia.org/wiki/Order_statistic#Order_statistics_sampled_from_a_uniform_distribution). The beta distribution's mean under this parameterization is $$\mathbf{E}[N_i] = \frac{i}{n+1}$$.
+These normalized random variables $$N_i$$ can be shown to follow specific beta distributions. The parameterization is $$\alpha = i, \beta = n - i + 1$$, and [the derivation is on Wikipedia](https://en.wikipedia.org/wiki/Order_statistic#Order_statistics_sampled_from_a_uniform_distribution). The beta distribution's mean under this parameterization is $$\operatorname{E}[N_i] = \frac{i}{n+1}$$.
 
-See where I'm going with this? We can just rewrite $$\mathbf{E}[N_i] = \frac{i}{n+1}$$ as $$n = \frac{i}{\mathbf{E}[N_i]} - 1$$.
+See where I'm going with this? We can just rewrite $$\operatorname{E}[N_i] = \frac{i}{n+1}$$ as $$n = \frac{i}{\operatorname{E}[N_i]} - 1$$.
 
 Size-$$k$$ lookups allow us to sample $$N_1$$ through $$N_k$$. Running multiple lookups in parallel allows us to take averages across (effectively) independent samples for each of $$N_1, \ldots, N_k$$.
 
@@ -188,9 +188,9 @@ Attacking the routing overlay requires a large-scale horizontal or hybrid attack
 
 What about vertical Sybil attacks? These are harder to passively detect, because they are entirely localized around a target address. This is also the key to detecting them. These attacks can only succeed if the attacker controls the $$k$$ closest nodes to the target address, which means deploying at least $$k$$ Sybil nodes closer to the target address than the closest honest peer.
 
-The closest honest peer's expected distance from an arbitrary address is $$\mathbf{E}[D_{1}]$$. If a (successful) vertical Sybil attack is underway, we will observe that $$D_{k} > \mathbf{E}[D_1]$$. The probability of this happening by random chance is extremely low.[^vert-prob] In fact, it is low enough that the test is still reliable even when our estimate of network size is still noisy.
+The closest honest peer's expected distance from an arbitrary address is $$\operatorname{E}[D_{1}]$$. If a (successful) vertical Sybil attack is underway, we will observe that $$D_{k} > \operatorname{E}[D_1]$$. The probability of this happening by random chance is extremely low.[^vert-prob] In fact, it is low enough that the test is still reliable even when our estimate of network size is still noisy.
 
-[^vert-prob]: If we assume that all node IDs (including Sybil IDs) are uniformly distributed, then the probability $$P(D_{k} > E[D_1])$$ is just given by the CDF of $$D_k$$ at $$x = E[D_1]$$. The precise value varies with network size and parameterization but it can be expected to be extremely small. On the other hand, if node ID uniformity is not enforced, then the attacker can simply measure $$D_1$$ and hope that its actual value exceeds $$E[D_1]$$ -- in which case they can fool our simple test. There might be other tests (perhaps involving $$D_{1}, \ldots, D_{k-1}$$) which would be harder to fool; investigating these is left as an exercise for the reader.
+[^vert-prob]: If we assume that all node IDs (including Sybil IDs) are uniformly distributed, then the probability $$P(D_{k} > \operatorname{E}[D_1])$$ is just given by the CDF of $$D_k$$ at $$x = \operatorname{E}[D_1]$$. The precise value varies with network size and parameterization but it can be expected to be extremely small. On the other hand, if node ID uniformity is not enforced, then the attacker can simply measure $$D_1$$ and hope that its actual value exceeds $$\operatorname{E}[D_1]$$ -- in which case they can fool our simple test. There might be other tests (perhaps involving $$D_{1}, \ldots, D_{k-1}$$) which would be harder to fool; investigating these is left as an exercise for the reader.
 
 Thus, once we have an up-to-date estimate of network size, we also have an extremely reliable test for whether any given address is the target of a vertical Sybil attack. The cost of this test is one lookup for the target address, meaning we can simply run it on every lookup we perform.[^resilience]
 

@@ -207,7 +207,7 @@ Perhaps surprisingly, the method is shown to work much better on large networks 
 
 Everything described here relies only on ordinary lookups for arbitrary addresses, meaning size estimates can be produced as a byproduct of ordinary network activity. This allows peers to maintain up-to-date estimates of network size essentially for free.
 
-This is original research. I could not find any prior published descriptions of it. This method is several orders of magnitude faster than the next-best published methodology of which I am aware.
+This is original research. I could not find any prior published descriptions of this method, and it is several orders of magnitude faster than the next-best published methodology of which I am aware.
 
 
 <hr>

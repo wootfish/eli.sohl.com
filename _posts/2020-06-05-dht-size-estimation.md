@@ -137,11 +137,11 @@ Smaller networks can be seen to lead to noisier (though not inaccurate) measurem
 
 The next step is to combine these measurements into an overall size estimate. There are many reasonable ways to do this. I've illustrated the results of two simple ideas on a variety of networks below.
 
-These charts are histograms showing many independent size estimates on many different networks of a given size. Being histograms, the y-axis shows relative frequency, which is why I've left it unlabeled: absolute units would just end up being a function of the sample size and bucket sizes and would not convey anything useful.
+These charts are histograms showing many independent size estimates on many different networks of a given size. If it helps, you can think of these as approximating probability density functions for size estimates under the given parameterizations.
 
-If it helps, you can think of these as approximating probability density functions for size estimates under the given parameterizations.
+Being histograms, the y-axis shows relative frequency, which is why I've left it unlabeled: columns' values in terms of any absolute units would just end up being a function of the sample size and bucket sizes and would not convey anything useful.
 
-Both methods start by taking unweighted averages across all the measurements for each order statistic. The blue curve shows the result of generating a size estimate from each of these, then averaging those estimates. The green curve shows the result of deriving the estimate from a least-squares fit (as discussed in the last section).
+Both methods start by taking unweighted averages across all the measurements for each order statistic. The blue curve shows the result of generating a size estimate from each measurement and then averaging those estimates. The green curve shows the result of deriving the estimate from a least-squares fit (as discussed in the last section).
 
 Some hardcore stats nerd could probably find an even more accurate method for generating consolidated size estimates; if that's you, I'd love to hear about it.
 
@@ -176,11 +176,11 @@ For very small networks, it may be just as effective to produce size estimates t
 
 # Detecting Sybil Attacks
 
-It also turns out that once we have a network size estimate, we also get Sybil attack detection for free.[^diagnosis-vs-cure]
+It turns out that once we have a network size estimate, we also get Sybil attack detection for free.[^diagnosis-vs-cure]
 
 [^diagnosis-vs-cure]: Sybil attacks are notoriously hard to defend against. Note that this does not necessarily mean they are hard to detect; the difference between detection and defense is something like that between diagnosis and cure. Perfect defense against Sybil attacks is not possible in a fully ad-hoc setting; however, we can take some steps to limit their impact. See footnote[^resilience] for more on this.
 
-_Real-World Sybil Attacks in BitTorrent Mainline DHT_ ([PDF](https://www.cl.cam.ac.uk/~lw525/publications/security.pdf)) gives a taxonomy sorting Sybil attacks into three categories "horizontal", "vertical", and "hybrid". Horizontal attacks target the entire network; vertical attacks target specific addresses; hybrid attacks are a mix of both methods.
+_Real-World Sybil Attacks in BitTorrent Mainline DHT_ ([PDF](https://www.cl.cam.ac.uk/~lw525/publications/security.pdf)) gives a taxonomy sorting Sybil attacks into three categories: "horizontal", "vertical", and "hybrid". Horizontal attacks target the entire network; vertical attacks target specific addresses; hybrid attacks are a mix of both methods.
 
 For a Sybil attack on a specific address to be successful, the attacker needs lookups for that address to yield only attacker-controlled peers. This means subverting the routing overlay and/or simply outnumbering honest peers by a massive margin.
 

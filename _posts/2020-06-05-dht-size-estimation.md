@@ -203,7 +203,7 @@ This passive method for measuring DHT network size greatly lowers the cost of tr
 
 I shared the results of -- and the source code for -- a thorough experimental validation of this methodology. There is almost certainly room for improvements, and there are likely some wrinkles to iron out; however, it is clear that the core idea is both practical and effective.
 
-Perhaps surprisingly, the method is shown to work much better on large networks than small ones, and to increase in accuracy as network size increases.
+Perhaps surprisingly, the method is shown to work much better on large networks than small ones, and to increase in accuracy monotonically as network size increases.
 
 Everything described here relies only on ordinary lookups for arbitrary addresses, meaning size estimates can be produced as a byproduct of ordinary network activity. This allows peers to maintain up-to-date estimates of network size essentially for free.
 

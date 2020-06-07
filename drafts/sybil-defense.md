@@ -4,6 +4,20 @@ title: Sybil Defense
 mathjax: true
 ---
 
+<style>
+{% include sybil-prefix-tree.css %}
+</style>
+
+
+# Introduction
+
+This post discusses some well-known security issues with modern distributed hash tables.
+
+We start with a discussion of attempted solutions, then review the current best-known solutions. Some issues with these are identified and discussed, and remediations are proposed. The final section, which makes up the bulk of the post, consists of a thorough mathematical analysis of these remediations' effectiveness.
+
+It is shown that while Sybil attacks cannot be prevented entirely, they can be made impractical while introducing only negligible overhead for honest peers.
+
+This post's main contribution is a method for quantifying precisely _how_ impractical a Sybil attack may be under any given set of network parameters. The results are surprisingly strong, and indicate that modern DHT constructs could be made much more secure with some very easy and simple design changes.
 
 # Background
 
@@ -31,7 +45,7 @@ This is an improvement: we aren't leaking any social metadata, we aren't relying
 
 [^pow-overhead]: This is not an idle concern: TODO rant about bitcoin
 
-This is just a quick overview geared towards giving you some idea of the main sorts of proposed solutions; for some more thorough surveys, see the footnote.[^surveys]
+The above is just a quick overview geared towards giving you some idea of the main sorts of proposed solutions; for some more thorough surveys, see the footnote.[^surveys]
 
 [^surveys]: TODO Cite
 
@@ -72,7 +86,7 @@ First, they suggest that public keys could be endorsed by a central authority. W
 
 Second, they suggest sharing public keys alongside solved computational puzzles. This is similar, but not identical, to the fourth solution class discussed earlier: the differences are that peers come up with their own puzzles (instead of being challenged), and the puzzle only has to be solved once, when the peer is first initialized, rather than on an ongoing basis.
 
-Unfortunately, one of the actual puzzles specified in the S/Kademlia authors' paper is broken.
+Unfortunately, one of the puzzles specified in the S/Kademlia paper is broken.
 
 
 # Breaking S/Kademlia
@@ -81,7 +95,7 @@ If this were a Wikipedia article, this would be the part where you'd see a giant
 
 Now, here are the two puzzles given for S/Kademlia. A peer needs to solve both for their node ID to be accepted.
 
-Let us define the following: a cryptographic hash function denoted $$H$$, a method for generating public/private keypairs which are written as $$s_{\text{pub}}, s_{\text{priv}}$$, and a pair of constant integer parameters $$c1, c2$$, which allow us to tune the difficulties of the first and second puzzles respectively.
+Let us define the following: a cryptographic hash function $$H$$, a method for generating public/private keypairs $$s_{\text{pub}}, s_{\text{priv}}$$, and a pair of constant integer parameters $$c_1, c_2$$ (which allow us to tune the difficulties of the first and second puzzles respectively).
 
 Now, first, here is the "static" puzzle:[^transcription-1]
 
@@ -117,7 +131,7 @@ Thus, once a suitable value $$I$$ has been found,[^preimage-stealing] solutions 
 
 # Fixing S/Kademlia
 
-A trivial mitigation would be to swap out XOR for concatenation in the dynamic puzzle, like $$P := H(\text{NodeID} \vert X)$$, or to use a more robust construction like $$P := HMAC(\text{NodeID}, X)$$.
+A trivial mitigation would be to swap out XOR for concatenation in the dynamic puzzle, like $$P := H(\text{NodeID} \vert X)$$, or to use a more robust construction like $$P := \operatorname{HMAC}(\text{NodeID}, X)$$.
 
 Of course, either of these changes would break backwards compatibility with the original S/Kademlia spec... but perhaps breaking backwards compatibility with a broken system is not such a bad thing.
 
@@ -180,9 +194,9 @@ We will be dealing with a number of random variables following the [hypergeometr
 
 ### Network Model
 
-The Kademlia address space may be thought of as a binary tree of height $$L$$, structured as a prefix tree, with each leaf representing an address (or, equivalently, a node ID, since both are just length-$$L$$ bitstrings).[^node-addr]
+The Kademlia address space may be thought of as a binary tree of height $$L$$, structured as a prefix tree, with each leaf representing an address (or, equivalently, a node ID, since both are length-$$L$$ bitstrings).[^node-addr]
 
-[^node-addr]: Side note: I've always thought the "Node ID" naming convention is a little obtuse - these IDs are just points in the address space, so why not call them "node addresses"?
+[^node-addr]: Side note: I've always thought the "Node ID" naming convention is a little obtuse - these IDs are points in the address space, so why not call them "node addresses"?
 
 Note that as a straightforward consequence of the XOR metric's definition, any leaf in a given subtree will be closer to any other leaf in that subtree than to any leaf outside it.
 
@@ -190,7 +204,7 @@ With regard to node IDs, each leaf in the tree may be considered as being in one
 
 With regard to data addresses, we may consider each leaf to be in one of two states: _compromised_ or _resilient_, depending on whether a lookup for that data address would return at least one honest node (i.e. whether the network's redundancy factor $$k$$ is sufficient to maintain the integrity of any data stored at the given address).[^perfect-routing]
 
-[^perfect-routing]: Note: This model assumes perfect routing information, which is not quite true to life. However, this is not as bad of a compromise as it might sound, since the S/Kademlia lookup algorithm comes with an analysis of its probability of success. As such, that result can just be composed with this one to provide a (probably fairly tight) lower bound on network resilience.
+[^perfect-routing]: Note: This model assumes perfect routing information, which is not quite true to life. However, this is not as bad of a compromise as it might sound, since the S/Kademlia lookup algorithm comes with an analysis of its probability of success. As such, that result can be composed with this one to provide a (probably fairly tight) lower bound on network resilience.
 
 
 ### Collocation
@@ -228,20 +242,26 @@ Let $$N_h$$ denote the event of a height-$$h$$ subtree being a NEST. $$N_h = \ln
 
 Let $$E_h$$ denote the event of a height-$$h$$ subtree being a maximal EST. $$E_h = N_{h+1} \land \lnot N_{h}$$ by definition.
 
+Bitstrings will be indicated by a subscripted $$b$$, like so: $$10101_b$$. Note that in bitstrings, unlike ordinary numbers, leading zeroes have semantic significance.
+
 
 ### Example: Evaluating a Prefix Tree
 
-{%
-include blog-image.md
-image="/assets/img/sybil/tree.svg"
-description="A binary tree with some of its leaves colored green and red. Below it are three rows of dots aligned with the tree's leaves, representing data addresses. The rows are labeled k = 1, k = 2, and k = 3 respectively, and they are colored green or red depending on the address's resilience. The first row has eighteen red dots, the second row has eight, and the third row has four. It can be seen that as k increases, the network's resilience rapidly increases as well."
-%}
+<div class="img-center img-fluid">
+{% include sybil-prefix-tree.svg %}
+</div>
 
-This illustration shows a simple toy network with $$L = 5, a = 5, d = 5$$. The green leaves represent honest peers, and the red leaves represent Sybil peers.
+This illustration shows a simple toy network with $$L = 5, a = 5, d = 5$$.
 
-Under the tree, we have three rows. These represent the states of the leaves' corresponding data addresses for $$k \in \{1, 2, 3\}$$. You can see that each address is either resilient (green) or compromised (red), and that the number of resilient addresses rises sharply as $$k$$ increases.
+Each leaf represents an address (or node ID) determined by the leaf's position in the prefix tree. Starting from the left, we have $$\text{00000}_b$$, $$\text{00001}_b$$, $$\text{00010}_b$$, $$\text{00011}_b$$, etc.
 
-Let's review our terminology.
+The green leaves represent honest peers and the red leaves represent Sybil peers.
+
+Under the tree, we have three rows. These represent the states of the leaves' data addresses for $$k \in \{1, 2, 3\}$$. You can see that each address is either resilient (green) or compromised (red), and that the number of resilient addresses rises sharply as $$k$$ increases. Note that real networks use much larger values of $$k$$, e.g. $$k = 8$$ or $$k = 16$$.
+
+You can mouse over any address in these last three rows to see which peers are included in its size-$$k$$ lookup set.
+
+Let's use this figure to help review our terminology.
 
 The honest nodes are $$\text{00001}_b$$, $$\text{01001}_b$$, $$\text{01010}_b$$, $$\text{01111}_b$$, and $$\text{10001}_b$$.
 
@@ -251,7 +271,7 @@ The maximal ESTs' root nodes are $$\text{00000}_b$$, $$\text{0001}_b$$, $$\text{
 
 Every node which is not part of a maximal EST is a NEST.
 
-We may evaluate the following resilience coefficients:
+By simply counting resilient addresses, we can evaluate the following resilience coefficients:
 
 $$
 \begin{align}
@@ -263,7 +283,7 @@ $$
 
 Some instructive relationships between subtrees can also be observed.
 
-The resiliences of each address in subtree $$\text{11}_b$$ are equal to those for subtree $$\text{10}_b$$. This is because $$\text{11}_b$$ is completely empty, meaning that the closest peers to any address in $$\text{11}_b$$ are the same as the closest peers to the corresponding leaf in $$\text{11}_b$$'s sibling $$\text{10}_b$$.
+The resiliences of each address in subtree $$\text{11}_b$$ are equal to those for subtree $$\text{10}_b$$. This is because $$\text{11}_b$$ is completely empty (i.e. it is an EST), meaning that the closest peers to any address in $$\text{11}_b$$ are the same as the closest peers to the corresponding leaf in $$\text{11}_b$$'s sibling $$\text{10}_b$$.
 
 The maximal EST $$\text{101}_b$$ contains two Sybil nodes. Thus, for $$k \le 2$$, this subtree is fully compromised. However, for $$k = 3$$ its resilience states are the same as its sibling $$\text{100}_b$$'s states with $$k = 1$$. This is because any lookup for an address in $$\text{101}_b$$ will necessarily include the subtree's two Sybil nodes, leaving room for one more possibly-honest node. Thus, the lookup will succeed if and only if a $$k = 1$$ lookup for the corresponding leaf in $$\text{100}_b$$ would also succeed.
 
@@ -272,15 +292,21 @@ The maximal EST $$\text{101}_b$$ contains two Sybil nodes. Thus, for $$k \le 2$$
 
 The goal of this analysis is to provide a method for finding $$\operatorname{E}[R_{L,k}]$$ given arbitrary values of $$n, m$$. We will find $$\operatorname{E}[R_{L,k}]$$ through an iterative method which derives the resilience coefficients for progressively taller nonempty subtrees, eventually working our the way up to the full tree.
 
+You can click on any **Equation 1.x** heading to hide (or unhide) the corresponding proof.
+
+{::options parse_block_html="true" /}
+
 **Theorem 1.** $$\operatorname{E}[R_{L,k}]$$ is computable for all $$L, k$$.
 
 > *Proof.* From definitions, $$L > 0, k \ge 0, n \ge 0$$.
 >
 > If $$n = 0$$, then the network contains no honest nodes and the result is trivial: $$\operatorname{E}[R_{L,k}] = 0$$.
 >
-> The rest of this proof assumes the nontrivial case $$n > 0$$. This case requires us to establish some supporting results.
+> The rest of this proof assumes the nontrivial case $$n > 0$$. The derivation for this case depends on some supporting results.
 >
-> **Lemma 1.1.** For $$h \le \log_2{k}$$, we have $$\operatorname{E}[R_{L,k} \vert N_h] = 1$$.
+> Before continuing, take a moment to convince yourself that for a height-$$L$$ tree containing $$n$$ evenly distributed nodes, the number of nodes in any height-$$h$$ subtree is modeled by the hypergeometric random variable $$X_{2^L,n,2^h}$$. The proofs for Equations 1.8 and 1.9 rely on this fact.
+>
+> <span onclick="do_toggle('#eqn-1')">**Equation 1.1.**</span> For $$h \le \log_2{k}$$, we have $$\operatorname{E}[R_{L,k} \vert N_h] = 1$$.
 >
 >> *Proof.* The event $$N_h$$ guarantees that at least one honest node will be present in our height-$$h$$ subtree.
 >>
@@ -289,26 +315,29 @@ The goal of this analysis is to provide a method for finding $$\operatorname{E}[
 >> Thus, any lookups in this subtree will find the honest node and will succeed.
 >>
 >> It follows that $$\operatorname{E}[R_{L,k} \vert N_h] = \frac{2^h}{2^h} = 1$$. $$\tag*{$\square$}$$
+> {: #eqn-1 }
 >
-> **Lemma 1.2.** For $$h > 0$$, we have $$\operatorname{E}[R_{h,k} \vert N_h] = \operatorname{E}[R_{h-1,k} \vert N_h]$$.
+> <span onclick="do_toggle('#eqn-2')">**Equation 1.2.**</span> For $$h > 0$$, we have $$\operatorname{E}[R_{h,k} \vert N_h] = \operatorname{E}[R_{h-1,k} \vert N_h]$$.
 >
 >> *Proof.* Recall that the left-hand side of this equality is the expected resilience coefficience for a height-$$h$$ NEST.
 >>
->> Every leaf of this NEST belongs to either its left or right child subtree. It follows that the resilience for the full NEST may be accounted for in terms of the child subtrees’ resiliences. In fact, since both subtrees are of equal size, the full NEST's resilience must just be the average of its children's by definition.
+>> Every leaf of this NEST belongs to either its left or right child subtree. It follows that the resilience for the full NEST may be accounted for in terms of the child subtrees’ resiliences. In fact, since both subtrees are of equal size, the full NEST's resilience must be the average of its children's by definition.
 >>
->> By symmetry, the children's resilience coefficients are equal. Their expected value is just $$\operatorname{E}[R_{h-1,k} \vert N_h]$$, so this must be the expected value for the full NEST's resilience coefficient as well. $$\tag*{$\square$}$$
+>> By symmetry, the children's resilience coefficients are equal. Their expected value is $$\operatorname{E}[R_{h-1,k} \vert N_h]$$, so this must be the expected value for the full NEST's resilience coefficient as well. $$\tag*{$\square$}$$
+> {: #eqn-2 }
 >
-> **Lemma 1.3.** For $$n > 0$$, we have $$\operatorname{E}[R_{L,k}] = \operatorname{E}[R_{L-1,k} \vert N_L]$$.
+> <span onclick="do_toggle('#eqn-3')">**Equation 1.3.**</span> For $$n > 0$$, we have $$\operatorname{E}[R_{L,k}] = \operatorname{E}[R_{L-1,k} \vert N_L]$$.
 >
 >> *Proof.* If $$n > 0$$, then the prefix tree's root must be a NEST.
 >>
 >> Thus, $$P(N_L) = 1$$ and $$\operatorname{E}[R_{L,k}] = \operatorname{E}[R_{L,k} \vert N_L]$$.
 >>
->> The given equation then follows trivially from Lemma 1.2. $$\tag*{$\square$}$$
+>> The given equation then follows trivially from Equation 1.2. $$\tag*{$\square$}$$
+> {: #eqn-3 }
 >
-> **Equation 1.4.** $$
+> <span onclick="do_toggle('#eqn-4')">**Equation 1.4.**</span> $$
 \begin{equation*}
-\operatorname{E}[R_{0, k} | N_1] =
+\operatorname{E}[R_{0, k} \vert N_1] =
 \begin{cases}
 0 & \text{if } k = 0\\
 1 - \frac{P(A_{0,1})P(X_{2^L, n-1, 1} = 0)}{2} & \text{if } k = 1\\
@@ -317,9 +346,11 @@ The goal of this analysis is to provide a method for finding $$\operatorname{E}[
 \end{equation*}
 $$
 >
->> *Proof.* For $$k = 0$$, we note that $$E(R_{h,0}) = 0$$ by definition, since an empty result set cannot contain any honest peers. It follows as a trivial corollary that $$\operatorname{E}[R_{0,0} \vert N_1] = 0$$.
+>> *Proof.* Let's address each case individually.
 >>
->> For $$k = 1$$: First, per Lemma 1.2, we have $$\operatorname{E}[R_{0,1} \vert N_{1}] = \operatorname{E}[R_{1,1} \vert N_1]$$.
+>> Case $$k = 0$$: We know that $$\operatorname{E}[R_{h,0}] = 0$$ by definition, since an empty result set cannot contain any honest peers. It follows as a trivial corollary that $$\operatorname{E}[R_{0,0} \vert N_1] = 0$$.
+>>
+>> Case $$k = 1$$: First, per Equation 1.2, we have $$\operatorname{E}[R_{0,1} \vert N_{1}] = \operatorname{E}[R_{1,1} \vert N_1]$$.
 >>
 >> Recall that a NEST of height 1 contains two leaves, one of which is guaranteed to be occupied by an honest node. Lookups for the other address succeed unless two independent conditions are both met: first, the lookup address is occupied by a malicious node; second, no other honest node is collocated at the same address.
 >>
@@ -332,17 +363,18 @@ $$
 >> \end{align}
 >> $$
 >>
->> For $$k \ge 2$$: the result is a direct consequence of Lemmas 1.1 and 1.2:
+>> Case $$k \ge 2$$: the result is a direct consequence of Equations 1.1 and 1.2:
 >>
 >> $$ \begin{align*}
->> \operatorname{E}[R_{0, k} | N_1]
->> &= \operatorname{E}[R_{1,k} | N_1] & \text{(by Lemma 1.2)} \\
->> &= 1 & \text{(by Lemma 1.1, since $1 \leq \log_2{k}$)}
+>> \operatorname{E}[R_{0, k} \vert N_1]
+>> &= \operatorname{E}[R_{1,k} \vert N_1] & \text{(by Eqn 1.2)} \\
+>> &= 1 & \text{(by Eqn 1.1, since $1 \leq \log_2{k}$)}
 >> \end{align*}
 >> $$
 >> $$\tag*{$\square$}$$
+> {: #eqn-4 }
 >
-> **Lemma 1.5.** For $$h > 0$$, we have
+> <span onclick="do_toggle('#eqn-5')">**Equation 1.5.**</span> For $$h > 0$$, we have
 >
 > $$
 \begin{align}
@@ -366,7 +398,7 @@ $$
 >>
 >> $$
 \begin{equation*}
-P(N_h | N_{h+1}) + P(E_h | N_{h+1}) + P(D_{h+1,0} | N_{h+1}) = 1
+P(N_h \vert N_{h+1}) + P(E_h \vert N_{h+1}) + P(D_{h+1,0} \vert N_{h+1}) = 1
 \end{equation*}
 $$
 >>
@@ -375,8 +407,8 @@ $$
 >> $$
 \begin{align*}
 &P(D_{h+1,0}) = 1 - P(N_{h+1})\\
-\text{$\therefore$ } & P(D_{h+1,0}|N_{h+1}) = 0\\
-\text{$\therefore$ } & P(N_h | N_{h+1}) + P(E_h | N_{h+1}) = 1
+\text{$\therefore$ } & P(D_{h+1,0} \vert N_{h+1}) = 0\\
+\text{$\therefore$ } & P(N_h \vert N_{h+1}) + P(E_h \vert N_{h+1}) = 1
 \end{align*}
 $$
 >>
@@ -393,32 +425,37 @@ $$
 $$
 >>
 >> This was the expected conclusion. $$\tag*{$\square$}$$
+> {: #eqn-5 }
 >
-> **Lemma 1.6.** For $$h > 0$$, we have
+> <span onclick="do_toggle('#eqn-6')">**Equation 1.6.**</span> For $$h > 0$$, we have
 >
 > $$
-\operatorname{E}[R_{h,k} | E_h] = \sum_{a=0}^{k-1} P(A_{h,a}) \operatorname{E}[R_{h-1,k-a} | N_h]
+\operatorname{E}[R_{h,k} \vert E_h] = \sum_{a=0}^{k-1} P(A_{h,a}) \operatorname{E}[R_{h-1,k-a} \vert N_h]
 $$
 >
 >> *Proof.* In an empty subtree, $$k$$ or more attackers are sufficient to compromise every subtree address.
 >>
->> Thus, the expectation for the resilience coefficient must be a weighted sum of its expectations for 0 to $$k$$ attackers, where the summands are weighted by the relative probabilities of their attendant events.
+>> Thus, the expectation for the resilience coefficient must be a weighted sum of its expectations for 0 to $$k$$ attackers, where the summands are weighted by the relative probabilities of their corresponding events.
 >>
 >> Any attackers in the EST will necessarily by found by all subtree address lookups. The question is whether a honest node in the sibling subtree (which must be a NEST) can be reached as well. This amounts to performing a lookup for the sibling's corresponding address with $$k$$ reduced by the empty subtree's number of attackers. $$\tag*{$\square$}$$
+> {: #eqn-6 }
 >
-> **Lemma 1.7.** The following identities hold:
+> <span onclick="do_toggle('#eqn-7')">**Equation 1.7.**</span> $$P(E_h \vert N_{h+1}) = 1-P(N_h \vert N_{h+1})$$
 >
-> $$
-\begin{align*}
-P(N_h|N_{h+1}) &= \frac{1-P(X_{2^L,n,2^h}=0)}{1-P(X_{2^L,n,2^{h+1}}=0)}\\
-P(E_h|N_{h+1}) &= 1-P(N_h|N_{h+1}) \\
-P(A_{h,a}) &= P(X_{2^L, m, 2^h} = a)
-\end{align*}
-$$
->
->> *Proof.* Note that for a height-$$L$$ tree containing $$n$$ evenly distributed nodes, the number of nodes in any height-$$h$$ subtree is modeled by a hypergeometric random variable $$X_{2^L,n,2^h}$$.
+>> *Proof.* This one's easy. By definition,
 >>
->> Now, for the first identity, apply Bayes' Theorem and simplify:
+>> $$
+\begin{align}
+P(E_h \vert N_{h+1}) &= P(\lnot N_h \vert N_{h+1}) \\
+&= 1 - P(N_h \vert N_{h+1})
+\end{align}
+$$
+>> $$\tag*{$\square$}$$
+> {: #eqn-7 }
+>
+> <span onclick="do_toggle('#eqn-8')">**Equation 1.8.**</span> $$P(N_h \vert N_{h+1}) = \frac{1-P(X_{2^L,n,2^h}=0)}{1-P(X_{2^L,n,2^{h+1}}=0)}$$
+>
+>> *Proof.* Apply Bayes' Theorem and simplify:
 >>
 >> $$
 \begin{align*}
@@ -428,37 +465,30 @@ P(N_h \vert N_{h+1})
 &= \frac{1-P(X_{2^L, n, 2^h}=0)}{1-P(X_{2^L, n, 2^{h+1}}=0)}
 \end{align*}
 $$
->>
->> The second identity is straightforward enough:
->>
->> $$
-\begin{equation*}
-P(E_h \vert N_{h+1}) = P(\lnot N_h \vert N_{h+1}) = 1 - P(N_h \vert N_{h+1})
-\end{equation*}
-$$
->>
->> For the third identity, first recall that the event $$A_{h,a}$$ is dependent only on the distribution of Sybil nodes, i.e. it is not influenced by the possibility of address collocation between malicious and honest nodes. The third identity, then, is just a trivial application of the hypergeometric distribution. $$\tag*{$\square$}$$
+>> $$\tag*{$\square$}$$
+> {: #eqn-8}
 >
-> These lemmas give us everything we need to prove the theorem. The derivation is as follows.
+> <span onclick="do_toggle('#eqn-9')">**Equation 1.9**</span> $$P(A_{h,a}) = P(X_{2^L, m, 2^h} = a)$$
 >
-> Let $$0 \leq k' \leq k$$ and let $$0 \leq h < L$$. Equation 1.4 gives us
+>> *Proof.* Recall that the event $$A_{h,a}$$ is dependent only on the distribution of Sybil nodes, i.e. it is not influenced by the possibility of address collocation between malicious and honest nodes. This identity, then, is just a trivial application of the hypergeometric distribution. $$\tag*{$\square$}$$
+> {: #eqn-9 }
+>
+> These equations give us everything we need to prove the theorem. The derivation is as follows.
+>
+> Let $$0 \leq k' \leq k$$ and let $$0 \leq h < L$$. Equation 1.4 gives us,
 >
 > $$
-\begin{align*}
-\operatorname{E}[R_{0, 0} \vert N_1] &= 0\\
-\operatorname{E}[R_{0, 1} \vert N_1] &= 1 - \frac{P(A_{0,1})P(X_{2^L, n-1, 1} = 0)}{2}\\
-\end{align*}
+\operatorname{E}[R_{0, k'} \vert N_1] =
+\begin{cases}
+0 & \text{if } k' = 0\\
+1 - \frac{P(A_{0,1})P(X_{2^L, n-1, 1} = 0)}{2} & \text{if } k' = 1\\
+1 & \text{if } k' \ge 2
+\end{cases}
 $$
 >
-> And for $$k' \ge 2$$, we have,
+> This is a full, computable definition for $$\operatorname{E}[R_{h, k'} \vert N_{h+1}]$$ with $$h=0$$.
 >
-> $$
-\operatorname{E}[R_{0, k'} \vert N_1] = 1
-$$
->
-> We now have a full definition for $$\operatorname{E}[R_{h, k'} \vert N_{h+1}]$$ with $$h=0$$.
->
-> We may find the expectations for $$h=1$$ in terms of the expectations for $$h=0$$ by combining Lemmas 1.2, 1.5, and 1.6 as follows:
+> We may find the expectations for $$h=1$$ in terms of the expectations for $$h=0$$ by applying Equations 1.5, 1.2, and 1.6 as follows:
 >
 > $$
 \begin{align*}
@@ -469,29 +499,29 @@ $$
 \end{align*}
 $$
 >
-> This expression is not pretty, but it is computationally tractable. The probabilities $$P(N_1 \vert N_2)$$, $$P(E_1 \vert N_2)$$, and $$P(A_{1,a})$$ may all be evaluated via the closed-form solutions given in Lemma 1.7.
+> This expression is not pretty, but it is computationally tractable. The probabilities $$P(N_1 \vert N_2)$$, $$P(E_1 \vert N_2)$$, and $$P(A_{1,a})$$ can be evaluated via the closed-form solutions given in Equations 1.8, 1.7, and 1.9 respectively.
 >
 > This same method can be used to express the expectation for $$h = 3$$ in terms of those for $$h = 1$$ and $$h = 2$$, and so on up to $$h = L - 1$$, at which point the result is:
 >
 > $$
 \begin{align*}
-&\operatorname{E}[R_{L-1, k'} \vert N_L]
-= P(N_{L-1} \vert N_L) \operatorname{E}[R_{L-2, k'} \vert N_{L-1}] \\
+\operatorname{E}[R_{L-1, k'} \vert N_L]
+&= P(N_{L-1} \vert N_L) \operatorname{E}[R_{L-2, k'} \vert N_{L-1}] \\
 &+ P(E_1 \vert N_2) \sum_{a=0}^{k'-1} P(A_{L-1,a}) \operatorname{E}[R_{L-2, k'-a} \vert N_1]
 \end{align*}
 $$
 >
-> Every part of the right-hand side of this equation has been shown to be individually computable, and therefore this expression can be evaluated. Now let us apply Lemma 1.3 to the left-hand side:
+> Every part of the right-hand side of this equation has been shown to be individually computable, and therefore this expression can be evaluated. Now let us apply Equation 1.3 to the left-hand side:
 >
 > $$
-\operatorname{E}[R_{L-1, k} | N_L] = \operatorname{E}[R_{L,k}]
+\operatorname{E}[R_{L-1, k}  \vert  N_L] = \operatorname{E}[R_{L,k}]
 $$
 >
 > In this way, we see that the prescribed iterative method leads us all the way to $$\operatorname{E}[R_{L,k}]$$, the expected resilience of the full tree (and so also the full address space).
 >
-> We have thus shown $$\operatorname{E}[R_{L,k}]$$ to be well-defined and computable by deriving an algorithm through which it can be computed. $$\tag*{$\blacksquare$}$$
+> This shows $$\operatorname{E}[R_{L,k}]$$ to be well-defined and computable. $$\tag*{$\blacksquare$}$$
 
-The process described above may be codified as an algorithm with complexity $$\Theta(Lk^2)$$.
+The process described above may be implemented as an algorithm with complexity $$\Theta(Lk^2)$$.
 
 My biggest disappointment with this research is that I have not yet found a closed-form expression for the resilience of a full tree. Even without a closed-form solution, though, the resilience of realistic networks can still be evaluated. The exact algorithm given above can be used as-is, and it can be shown to give exact, correct results.
 

@@ -17,17 +17,17 @@ We start with a discussion of attempted solutions, then review the current best-
 
 It is shown that while Sybil attacks cannot be prevented entirely, they can be made impractical while introducing only negligible overhead for honest peers.
 
-This post's main contribution is a method for quantifying precisely _how_ impractical a Sybil attack may be under any given set of network parameters. The results are surprisingly strong, and indicate that modern DHT constructs could be made much more secure with some very easy and simple design changes.
+This post's main contribution is a method for quantifying precisely _how_ impractical a Sybil attack may be under any given set of network parameters. The results are surprisingly strong, and indicate some very easy and simple design changes that could greatly increase the security margins of modern DHTs.
 
 # Background
 
-Sybil attacks are really hard to defend against. The basic issue is this: if you have a peer-to-peer network that anyone can join anonymously, there's no good way to keep someone from joining a bunch of times with a bunch of different names. An increased presence in the network often leads to an outsided level of influence over it, and that is the root of the problem.
+Sybil attacks are really hard to defend against. The basic issue is this: if you have a peer-to-peer network that anyone can join anonymously, there's no good way to keep someone from joining a bunch of times under a bunch of different identities. An increased presence in the network often leads to an outsided level of influence over it; this is the root of the problem.
 
-I'll take a moment to summarize the conclusions of a couple good surveys[^surveys] on the subject.
+I'll take a moment to summarize the conclusions of some surveys[^surveys] on the subject.
 
 [^surveys]: For more detail and meatier discussion, see _A Survey of Solutions to the Sybil Attack_ by Brian Neil Levine, Clay Shields, and N Boris Margolin or _A Survey of DHT Security Techniques_ by Guido Urdaneta, Guillaume Pierre, and Maarten Van Steen.
 
-The simplest and most common solution is to introduce a central authority who certifies identities. This solution has been breathlessly proposed many, many times. Of course, it completely sacrifices decentralization and anonymity, and so it is not appropriate for ad-hoc peer-to-peer settings.
+The simplest and most common solution is to introduce a central authority who certifies identities. This solution has been breathlessly proposed many times. Of course, it completely sacrifices decentralization and anonymity, and so it is not appropriate for ad-hoc peer-to-peer settings.
 
 OK, so that's a no-go -- what else has been tried?
 
@@ -39,9 +39,9 @@ The fourth solution class, and the one that has seen the most interesting result
 
 [^pow-papers]: See the surveys cited above for a few examples; the most notable for our discussion S/Kademlia, first described in _S/Kademlia: A Practicable Approach Towards Secure Key-Based Routing_ by Ingmar Baumgart and Sebastian Mies ([PDF link](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.68.4986&rep=rep1&type=pdf)).
 
-This is an improvement: we aren't leaking any social metadata, we aren't relying on anything fragile (to our knowledge), and we need no central authority. However, there are drawbacks: First, the overhead for this scheme is very high,[^pow-overhead] and second, it penalizes peers for maintaining connections with a large number of peers (since this will result in them receiving more challenges). This disincentivizes broad engagement with the network. These drawbacks are also serious.
+This is an improvement: we aren't leaking any social metadata, we aren't relying on anything fragile (as far as we know), and we need no central authority. However, there are drawbacks: First, the overhead for this scheme is very high,[^pow-overhead] and second, it penalizes peers for maintaining connections with a large number of peers (since this will result in them receiving more challenges). This disincentivizes broad engagement with the network. These drawbacks are also serious, and they are hard to avoid in the general case.
 
-[^pow-overhead]: This is not an idle concern: Systems like Bitcoin which fail to account for overhead (or, perhaps, simply fail to care) have a real and measurable impact on the Earth's environment. As of this writing it is estimated that only about 40 countries on Earth consume more power than the Bitcoin network does - and no doubt a large portion of their power consumption is spent on Bitcoin. Some of this energy comes from renewable sources, but a study from last year suggested that even with these measures, Bitcoin's carboon footprint still exceeds that of Las Vegas.
+[^pow-overhead]: This is not an idle concern: Systems like Bitcoin which fail to account for overhead (or, perhaps, simply fail to care) have a real and measurable impact on the Earth's environment. As of this writing it is estimated that only about 40 countries on Earth consume more power than the Bitcoin network does - and that's without adjusting for how much of their power consumption is spent on Bitcoin. Some of this energy comes from renewable sources, but a study from last year suggested that even with these measures, Bitcoin's carboon footprint still exceeds that of Las Vegas.
 
 The above is just a quick overview geared towards giving you some idea of the main sorts of proposed solutions; for some more thorough surveys, see the footnote.[^surveys]
 
@@ -59,7 +59,9 @@ The reason Bitcoin works is because peers gain influence in the network by solvi
 
 [^bad-pow]: Though not all compute power is created equal, at least for Bitcoin: they chose a hash function (SHA-256) that runs quickly with low memory overhead, meaning it is embarrassingly easy to parallelize on cheap, low-horsepower specialized hardware (eg GPUs or ASICs). These hardware miners have much higher ROIs than consumer hardware, granting an outsized level of network influence to those who can afford to pick up (and run) specialized hardware. Proof-of-work systems are generally better off using a memory-hard hash function like Argon2 or a purpose-built proof-of-work algorithm like Equihash.
 
-The problem, of course, is that Bitcoin's security is predicated on the combined hash rate of all honest peers exceeding that of any attacker. Thus, honest peers must pay greater hardware and power costs than any attacker can afford to -- at all times. Bitcoin's security assumption might be stated as: _none of us can afford to be as wasteful as all of us._
+The problem, of course, is that Bitcoin's security is predicated on the combined hash rate of all honest peers exceeding that of any attacker. Thus, honest peers must pay greater hardware and power costs than any attacker can afford to -- at all times. Bitcoin's security assumption might be stated as: _none of us can afford to be as wasteful as all of us._[^waste]
+
+[^waste]: The Bitcoin evangelist's reply might be that "waste" is the wrong word, since this work is necessary to keep the network running. This ignores a few essential points, though: first, proof-of-work isn't really _necessary_ to keep the network running; other schemes like proof-of-stake exist (and that's as far as I'm willing to go into discussing cryptocurrency design). Second, if the amount of power the network spends on defense is totally uncorrelated to whether the network is under attack, and remains at the same level even when no attack is occurring, how could we interpret that as anything _but_ waste? You might wonder what the alternative is. To find out, read on.
 
 Anyway, the point of that digression was to set up this question: we've seen that proof-of-work works, but can it work _efficiently_? I believe that it can. I'd like to describe an idea, and provide some analysis for it, in the specific context of distributed hash tables. First, though, we'll need a little more background.
 
@@ -68,13 +70,15 @@ Anyway, the point of that digression was to set up this question: we've seen tha
 
 Let's talk distributed hash tables. All sorts of DHT designs are proven to work in theory, but in practice Kademlia is the most popular by far. If you're not already familiar, [Wikipedia has a good article](https://wikipedia.org/wiki/Kademlia) that you might want to scan through before continuing.
 
-Plain Kademlia (as implemented in e.g. Mainline DHT) is horribly insecure. The currently recognized state of the art (as far as I know) is a variant called S/Kademlia.[^skademlia] You can tell S/Kademlia is an improvement because it has "S", which stands for Secure, in the name.[^proto-hyperbole] How secure is it?
+Plain Kademlia (as implemented in e.g. Mainline DHT) is horribly insecure. The currently recognized state of the art (as far as I'm aware) is a variant called S/Kademlia.[^skademlia] You can tell S/Kademlia is an improvement because it has "S", which stands for Secure, in the name.[^proto-hyperbole]
 
 [^skademlia]: See _S/Kademlia: A Practicable Approach Towards Secure Key-Based Routing_ by Ingmar Baumgart and Sebastian Mies ([PDF link](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.68.4986&rep=rep1&type=pdf)).
 
 [^proto-hyperbole]: Side note: can we please declare a moratorium on hyperbole in protocol names? It never goes well -- just look at WEP, aka "_Wired Equivalent Privacy_". That's great marketing, but it's also totally untrue and, for the designers, probably a little embarrassing in hindsight.
 
-Let me first say: The S/Kademlia designers have some really good ideas. They provide interesting and compelling modifications to the stock peer lookup algorithm. I consider that to be the best part of their work. They also recognize the need to prevent peers from choosing their own Node IDs.
+How secure is it?
+
+Let me first say: The S/Kademlia designers have some really good ideas. They provide interesting and compelling modifications to the stock peer lookup algorithm. I consider that to be the best part of their work. They also recognize the need to prevent peers from choosing their own Node IDs, which is simple but very important.
 
 They propose generating node IDs from cryptographic hashes of identity-certifying public keys. These keys are used for authentication and to ensure message integrity. For Sybil defense, two options are provided.
 
@@ -87,7 +91,7 @@ Unfortunately, one of the puzzles specified in the S/Kademlia paper is broken.
 
 # Breaking S/Kademlia
 
-If this were a Wikipedia article, this would be the part where you'd see a giant red banner saying something like, "WARNING: ORIGINAL RESEARCH." Let's just acknowledge that up front.
+If this were a Wikipedia article, this would be the part where you'd see a giant red banner saying something about "WARNING: ORIGINAL RESEARCH." Let's just acknowledge that up front.
 
 Now, here are the two puzzles given for S/Kademlia. A peer needs to solve both for their node ID to be accepted.
 
@@ -107,7 +111,7 @@ Now, first, here is the "static" puzzle:[^transcription-1]
 
 There are several drawbacks to this scheme. It considers any given public key to be either valid or invalid, with the majority of public keys being invalid. Constraining the set of valid keys like this opens up some trivial theoretic attacks.[^storage-attack] Pre-existing identity keys generally can't be imported since the great majority of them will not pass validation. The scheme also requires two hash function evaluations when really only one should be necessary.
 
-[^storage-attack]: For instance, say our keypair's security level is $$2^{128}$$. Say that one in every $$x$$ keys is valid. Since not all keys are valid, an offline attack which computes and stores all valid keys would be able to recover the key with $$2^{128 / \log_2{x}}$$ work. This is not a practical attack unless $$x$$ is very large, but either way it does demonstrate that the scheme has failed to achieve its expected security level.
+[^storage-attack]: For instance, say our keypair's security level is $$2^{n}$$. Say that one in every $$x$$ keys is valid. Since not all keys are valid, an offline attack which computes and stores all valid keys would be able to recover the key with $$2^{n}$$ memory and $$2^{n / \log_2{x}}$$ work. This is not a practical attack (unless $$x$$ is _very_ large) but it still demonstrates that the scheme has failed to achieve its expected security level.
 
 Now, here is the second, "dynamic" puzzle:[^transcription-2]
 
@@ -127,18 +131,20 @@ The paper claims that the dynamic puzzle "ensures that it is complex to generate
 
 The issue is that once an attacker has identified _any_ hash input $$I$$ which passes the puzzle's test, they can set X to produce that input: $$X := \text{NodeID} \oplus I$$. This works since there is no way for remote peers to verify that X is truly random.
 
-Thus, once a suitable value $$I$$ has been found,[^preimage-stealing] solutions to the second puzzle may be generated for free, lowering the total complexity to $$O(2^{c_1})$$, the cost for the first puzzle.
+Thus, once a suitable value $$I$$ has been found,[^preimage-stealing] additional solutions to the second puzzle may be generated for free, lowering the total complexity to $$O(2^{c_1})$$, the cost for the first puzzle.
 
 [^preimage-stealing]: Note that I say "found" and not "generated" because in fact there is no need for the attacker to generate this at all: they could simply observe some other peer's solution to the dynamic problem and copy that peer's value of $$NodeID \oplus X$$.
 
 
 # Fixing S/Kademlia
 
-A trivial mitigation would be to swap out XOR for concatenation in the dynamic puzzle, like $$P := H(\text{NodeID} \vert X)$$, or to use a more robust construction like $$P := \operatorname{HMAC}(\text{NodeID}, X)$$.
+A trivial mitigation would be to swap out XOR for concatenation in the dynamic puzzle. This would just mean redefining step 3 in puzzle 2 to read, $$P := H(\text{NodeID} \vert X)$$. An alternative would be to use a more robust construction like $$P := \operatorname{HMAC}(\text{NodeID}, X)$$. This would work, but stay tuned to see how we can do even better.
 
-Of course, either of these changes would break backwards compatibility with the original S/Kademlia spec... but perhaps breaking backwards compatibility with a broken system is not such a bad thing.
+Of course, it bears mentioning that either of these would be breaking changes... but perhaps breaking backwards compatibility with a broken system is not such a bad thing.
 
-Another note: The paper does not specify that $$H$$ should be a hard function, only that it should be cryptographically secure; however, most classic cryptographic hash functions are specifically tuned for speed, making them unsuitable for use in proof-of-work constructions. Common sense dictates that a hard function, ideally a modern, memory-hard password hashing function like Argon2, should be used for $$H$$.
+Another note: The paper does not specify that $$H$$ should be a hard function, only that it should be cryptographically secure; however, most classic cryptographic hash functions are specifically tuned for speed, making them unsuitable for use in proof-of-work constructions. Common sense dictates that a hard function should be used for $$h$$. I'd suggest a modern, x86-optimized, memory-hard password hashing function like Argon2.[^fpga]
+
+[^fpga]: For those who don't know, memory-hard functions are preferable over CPU-hard functions because it's harder to fit them onto dedicated hardware: FPGAs tend to have low amounts of onboard memory, and high-memory ASICs are much more expensive to manufacture. Optimizing for x86 attempts to minimize the advantage of dedicated hardware over generic consumer hardware.
 
 If we are using a hard function for $$H$$, then we need to pay attention to how many calls to this function we need to make to verify a remote peer's NodeID. S/Kademlia's two-puzzle construction requires three calls: one to generate the NodeID, one more to check the static puzzle, and a third one to check the dynamic puzzle. We can improve on this.
 
@@ -564,11 +570,13 @@ A range of values for $$k$$ are shown here. $$k = 8$$ is most common in real-wor
 
 It can be seen that while $$k = 8$$ is not a bad choice, $$k = 16$$ and $$k = 32$$ are non-negligibly more resilient, with the difference being most notable in extreme cases.
 
-S/Kademlia's authors suggest parameterizing $$k \in [8, 16]$$, noting that 
+S/Kademlia's authors suggest parameterizing $$8 \le k \le 16$$, noting that 
 
 > _Higher values of $$d$$ and $$k$$ seem not worth the additional communication costs. Larger values for $$k$$ would also increase the probability that a large fraction of buckets are not full for a long time. This unnecessarily makes the routing table more vulnerable to Eclipse attacks._
 
-Their analysis argues for setting $$k$$ no higher than 16. The analysis given here indicates that $$k = 16$$ is greatly preferable to $$k = 8$$. As such, I'd advocate for $$k = 16$$ as the new de facto standard value for $$k$$.
+Their analysis argues for setting $$k$$ no higher than 16.[^filling-buckets] The analysis given here indicates that $$k = 16$$ is greatly preferable to $$k = 8$$. As such, I'd advocate for $$k = 16$$ as the new de facto standard value for $$k$$.
+
+[^filling-buckets]: As an aside: a security-focused DHT can partially compensate for the risk of empty buckets by proactively filling them. Just take any bucket that's (say) less than 80% full, pick a random address from its range, and look up that address. This has side benefits, too; for instance, it provides high-quality lookups for use in [DHT size estimates]({% post_url 2020-06-05-dht-size-estimation %}). I say _high-quality_ because the lack of routing info indicates that no other lookups have been performed around the target address, meaning the resulting measurements from it should be effectively independent from any others already collected.
 
 
 # Routing

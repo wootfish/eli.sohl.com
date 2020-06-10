@@ -602,7 +602,7 @@ description="A screenshot of a chart showing that the lookup success probability
 One has to wonder about their sample sizes, but the shapes of the curves are still (more or less) evident. For $$d = 8$$ disjoint lookup paths, it can be seen that the probability of success is still around 0.9 when Sybil peers account for half of the network, and stays strong until the fraction of adversarial nodes reaches about 0.75.
 
 
-# Wrapping Up
+# Combining Results
 
 Successfully retrieving data from a DHT depends on a successful lookup and on the lookup set containing at least one honest peer. If we treat these two events as independent, we can model our overall probability of success as $$P \cdot \operatorname{E}[R_{L,k}]$$.
 
@@ -610,11 +610,14 @@ The shape of this combined distribution depends on the distribution of lookup pa
 
 The good news is that we now have a complete model for how certain DHTs fare under Sybil attacks. We also have a list of parameters we can tune to increase the network's resilience in the face of attacks, and we can quantify exactly how much of a difference any given change will make.
 
-One last defensive measure: Say you want to store data at some address $$A$$, but the network is currently under a heavy Sybil attack, and you estimate $$P \cdot \operatorname{E}[R_{L,k}] = 0.4$$, meaning you have a 40% chance of successfully storing data at $$A$$ and other peers have a 40% chance of successfully retrieving it. This is likely not good enough. OK then - just use some other addresses. For instance you could derive $$A_1 = \operatorname{H}(A \vert 1), A_2 = \operatorname{H}(A \vert 2)$$, etc.[^app-concerns] If the probability of any of these addresses failing is 0.6, then the probability of both failing is 0.36. If you use five addresses, then your chances of success are back over 90% - even while the table is more than halfway compromised!
+One last defensive measure: Say you want to store data at some address $$A$$, but the network is currently under a heavy Sybil attack, and you estimate $$P \cdot \operatorname{E}[R_{L,k}] = 0.4$$, meaning you have a 40% chance of successfully storing data at $$A$$ and other peers have a 40% chance of successfully retrieving it. This is likely not good enough. OK then - just use some other addresses. For instance you could derive $$A_1 = \operatorname{H}(A \vert 1), A_2 = \operatorname{H}(A \vert 2)$$, etc.[^app-concerns] If the probability of either of those addresses failing is 0.6, then the probability of both failing is $$0.6^2 = 0.36$$. If you use five addresses, then your chances of success are back over 90% - even while the DHT is more than halfway compromised!
 
 [^app-concerns]: Note: Figuring out this scheme, bounding it, and sharing the necessary parameters between peers are all application concerns.
 
-Of course, countermeasures like this rely on the assumption that the DHT is operating well under its carrying capacity, since going from one address to five addresses really just amounts to increasing data redundancy fivefold. In a sense, increasing $$k$$ also amounts to increasing data redundancy, since data is stored on the $$k$$ closest peers to an address - though increasing $$k$$ impacts other parts of the system as well (most notably routing).
+Of course, countermeasures like this rely on the assumption that the DHT is operating well under its carrying capacity, since going from one address to five addresses really just amounts to increasing data redundancy fivefold. In a sense, increasing $$k$$ is also a way of increasing data redundancy, since data for any address is stored on the $$k$$ closest peers to that address - though increasing $$k$$ impacts other parts of the system as well (most notably routing).
+
+
+# Closing Thoughts
 
 Ad-hoc, peer-to-peer distributed systems were all the rage in the early 2000s. This was the era that brought us Freenet, BitTorrent, I2P, and many others. Most of these have fallen out of fashion in favor of centralized technologies, in part because centralized systems trade Sybil vulnerability for several less-obvious issues; I've written about this trend and its implications [here]({% post_url 2019-01-13-public-cyberspace %}). This shift in fashion has led most people to discount peer-to-peer systems (aside from BitTorrent) as novelties at best.
 

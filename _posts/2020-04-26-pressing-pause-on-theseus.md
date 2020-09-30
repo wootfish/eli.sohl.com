@@ -4,75 +4,73 @@ title: Pressing Pause on Theseus
 ---
 
 
-I'll get right to the point. I'm putting the Theseus project on indefinite
-hiatus pending interested collaborators.
+# tl;dr
+
+I'll skip right to the point. *I'm putting the Theseus project on indefinite
+hiatus pending interested collaborators.*
 
 I still believe in the project's importance and potential. There are powerful
 ideas in here that I have not seen anywhere else. I don't expect non-experts to
-recognize their significance without a working proof of concept, which is why
-I've been working for several years on building just that. But I've been working
-alone, slowly, while splitting my attention between this project, my full-time
-job, several other side projects, and the rest of my life.
+recognize them without a working proof of concept, which is why I've been
+working for several years on building one.
 
-It's been slow going, and I've burned out on it several times. I don't know how
-to properly convey how mentally and emotionally taxing it is to work alone on
-such a large and difficult project. Every success is private; so is every
-mistake. No one cares about either - not until you have a finished product that
-they can see, use, and begin to understand in context. When all signs point
-towards that finished product being years out, it can be hard to take any
-satisfaction from the successes, and it can be hard to persevere through the
-failures. At the same time, I've felt an overwhelming sense of guilt at not
-having finished the whole thing sooner - a feeling which has tarnished every
-other project I've tried to take on in parallel with Theseus. Frankly, I'm
-surprised that I've been able to keep this up for so long.
+But I've been working alone, slowly, splitting my attention between this
+project, my other projects, my day job as a security engineer, and the rest of
+my life. It's been slow going, and I've burned out on it more than once.
 
-In spite of the guilt, I have taken on a couple side projects over the last
-year, and I've been startled both by how _fun_ they've been and how _easy_
-they've felt relative to Theseus. Maybe this is unsurprising; unlike Theseus,
-none of them have been preconditioned on original research, nor have they been
-designed to resist state-level surveillance. In any case, these small successes
-have opened my eyes to how much more I could be doing.
+It's hard to describe how taxing it can be to work alone on a large, difficult
+project like this. Every success is private, and so is every mistake.
+
+I've also felt some guilt at not having finished it sooner - a feeling which has
+seeped into everything else I've worked on in parallel with Theseus. Frankly,
+I'm surprised that I've been able to keep this up for so long.
+
+In spite of this guilt, I have taken on some small side projects lately and I've
+been startled both by how _fun_ they've been and how _easy_ they've felt
+relative to Theseus. These small successes have opened my eyes to how much more
+I could be doing.
 
 The project's social context has also changed - or at least, my view of it has.
 
+
+# context
+
 [I wrote in early 2017]({% post_url 2017-02-17-theseus-robust-system-for-preserving %})
-that the Trump administration's efforts at censoring climate research had
-exposed a number of failings with our current academic and social institutions.
-I still believe this, and I still believe that open access is a necessary
-response to these failures. Necessary, but not sufficient.
+that the current administration's efforts at censoring climate research had
+highlighted a number of failings with our academic and social institutions. I
+still believe this. I still believe that strong advocacy (in both social and
+technological forms) for open access is a necessary response to these failures.
+Necessary, but not sufficient.
 
-True, this administration (and its counterparts around the world) use censorship
-to further their goals, but they also use misinformation, distraction, and
-appeals to toxic biases - racism, sexism, classism, xeonophobia, and all the
-rest - to further those same goals. In many cases these latter methods of
-control are much more effective, in part because to many people they are less
-obvious. We are currently seeing the results of this throughout the
-english-speaking world.
+True, oppressive governments around the world are using censorship to further
+their goals, but it is far from their only tool. Others include misinformation,
+distraction, and appeals to toxic biases - racism, sexism, classism,
+xeonophobia, et cetera ad nauseum.
 
-I'm not arrogant or conceited enough to claim to know what to do about this.
-I've come to see that anti-censorship tools, while undeniably essential, are
-only a very small part of a very large picture.
+In many cases these latter methods of control are much more effective, in part
+because to many people they are less obvious.
 
-Frankly, this feels obvious in hindsight. You're probably rolling your eyes and
-silently judging my naivete. Go ahead; you're not wrong.
+I'm not going to claim to know what to do about this.
 
-It is easy to forget that just a few years ago the world looked very different.
-Particularly for moderately privileged people like myself, it was easy to fall
-into the trap of seeing the world's most pressing problems as abstract,
-concerning ideas, and not as concrete, concerning lives.
+I have come to see that anti-censorship tools, while undeniably essential, are
+only a very small part of a very big picture. I thought Theseus could matter; I
+still think that, but I am no longer convinced that grinding away at this in
+isolation is the best use of my time.
 
-I thought Theseus could matter; I still think that, but I also think I can spend
-my time in other ways that could matter much more.
 
-This doesn't mean the project is over. If I could find some interested
-collaborators, I would be glad to pick this project back up at any time. I just
+# what now?
+
+Good question. I'm looking forward to figuring that out.
+
+There are some interesting unpublished results that I'll be writing up for this
+blog once I find the time. But my main hope for placing Theseus on hiatus is to
+reclaim my free time (which this project has almost completely consumed for the
+last few years), so it might be a while.
+
+This doesn't mean Theseus is over. If I could find some interested
+collaborators, I'd be glad to pick this project back up at any time. I just
 can't keep working on it alone.
 
-I do still have some interesting unpublished results that I will be writing up
-for this blog whenever I find the time. But my main hope for placing Theseus on
-hiatus is to reclaim my free time (which this project has almost completely
-consumed for the last several years), so it might be a while.
-
-I really care about Theseus, and I don't want it to be over. That said, I am
-trying to make a (rare) concession to practicality here. It's painful, but it
+This project matters a lot to me. I don't want it to be over. That said, I'm
+trying to make a rare concession to practicality here. It sucks, but it also
 seems like the right thing to do.

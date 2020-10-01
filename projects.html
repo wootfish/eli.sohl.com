@@ -15,6 +15,39 @@ layout: main
 
     <hr>
 
+    <h2 class="project-row" onclick="do_toggle('#cryptopals-details');">
+        cryptopals <span>+</span>
+    </h2>
+    <div id="cryptopals-details" class="display-none">
+        <p>
+        These are so much fun. They're a series of cryptography challenges
+        written by some folks who really know their stuff. Sets 1 through 7 are
+        available <a href="https://cryptopals.com">here</a>, and you can check
+        out Set 8 <a href="https://toadstyle.org/cryptopals/">here</a>. They
+        start out easy enough, but the later sets have some genuinely tricky
+        problems in them.
+        </p>
+
+        <p>
+        You can check out my solutions
+        <a href="https://github.com/wootfish/cryptopals">on Github</a>.
+        I've worked through sets 1 through 7 so far, and I plan on taking on
+        set 8 soon.
+        </p>
+
+        <p>
+        Back in the day I was very into <a href="https://projecteuler.net">Project Euler</a>
+        (in fact, I'm still ranked in the 99.4th percentile> on there after
+        almost a decade of inactivity), and a lot of what makes Project Euler
+        fun can also be found in Cryptopals. Usually, programming is hard in
+        tedious ways; this stuff is hard in fun ways. The most challenging parts
+        of it are also the most interesting. And it's just so damn satisfying
+        when you finally get your solution working for the first time.
+        </p>
+    </div>
+
+    <hr>
+
     <h2 class="project-row" onclick="do_toggle('#obsidian-details');">
         obsidian <span>+</span>
     </h2>
@@ -31,6 +64,60 @@ layout: main
         early results are very promising. You can read about the project
         <a href="{% post_url 2020-04-14-obsidian %}">here</a>, and you can
         read its source code <a href="https://github.com/wootfish/obsidian">here</a>.
+        </p>
+    </div>
+
+    <hr>
+
+    <h2 class="project-row" onclick="do_toggle('#visuals-details');">
+        visuals <span>+</span>
+    </h2>
+    <div id="visuals-details" class="display-none">
+        <center>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/FRhoHzBTGBw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+            <p>
+            That's me on the right!
+            <br/>
+            <small>(for the full concert, see <a href="https://www.youtube.com/watch?v=bZUzoteuH9g">here</a>)</small>
+            </p>
+        </center>
+
+        <br/>
+
+        <p>
+        Everything you see in my visual sets is generated live. Much of it is
+        improvised on the spot.
+        </p>
+
+        <p>
+        I shape the images using some MIDI controllers and a lot of custom
+        graphics code that I've written from scratch. Last time I checked, the
+        program was up to about seven thousand lines of Processing and GLSL.
+        </p>
+
+        <p>
+        I got started on this project in January of 2019 after having a
+        transcendental experience in an unexpected place. Ask me at the right
+        time and I might tell you the rest of the story :)
+        </p>
+    </div>
+
+    <hr>
+
+    <h2 class="project-row" onclick="do_toggle('#book-notes-details');">
+        book notes <span>+</span>
+    </h2>
+    <div id="book-notes-details" class="display-none">
+        <p>
+        You can find a collection of these posts <a href="/tags/book-notes.html">here</a>.
+        </p>
+
+        <p>
+        I only write these for books I've really enjoyed. The form, then, is
+        less of a review (since you already know what I think) and more of an
+        exploration. It's my attempt to share some of what makes these books so
+        compelling to me.
         </p>
     </div>
 
@@ -75,67 +162,6 @@ layout: main
         I've written a fair bit on this site about Theseus and Theseus DHT.
         <a href="/tags/theseus.html">Here's a list of those posts</a> (though
         bear in mind that not all of them are up to date).
-        </p>
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#visuals-details');">
-        visuals <span>+</span>
-    </h2>
-    <div id="visuals-details" class="display-none">
-        watch this space :)
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#cryptopals-details');">
-        cryptopals <span>+</span>
-    </h2>
-    <div id="cryptopals-details" class="display-none">
-        <p>
-        These are so much fun. They're a series of cryptography challenges
-        written by some folks who really know their stuff. Sets 1 through 7 are
-        available <a href="https://cryptopals.com">here</a>, and you can check
-        out Set 8 <a href="https://toadstyle.org/cryptopals/">here</a>. They
-        start out easy enough, but the later sets have some genuinely tricky
-        problems in them.
-        </p>
-
-        <p>
-        You can check out my solutions
-        <a href="https://github.com/wootfish/cryptopals">on Github</a>.
-        I've worked through sets 1 through 7 so far, and I plan on taking on
-        set 8 soon.
-        </p>
-
-        <p>
-        Back in the day I was very into <a href="https://projecteuler.net">Project Euler</a>
-        (in fact, I'm still ranked in the <a href="https://projecteuler.net/profile/wootfish.png">99.4th percentile</a>
-        on there after half a decade of inactivity), and a lot of what makes
-        Project Euler fun can also be found in Cryptopals. Most programming is
-        hard in tedious ways; this stuff is hard in fun ways. The most
-        challenging parts of it are also the most interesting. And it's just so
-        damn satisfying when you finish troubleshooting and get to watch your
-        script work for the first time.
-        </p>
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#book-notes-details');">
-        book notes <span>+</span>
-    </h2>
-    <div id="book-notes-details" class="display-none">
-        <p>
-        You can find a collection of these posts <a href="/tags/book-notes.html">here</a>.
-        </p>
-
-        <p>
-        I only write these for books I've really enjoyed. The form, then, is
-        less of a review (since you already know what I think) and more of an
-        exploration. It's my attempt to share some of what makes these books so
-        compelling to me.
         </p>
     </div>
 

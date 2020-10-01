@@ -1,6 +1,6 @@
 ---
 layout: post
-title: a new method for estimating DHT network size
+title: A New Method for Estimating P2P Network Size
 mathjax: true
 image: '/assets/img/dht/estimate_results.png'
 ---

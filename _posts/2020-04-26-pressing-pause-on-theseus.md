@@ -1,6 +1,6 @@
 ---
 layout: post
-title: pressing pause on Theseus
+title: Pressing Pause on Theseus
 ---
 
 

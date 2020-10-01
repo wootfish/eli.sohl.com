@@ -1,6 +1,6 @@
 ---
 layout: post
-title: on ceasing to be exceptional
+title: ceasing to be exceptional
 mathjax: true
 ---
 

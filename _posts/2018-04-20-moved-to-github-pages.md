@@ -1,6 +1,6 @@
 ---
 layout: post
-title: hello github pages!
+title: Hello github pages!
 nobreak: True
 ---
 

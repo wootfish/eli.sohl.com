@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Wang's attack in practice
+title: Wang's Attack in Practice
 mathjax: true
 ---
 

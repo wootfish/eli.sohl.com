@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "low-overhead routing for ad-hoc mesh networks"
+title: "Low-Overhead Routing for Ad-Hoc Mesh Networks"
 mathjax: true
 ---
 

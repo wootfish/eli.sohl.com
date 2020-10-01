@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Wang's attack in theory
+title: Wang's Attack in Theory
 mathjax: true
 image: '/assets/img/wang/wang-a5-adjustments.png'
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: book notes
+title: Book Notes
 tags: [book-notes]
 ---
 

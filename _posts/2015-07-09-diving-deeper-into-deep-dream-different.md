@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Diving Deeper Into Deep Dream: Different Distortions'
+title: 'diving deeper into Deep Dream: different distortions'
 ---
 
 The moment you get Google Research's Deep Dream project [set up](http://sohliloquies.blogspot.com/2015/07/setting-up-deep-dream-google-researchs.html), you can make it do incredible things. If you want to generate trippy zooms with lots of dogs and eyes, the [code](https://github.com/google/deepdream) Google provides works more or less out-of-the-box.
@@ -9,10 +9,10 @@ For reference, [here](https://gist.github.com/wootfish/1cf98f3a113f3f06da5f) is 
 
 And, [here](https://gist.github.com/wootfish/c287e344672c4add075b) is a gist for a similar but extended piece of code which takes an input file on the command line and performs the iterative process described at the very end of the researchers' original iPython notebook. Both these files are almost entirely composed of code from that notebook; they're just provided as references, so we can have some well-established starting points from which to branch out.
 
-<br/>
+
 # Prelude
 
-Cards on the table. I'm not here to teach you about neural nets or about Deep Dream. I'm here to show you [some really fucking cool graphics](http://imgur.com/8C3076A.gifv) (watch that link to the end, I promise it's worth it), and I'm here to give you some ideas about how you could make your own. If you aren't interested in the blow-by-blow, and want to hurry up and get to the blow-my-mind, just pop on down to the bottom of the post, where you'll find a list of every graphic linked to in the body here, compiled for your browsing pleasure.
+Cards on the table. I'm not here to teach you about neural nets or about Deep Dream. I'm here to show you [some really cool graphics](http://imgur.com/8C3076A.gifv) (watch that link to the end, I promise it's worth it), and I'm here to give you some ideas about how you could make your own. If you aren't interested in the blow-by-blow, and want to hurry up and get to the blow-my-mind, just pop on down to the bottom of the post, where you'll find a list of every graphic linked to in the body here, compiled for your browsing pleasure.
 
 Okay, with that out of the way, let's do a quick overview of how those gists work, just so we know where we're starting from. I'm going to just quickly walk through the latter one, because its functionality is basically a superset of the former's.
 

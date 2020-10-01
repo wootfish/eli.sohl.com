@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sharing Economy Apps and the New Bottle-Wavers
+title: sharing economy apps and the new bottle-wavers
 ---
 
 

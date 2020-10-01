@@ -6,19 +6,17 @@ tags: [theseus]
 ---
 
 
-> Governments of the Industrial World, you weary giants of flesh and steel, I come from Cyberspace, the new home of Mind. On behalf of the future, I ask you of the past to leave us alone. You are not welcome among us. You have no sovereignty where we gather.
-
-\- [_A Declaration of the Independence of Cyberspace_](https://www.eff.org/cyberspace-independence) (1996)
-
 > Cyberspace is the "place" where a telephone conversation appears to occur. Not inside your actual phone, the plastic device on your desk. Not inside the other person's phone, in some other city. The place between the phones. The indefinite place out there, where the two of you, two human beings, actually meet and communicate.
 
-\- [_The Hacker Crackdown_](http://www.mit.edu/hacker/hacker.html) (1992)
+Bruce Sterling, [_The Hacker Crackdown_](http://www.mit.edu/hacker/hacker.html) (1992)
 
-At first, no one really knew what the internet was for. We knew what it _was_, and people were coming up with all sorts of uses for it -- bulletin boards, instant messaging, mailing lists -- but there was this general sense that the internet's potential went far beyond any of that. Bigger things were coming; it's just that no one quite knew what they would look like. To capture this sense of excited uncertainty, sci-fi authors of the '80s and '90s leaned heavily on the idea of _cyberspace_.[^1]
+---
+
+At first, no one really knew what the internet was for. Some people knew what it _was_, and they were coming up with all sorts of uses for it -- bulletin boards, instant messaging, mailing lists -- but there was this general sense that the internet's potential went far beyond any of that. Bigger things were coming; it's just that no one quite knew what they would look like. To capture this sense of excited uncertainty, sci-fi authors of the '80s and '90s leaned heavily on the idea of _cyberspace_.[^1]
 
 [^1]: Style note: Throughout this post, _"cyberspace"_ refers to the word _cyberspace_ when italicized, and to the concept of cyberspace otherwise.
 
-As a metaphor, _cyberspace_ was popular because it captured the sheer breadth of possibilities that exist with networked technology. By analogy to physical space, which of course is the venue for all analog human experience, _cyberspace_ seemed to suggest a limitless new domain: new experiences, new possibilities, new potentialities. It's an exciting thought. Fast-forward to 2019, and we've fallen a bit short of expectations. Many people's experience of the modern internet consists of four social media sites, each of which is largely comprised of screenshots from the other three.
+As a metaphor, cyberspace caught on because it seemed to capture the sheer breadth of possibilities that exist with networked technology. By analogy to physical space, which of course is the venue for all analog human experience, _cyberspace_ seemed to suggest a limitless new domain: new experiences, new possibilities, new potentialities. It's an exciting thought. Fast-forward to 2019, and we've fallen a bit short of expectations. Many people's experience of the modern internet consists of four social media sites, each of which is largely comprised of screenshots from the other three.
 
 OK, maybe that's a bit much. But grant me that bit of hyperbole and, in return, I'll let you in on a secret: cyberspace hasn't gone away. We're still in it, we're just spending our time in all the wrong parts of it.
 

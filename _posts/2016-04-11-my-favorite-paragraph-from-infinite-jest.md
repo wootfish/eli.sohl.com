@@ -1,9 +1,9 @@
 ---
 layout: post
-title: An Outstanding Paragraph From Infinite Jest
+title: my favorite paragraph from Infinite Jest
 ---
 
-From the fictional filmography of James O. Incandenza (page 988):
+From the fictional filmography of James O. Incandenza, page 988:
 <br/>
 <br/>
 

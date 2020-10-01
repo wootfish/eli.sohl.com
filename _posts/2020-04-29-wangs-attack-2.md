@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Wang's Attack in Practice
+title: Wang's attack in practice
 mathjax: true
 ---
 
@@ -26,7 +26,7 @@ That post covers the "what" and "why" of Wang's attack; this post covers the
 "how".
 
 
-# Review: MD4's Internals
+# review: MD4's internals
 
 [Here is a full implementation of MD4 in Python](https://github.com/wootfish/cryptopals/blob/master/challenge_30.py).
 
@@ -91,7 +91,7 @@ This may look pretty arbitrary. That’s fine; I won't try to convince you that 
 isn’t. I included this code because it shows the values of `k` and `s` used at
 each intermediate state. We'll need these values for our massage.
 
-# Defining Constraints
+# defining constraints
 
 The core of Wang's attack is a list of constraints on MD4's intermediate states.
 Nearly all of these constraints fall into one of three types: _zero
@@ -250,7 +250,7 @@ constraints, we've reduced this to 41 `Constraint` instances and thus 41 calls
 to `massage()`. This optimization alone yields a performance improvement of 2.3x
 over a naïve implementation.
 
-# Massaging Constraints: Round 1
+# massaging constraints: round one
 
 Let's write a function to take an input message (as bytes) and massage it.
 
@@ -320,7 +320,7 @@ bytes and return it:
 
 That's right - for round one, that really is all it takes.
 
-# Applying the Message Differential
+# applying the message differential
 
 We just wrote a `massage` function which takes an arbitrary length-64 bytestring
 and turns it into a promising candidate message `M`. Before we can check whether
@@ -354,7 +354,7 @@ indices up in this data structure; we just want to loop over its pairs of
 values. By storing the differential as pairs of values, we avoid having to call
 `.items()` on it. That has benefits for both performance and clarity.
 
-# Finding Collisions
+# finding collisions
 
 Now that we know how to derive `M'` from `M`, the next step is to generate `M`
 values in a loop, checking each one to see whether `M` and `M'` collide. We can
@@ -417,7 +417,7 @@ probability of appx $$2^{-25}$$. With just these constraints my implementation
 was finding about one collision per day. At that rate the attack is actually
 practical, making this a good time to test your attack code.
 
-# Massaging Constraints: Round 2
+# massaging constraints: round two
 
 Let's talk about how to get from one collision per day to several per minute.
 
@@ -604,7 +604,7 @@ someday I'll try that. Or maybe you will :-)
 Anyway, this much of a massage is enough to produce a few collisions per minute.
 Past this point, side effects get _really_ hard to manage, so we'll stop here.
 
-# Conclusion
+# conclusion
 
 If your implementation works, you should be able to discover collisions pretty
 quickly. If you have a practical need for MD4 collisions, I'm not going to ask

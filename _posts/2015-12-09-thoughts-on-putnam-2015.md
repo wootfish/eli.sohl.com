@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Thoughts on some 2015 Putnam Exam Problems
+title: 2015 Putnam exam retrospective
 mathjax: true
 ---
 

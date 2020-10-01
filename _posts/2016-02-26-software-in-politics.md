@@ -1,6 +1,6 @@
 ---
 layout: post
-title: More Politics in Software
+title: more politics in software
 ---
 
 > This is the sixth and final installment in a two-month series of posts on the intersection of politics and technology, written for a class at Western Washington University. The series consists of two bookend posts with four focused discussions in between; this is the second bookend. You can find the other posts [here]({{ site.baseurl }}{% post_url 2016-01-15-politics-in-software %}), [here]({{ site.baseurl }}{% post_url 2016-01-20-does-secure-boot-actually-help-security %}), [here]({{ site.baseurl }}{% post_url 2016-01-29-sharing-economy-apps-and-new-bottle %}), [here]({{ site.baseurl }}{% post_url 2016-02-12-ignoring-abuse-on-your-social-platform %}), and [here]({{ site.baseurl }}{% post_url 2016-02-19-you-cant-legislate-reality %}).

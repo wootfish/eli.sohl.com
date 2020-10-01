@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Making a Raspberry Pi Cluster's Rack
+title: making a raspberry pi cluster's rack
 ---
 
 

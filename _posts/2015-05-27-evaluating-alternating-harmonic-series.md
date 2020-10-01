@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Evaluating the Alternating Harmonic Series
+title: evaluating the alternating harmonic series
 mathjax: true
 ---
 

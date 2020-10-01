@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Book Notes: Serious Cryptography"
+title: "book notes: Serious Cryptography"
 tags: [book-notes]
 ---
 

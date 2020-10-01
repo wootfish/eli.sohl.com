@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Virtualizing a Raspberry Pi with QEMU
+title: virtualizing a Raspberry Pi with QEMU
 ---
 
 A while ago, I wrote about building a [rack](https://sohliloquies.blogspot.com/2015/12/making-raspberry-pi-cluster-part-1.html) for a Raspberry Pi cluster. If you have a rack, at some point you'll want to put some Pis on it. Virtualization can make the process of imaging these Pis relatively painless. You can generate custom images from the comfort of your desktop and even automate the whole process. Here's a quick crash course in virtualizing the Pi using QEMU.

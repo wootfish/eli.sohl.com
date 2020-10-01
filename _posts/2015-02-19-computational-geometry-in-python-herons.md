@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Symbolic Computational Geometry in Python: Heron''s Formula'
+title: 'symbolic computational geometry in python'
 mathjax: true
 ---
 

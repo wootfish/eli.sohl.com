@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Theseus Protocol v1.0 Overview
+title: theseus protocol v1.0 overview
 tags: [theseus]
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Wang's Attack in Theory
+title: Wang's attack in theory
 mathjax: true
 image: '/assets/img/wang/wang-a5-adjustments.png'
 ---
@@ -42,7 +42,7 @@ you, come on out to Seattle and we'll go through it over beers, coffee, or your
 beverage of choice.
 
 
-## The Basic Idea
+## the basic idea
 
 This attack is a _differential attack_, meaning we as attackers are trying to
 find collisions between pairs of messages where the messages also share a fixed
@@ -85,7 +85,7 @@ collisions.
 Before expanding on that idea, let's review the relevant parts of MD4 itself.
 
 
-## The Structure of MD4 (in brief)
+## the structure of MD4 (in brief)
 
 MD4 has a 128-bit internal state. Internally, this is represented as four 32-bit
 state variables. Call them $$a, b, c, d$$. These are initialized to certain
@@ -124,7 +124,7 @@ The final MD4 hash value is a function of the last four rows of this state grid.
 In other words, if two distinct inputs can produce the same values in these last
 four rows, those inputs will collide.
 
-## The Structure of MD4 (in detail)
+## the structure of MD4 (in detail)
 
 The previous section covered the concepts involved in computing MD4; the attack
 relies on those concepts, but it also relies on a number of (for lack of a
@@ -241,7 +241,7 @@ underpinnings, but I feel that _constraints_ is more reflective of how these
 rules are used when carrying out the attack. This post uses the two terms
 interchangeably.
 
-## Defining the Attack
+## defining the attack
 
 The core of Wang's attack is a large list of constraints on the hash function's
 intermediate states. Despite what the paper says, these do not quite form a set
@@ -297,7 +297,7 @@ satisfied, the higher the probability of success.
 The next couple sections outline the message massage methodology. After that,
 we'll take a look at the results of a successful massage.
 
-## Massaging the Message: Round One
+## massaging the message: round one
 
 We'll start with the message modifications needed to satisfy our round 1
 conditions.
@@ -347,7 +347,7 @@ Massaging the message to enforce all the round one conditions is enough to bring
 us to a success probability of roughly $$2^{-25}$$. That's not bad, but we can
 do better - at the cost of some added complexity.
 
-#### Massaging the Message: $$a_5$$
+#### massaging the message: $$a_5$$
 
 One thing I've glossed over so far: whenever we change an intermediate state,
 this change has side effects on each subsequent intermediate state. For
@@ -440,7 +440,7 @@ As it happens, our modifications to $$a_{2}$$ don't tend to disrupt
 $$a_{2,19}$$. When we move on to massaging $$d_5$$ and beyond, though, we will
 have to take this into consideration.
 
-#### Massaging the Message: $$d_5$$
+#### massaging the message: $$d_5$$
 
 Moving right along: Our next task is to massage $$d_5$$. This state takes
 $$m_4$$ as input; $$m_4$$ is also used by $$a_2$$.
@@ -544,7 +544,7 @@ It is possible to massage the state further, but each further step adds new
 complications and this post is already getting long.
 
 
-## Tracking the State Differential
+## tracking the state differential
 
 In order to see if our collision is working, we look at the `xor` difference of
 the two messages' intermediate hash states. This shows us where state
@@ -597,7 +597,7 @@ validity, but if I were to do so my proof strategy would make heavy use of the
 boolean function collisions described above, since those give you conditions
 under which any round's differentials will fail to propogate forward.
 
-## Countermeasures
+## countermeasures
 
 You may be wondering how modern hash functions defend against this sort of
 attack. Well, there's a long answer and a short answer. The long answer could
@@ -626,7 +626,7 @@ elegant security proofs. I'm no expert, but reading about SHA-3 and sponge
 constructions makes me wonder why we haven't been building hash functions this
 way all along.
 
-## Conclusion
+## conclusion
 
 That just about does it for the theory behind Wang's attack. Tune in next time
 for a discussion of how the attack might be implemented cleanly and efficiently

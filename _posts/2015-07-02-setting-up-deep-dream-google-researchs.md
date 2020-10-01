@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Setting Up Deep Dream, Google Research's Hallucinatory Work of Genius
+title: setting up Deep Dream, google research's hallucinatory work of genius
 ---
 
 Google Research [wrote](http://googleresearch.blogspot.ch/2015/06/inceptionism-going-deeper-into-neural.html) recently about a technique they call "Inceptionism", which needs to be seen to be believed. Click through and check out their pictures. A full gallery of official images can be found [here](https://photos.google.com/share/AF1QipPX0SCl7OzWilt9LnuQliattX4OUCj_8EP65_cTVnBmS1jnYgsGQAieQUc1VQWdgQ?key=aVBxWjhwSzg2RjJWLWRuVFBBZEN1d205bUdEMnhB). The techniques used to generate these sorts of images were described in broad strokes in this blog post, but the level of detail stopped just short of what someone wanting to replicate their results might have wanted.
@@ -27,7 +27,7 @@ First off, get Caffe's own prerequisites out of the way. I used the list of `apt
 
 I've had smooth sailing just installing that list. As ever, YMMV. If anyone finds that they need to install other packages in addition to these, please let me know and I'll amend the list.
 
-Anyhow, once that's taken care of, `cd` to whatever directory you want to install Caffe in (I put it in my usual ~/workspace directory), then download the Git repo and configure whatever options you'd like. There are several ways to get the Git repo. First, make sure to [set up Git](https://help.github.com/articles/set-up-git/), and follow the instructions on that page for either connecting over HTTPS or SSH. Then, depending on which of those you set up, run _one of the two following commands_. If you set up HTTPS, use
+Anyhow, once that's taken care of, `cd` to whatever directory you want to install Caffe in (I put it in my usual `~/workspace` directory), then download the Git repo and configure whatever options you'd like. There are several ways to get the Git repo. First, make sure to [set up Git](https://help.github.com/articles/set-up-git/), and follow the instructions on that page for either connecting over HTTPS or SSH. Then, depending on which of those you set up, run _one of the two following commands_. If you set up HTTPS, use
 
 `git clone https://github.com/BVLC/caffe.git`
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Academic Computer Science Needs to Get Its Shit Together
+title: academic computer science needs to get its shit together
 ---
 
 The fact is, our beloved field of computer science has reached an embarrassing low. Among programmers in all but some collegiate circles, calling something "academic" is oblique shorthand for calling it overwrought, obscure, inflexible, and/or too fragile to be useful in the real world. And there's a good reason for this: more often than not, the products of academia in computer science meet all those criteria.

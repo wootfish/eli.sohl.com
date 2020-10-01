@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Estimating the Size of DHT Networks
+title: a new method for estimating DHT network size
 mathjax: true
 image: '/assets/img/dht/estimate_results.png'
 ---

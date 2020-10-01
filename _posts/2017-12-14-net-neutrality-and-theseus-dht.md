@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Net Neutrality and Theseus DHT
+title: net neutrality and Theseus DHT
 tags: [theseus]
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to Lose at Mancala (Consistently!)
+title: how to lose at mancala (consistently!)
 mathjax: true
 ---
 

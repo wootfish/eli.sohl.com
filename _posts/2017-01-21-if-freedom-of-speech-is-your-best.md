@@ -1,6 +1,6 @@
 ---
 layout: post
-title: If Freedom of Speech Is Your Best Defense, You Have a Problem
+title: if freedom of speech is your best defense, you have a problem
 ---
 
 Let's keep this short and sweet. I love freedom of speech at least as much as the next person. Possibly more. Back in high school my civics teacher would, between classes, slip me publications on the First Amendment to study, because she'd noticed it was one of the only topics that consistently captured my interest.

@@ -112,29 +112,30 @@ Peers would make themselves available as onion services, and all peer connection
 
 Tor gives us NAT traversal for free. This is the killer feature, since reliable TCP NAT traversal is nontrivial.[^1]
 
-[^1]: The issue of NAT traversal is one reason why UDP is often favored over TCP by peer-to-peer protocols: UDP NAT traversal turns out to be much easier than TCP NAT traversal. TCP is connection-based, and so NAT routers set up routing rules per-connection; UDP is connectionless, so routing rules are set up based on outgoing packets' source ports, which can (and usually do) remain invariant across time -- unlike in TCP.
+[^1]: The issue of NAT traversal is one reason why UDP is often favored over TCP by peer-to-peer protocols: UDP NAT traversal turns out to be much easier than TCP NAT traversal. TCP is connection-based, and so NAT routers set up routing rules per-connection; UDP is connectionless, so routing rules are set up based on outgoing packets' source ports, which can (and usually do) remain invariant across time and across interactions with multiple peers.
 
 Reliable TCP NAT traversal usually involves both peers reaching out to some third party who helps mediate the process
 of forming their connection. This is not guaranteed to work -- modern protocols like STUN, TURN, etc, are pretty good,
 but ultimately their success relies on NAT implementation details and network topology -- and it is a privacy disaster,
-because the third-party mediator gets to see who is connecting to who, and when. That is not great.
+because the third-party mediator gets to see who is connecting to whom, and when. That is not great.
 
 An alternative to having our third party mediate new connections is to simply route all traffic through our helpful third
-party; this is what the Tor network offers. This might sound worse, privacy-wise, but in fact it is (likely) much better.
-Tor consists of a heterogenous mix of severs which work together in ways explicitly designed to limit the network's ability
-to track connection metadata. With Tor, peers can simply establish themselves as Tor onion services, listen for connections
-through the network, and establish connections through Tor as well.
+party; this is what the Tor network offers. This might sound worse, privacy-wise, but in fact with a properly chosen
+third party it is (likely) much better.  Tor consists of a heterogenous mix of severs which work together in ways
+explicitly designed to limit the network's ability to track connection metadata. With Tor, peers can simply establish
+themselves as Tor onion services, listen for connections through the network, and establish connections through Tor as
+well.
 
-I'd like to take a moment to underline how vital NAT traversal is for a peer-to-peer system like Theseus. A peer-to-peer
-system's strength comes from its peers. Everyone contributes resources to the system; we rely on each peer to help
-maintain the health of the network. If peers can't receive incoming connections then their ability to
-perform this duty is severely limited. 
+I'd like to take a moment to underline how vital NAT traversal is for a peer-to-peer system. These systems' strength
+comes from the peer network. Everyone contributes resources to the system; we rely on each other to collectively
+maintain the health of the network. If peers can't receive incoming connections then their ability to perform this duty
+is severely limited, since no one can contact them to request information.
 
-If a peer is unreachable, no one can contact them to request information. These peers are only able
-to offer information over outgoing connections. Worse, the peers at the other ends of those outgoing connections have no
-way of knowing that the peer they're talking to is otherwise unreachable (short of attempting a new, redundant trial
-connection), so they could add these peers to their routing tables, degrading the quality of the table's information.
-The impact would be significant if (as in the modern internet) the great majority of peers are behind NAT.
+These unreachable peers are only able to offer information over outgoing connections. Worse, the peers at the other ends
+of those outgoing connections have no way of knowing that the peer they're talking to is reachable or not (short of
+attempting a new, redundant trial connection). Consequently, they could end up adding these unreachable peers to their
+routing tables, degrading the quality of the table's information. The impact of this issue on the network's health could
+be significant.
 
 The integrity of the network depends on having a reliable method for NAT traversal. Tor onion services provide this.
 

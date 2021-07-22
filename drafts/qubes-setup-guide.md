@@ -276,3 +276,8 @@ exec_always --no-startup-id "qvm-run sys-net \"pkill nm-applet; nm-applet \&\""
 ```
 
 This automatically restarts sys-net's NetworkManager applet whenever i3's config file is executed, i.e. whenever i3 is loaded. Now, if the widget ever disappears, you can bring it back by hitting `mod+shift+r` to restart i3 in place.
+
+
+### AEM
+
+TODO

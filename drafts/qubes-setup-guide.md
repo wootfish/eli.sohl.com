@@ -146,6 +146,29 @@ You could do something similar with an AppVM for social media accounts, say, or 
 
 Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-33-dvm: Firefox` (note that this matches on the middle of the name, which is perfectly legal).
 
+#### Multi-Monitor Setups
+
+i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy xrandr is to learn:
+
+* `xrandr` to list your displays and their available resolutions
+* `xrandr --output HDMI1 --auto` to turn on a display called HDMI1
+* `xrandr --output HDMI1 --auto --left-of eDP1` to turn on HDMI1 and position it to the left of eDP1
+  * You can use any of `--left-of`, `--right-of`, `--above`, `--below` here.
+* `xrandr --output HDMI1 --auto --left-of eDP1 --mode 3440x1440` to do all of the above, and also set HDMI1's resolution to 3440x1440
+* `xrandr --output HDMI1 --off` to turn off HDMI1
+
+There's a whole lot more that xrandr can do, but frankly this is all I've ever needed.
+
+These commands do get a little tedious to type in; you can save some time by setting up keybindings for them. For example, in my dom0's `.config/i3/config` file I have the following lines:
+
+```
+# hotkeys for multi monitor setup
+bindsym $mod+x exec xrandr --output HDMI1 --auto --mode 3440x1440 --left-of eDP1
+bindsym $mod+c exec xrandr --output HDMI1 --off
+```
+
+With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
+
 
 ### USB Keyboard
 
@@ -221,6 +244,35 @@ The [official guide](https://www.qubes-os.org/doc/split-gpg/) does a great job o
 
 Security-conscious users might want to note that Git and GPG both (as of Jan 2020) still make heavy use of SHA-1 in spite of it being [extremely](https://sha-mbles.github.io/) [broken](https://arstechnica.com/information-technology/2020/01/pgp-keys-software-security-and-much-more-threatened-by-new-sha1-exploit/). Now, we don't have time to unpack all that... but it still seems worth mentioning.
 
-It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. Maybe someday.
+It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. A lot of things would have to change for that to be possible, but maybe someday.
 
+### sys-net 
 
+Sometimes your laptop might have trouble reconnecting to wifi after the laptop wakes up from sleep. I'm not sure if this is a ThinkPad issue or a more general Qubes issue but I've seen it for years on multiple laptops. You can read a little about sleep-related issues [here](https://www.qubes-os.org/doc/suspend-resume-troubleshooting/).
+
+Here's what works for me:
+
+To *manually* reload the wifi kernel module, which should manually fix the problem:
+
+`$ sudo rmmod iwlmvm iwlwifi; sudo modprobe iwlmvm iwlwifi`
+
+For a more permanent fix, try the following. In sys-net, create a file `/rw/config/suspend-module-blacklist` with the following contents:
+
+```
+# You can list modules here that you want to be unloaded before going to sleep. This
+# file is used only if the VM has any PCI device assigned. Modules will be
+# automatically re-loaded after resume.
+iwlmvm
+iwlwifi
+```
+
+For me, this prevents the issue maybe 95% of the time.
+
+If you're using i3, you might find that sometimes the sys-net wifi widget in the system dock comes undocked. In particular, this might happen after you restart i3. To fix that, in dom0 open `.config/i3/config` and add the following section:
+
+```
+# fix network widget
+exec_always --no-startup-id "qvm-run sys-net \"pkill nm-applet; nm-applet \&\""
+```
+
+This automatically restarts sys-net's NetworkManager applet whenever i3's config file is executed, i.e. whenever i3 is loaded. Now, if the widget ever disappears, you can bring it back by hitting `mod+shift+r` to restart i3 in place.

@@ -3,7 +3,23 @@ layout: post
 title: How to Install Qubes and Get It Set Up Just Right
 ---
 
-I've been using Qubes as my main OS for personal laptops for about five years. In that time, I've figured out some nice little tricks and customizations. This, from start to finish, is what I do to install Qubes from scratch and get it set up just how I like it. Try it out -- maybe you'll like it, too!
+Qubes has been my daily driver on personal laptops for the better part of a decade. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
+
+Here's a quick overview of the main points.
+
+* ThinkPad with up-to-date firmware
+* Stable releases
+* i3 window manager
+  * Movement rebound from `jkl;` to `hjkl`
+  * Temperature monitor in status bar
+  * Tailor app lists for each AppVM and DispVM
+  * Key bindings for common xrandr commands
+* USB input devices
+* Custom VM suggestions: `dev`, `vpn`, `dvm-web`
+* Per-VM custom browser homepages
+* Split GPG, `dev-gpg` VM
+* Bugfixes in `sys-net` (if needed)
+* Anti-Evil Maid protections (if needed)
 
 # Setup
 
@@ -82,7 +98,7 @@ Once you kick off the install process, it'll also ask you to choose a username a
 
 Bear in mind that at some point in the lifespan of this laptop you will be typing in your login password much more often than your disk encryption password, meaning the former is much more likely to eventually be caught by surveillance; for this and other reasons, I encourage you not to reuse either password/passphrase, and not to use the same one for both of these uses. On the subject of cameras: I've made a habit of tilting my laptop screen forward to partially cover my fingers as I type in passwords; I encourage you to do the same. This is only really important for disk, user, and password manager passphrases, of course: once you're logged in, you can just enter everything else using your password manager.
 
-After installation finishes, the installer will prompt you to reboot. After reboot you'll be prompted for post-install configuration. The defaults are fine here. Updates over Tor will go much slower, and (as mentioned above) aren't really necessary unless you're trying to hide the fact that you're using Qubes from your ISP (and their friends).
+After installation finishes, the installer will prompt you to reboot. After reboot you'll be prompted for post-install configuration. The defaults are fine here. In particular, you really want a USB qube. If you opt for updates over Tor, bear in mind that they will go much slower. They also (as mentioned above) aren't really necessary unless trying to hide the fact that you're using Qubes from your ISP and their associates.
 
 ## First Backups
 
@@ -148,7 +164,7 @@ Similar tricks work for most AppVMs and DispVMs: for instance, to open my passwo
 
 #### Multi-Monitor Setups
 
-i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy xrandr is to learn:
+i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
 
 * `xrandr` to list your displays and their available resolutions
 * `xrandr --output HDMI1 --auto` to turn on a display called HDMI1
@@ -170,7 +186,7 @@ bindsym $mod+c exec xrandr --output HDMI1 --off
 With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
 
 
-### USB Keyboard
+### USB Keyboard and Mouse
 
 If you don't plan on using a USB keyboard, skip this step. Doing so will marginally reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
 
@@ -189,6 +205,10 @@ Per the [Qubes docs](https://www.qubes-os.org/doc/usb-qubes/#automatic-setup):
 
 As suggested, I leave my USB keyboard and mouse unplugged until after I log in. This allows me to ensure that the USB keyboard is only ever directly exposed to sys-usb, not dom0.
 
+You can enable 
+
+https://www.qubes-os.org/doc/usb-qubes/
+
 Note that as of this writing (and probably forever), combined USB keyboard/mouse devices are _not_ supported: it'll let you identify an input device as a keyboard or a mouse, but not as both. I really wish they could relax that constraint, because I'd love to use my USB ThinkPad TrackPoint keyboard with Qubes, but I don't see that happening any time soon.
 
 
@@ -204,7 +224,7 @@ If you have a VPN client you like to use, you can set up a VPN NetVM. When set u
 
 Call me crazy, but I feel a little uncomfortable using Tor Browser. It's great, but software monoculture makes exploit targeting easy. Of course, there's a $1m bounty for Tor Browser 0-days, and people run honeypot browser sessions looking for that payout. So it's reasonable not to worry too much about 0-day Tor browser exploits. I probably shouldn't worry, but I do, because that's just how my brain is wired.
 
-If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. [Here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole schtick, his suggestions here are simple and solid. In particular, I strongly encourage disabling JavaScript by default (if you have the patience for that). That alone will eliminate the vast majority of your browser's attack surface.
+If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. [Here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole schtick, his suggestions here are simple and solid. In particular, I strongly encourage disabling JavaScript by default (if you have the patience for that). That alone will eliminate the vast majority of your browser's attack surface. It'll also break a lot of sites, but you can always selectively re-enable JS as needed.
 
 You can set this all up in `whonix-ws-15-dvm` or you can create a new VM; if you choose the latter, I'd suggest naming it something like `dvm-web` and setting your browser as its only application in the Qubes Settings menu. This ensures that you can get what you want by just typing "dvm" into dmenu and hitting Enter.
 
@@ -280,4 +300,14 @@ This automatically restarts sys-net's NetworkManager applet whenever i3's config
 
 ### AEM
 
-TODO
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+You may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
+
+It is not a perfect protection. In particular, there is no clear path to recovery from compromise - but then again, isn't that always the case? You can read more about the security trade-offs and installation instructions on Qubes' [Anti-Evil Maid](https://www.qubes-os.org/doc/anti-evil-maid/) page.
+
+In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning that if your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security.
+
+# Conclusion
+
+That's just about it! To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact)!

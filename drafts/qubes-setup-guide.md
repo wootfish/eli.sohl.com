@@ -33,9 +33,7 @@ Here's a quick overview of the main points.
 
 * Anti-Evil Maid protections (if needed)
 
-# Setup
-
-## Hardware
+# Hardware
 
 Qubes works fine on both desktops and laptops. From the start, they've made it a goal for Qubes to be a good fit for laptops.
 
@@ -47,13 +45,13 @@ My personal preference is for used or refurbished ThinkPads. The prices are grea
 
 You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level (which some governments are known to pervasively engage in).
 
-## Firmware
+# Firmware
 
 First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea (especially with older ThinkPads). It'll be easiest to do this now, before you've installed AEM.
 
 Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else you might end up in an unrecoverable fail state.
 
-## Getting an image
+# Getting an image
 
 I'm just going to go ahead and assume you're running Linux.
 
@@ -86,7 +84,7 @@ Write the image to the drive: something like `sudo dd if=Qubes-R4.x.x-x86_64.iso
 
 When `dd` completes, you can pull the drive, plug it into the box you're putting Qubes on, and boot from USB.
 
-## Installation
+# Installation
 
 The installer does a great job of guiding you through this process. There's not much you need to do.
 
@@ -120,17 +118,17 @@ Bear in mind that at some point in the lifespan of this laptop you will be typin
 
 After installation finishes, the installer will prompt you to reboot. After reboot you'll be prompted for post-install configuration. The defaults are fine here. In particular, you really want a USB qube. If you opt for updates over Tor, bear in mind that they will go much slower. They also (as mentioned above) aren't really necessary unless trying to hide the fact that you're using Qubes from your ISP and their associates.
 
-## First Backups
+# First Backups
 
 After login, before doing anything else, make a full system backup. You can do this through the Qube Manager. Next, update all your Qubes (including those with "no known available updates"). Then make another backup.
 
 If you ever want to "factory reset" a qube (e.g. after plugging in a dubious USB device), these backups will let you do that.
 
-## Configuration
+# Configuration
 
 Now we're getting to the good stuff. The base Qubes install is usable, but over the years I've found a lot of tweaks that I think make it much nicer.
 
-### i3
+## i3
 
 Once you get used to a tiling window manager, you'll never want to go back. I've tried a few and, to me, i3 is easily the standout.
 
@@ -138,7 +136,7 @@ Install in dom0 with `sudo qubes-dom0-update i3 i3-settings-qubes`. The second p
 
 Once i3 is installed, log out, then log in with i3. This will prompt you to create a config; follow the configuration wizard and you'll be set. You probably want to use Win as your modifier key since other apps generally leave Win chords for the window manager, whereas lots of apps have custom Alt chords.
 
-#### Key bindings
+### Key bindings
 
 i3 _almost_ comes with Vim keybindings, but they do something weird: they wanted to use `h` to mean "horizontal split", so they moved the movement keys from `hjkl` to `jkl;`. I do not like this, to put it mildly. I suggest shifting all five of these keys back over to the left: first, map horizontal split to `g` instead of `h`, then shift the movement keys back to where they belong.
 
@@ -153,7 +151,7 @@ This is also where you can change how fast the screen locks. In the `# Use a scr
 
 After making these changes and saving the config, restart i3 in-place with `mod+shift+r`.
 
-#### Temperature
+### Temperature
 
 I like to add a CPU temperature readout to the bar at the bottom. This works a little differently than it would in stock i3, because of Qubes' custom config. Here's what you have to do.
 
@@ -170,7 +168,7 @@ You may need to adjust the innermost set of commands here depending on what `sen
 
 Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost block and include the result to the final echo: `echo ",[$cputemp$qubes$disk$bat$load$time]"`. Then restart i3 and check the bottom of the screen to see if it worked.
 
-#### Starting apps
+### Starting apps
 
 Note that you can now start dom0 applications by name from dmenu (e.g. `mod+d Qube Manager`), and you can start AppVM applications by prefixing the VM name (e.g. "mod-d personal: Firefox"). If you open a terminal on a blank workspace, it will be a dom0 terminal; if any window is focused, the terminal is opened in the same VM where that window is running.
 
@@ -182,7 +180,7 @@ You could do something similar with an AppVM for social media accounts, say, or 
 
 Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-33-dvm: Firefox` (note that this matches on the middle of the name, which is perfectly legal).
 
-#### Multi-Monitor Setups
+### Multi-Monitor Setups
 
 i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
 
@@ -211,7 +209,7 @@ bindsym $mod+c exec xrandr --output HDMI1 --off
 With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
 
 
-### USB Keyboard and Mouse
+## USB Keyboard and Mouse
 
 If you don't plan on using a USB keyboard, skip this step. Doing so will marginally reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
 
@@ -237,7 +235,7 @@ https://www.qubes-os.org/doc/usb-qubes/
 Note that as of this writing (and probably forever), combined USB keyboard/mouse devices are _not_ supported: it'll let you identify an input device as a keyboard or a mouse, but not as both. I really wish they could relax that constraint, because I'd love to use my USB ThinkPad TrackPoint keyboard with Qubes, but I don't see that happening any time soon.
 
 
-### VMs
+## VMs
 
 You generally want to give your AppVMs short names, because (with i3) you'll be typing them a lot.
 
@@ -257,7 +255,7 @@ In fact, you'll find that `whonix-ws-15-dvm` competes with `whonix-gw-15` in dme
 
 I'd also suggest changing your default search engine. I use DuckDuckGo. Google gives marginally better results overall, especially for technical searches, but DDG doesn't force Tor users to do the unpaid labor of solving captchas. Google figures that if they can't track your searches, they'll just have to extract value from you a different way; DDG apparently doesn't give a fuck who you are or where you're connecting from. I appreciate that.
 
-### Homepages
+## Homepages
 
 It took me a while to think of this one.
 
@@ -265,7 +263,7 @@ You're going to have different uses for different VMs. If I'm opening `personal:
 
 This actually ends up being _more_ convenient than a traditional Linux install, because in that case your best option for really is to have your browser open on a blank tab. This also helps shore up your security boundaries against human error by making sure you open up each page in the correct VM.
 
-### Split GPG
+## Split GPG
 
 Split GPG lets you keep your GPG private keys on a standalone VM with no network access. Other VMs can request temporary access to these keys. This isn't full access -- they can't read the keys directly -- it just gives them an interface to request that your standalone VM performs certain operations with those keys and relays the results.
 
@@ -291,7 +289,7 @@ Security-conscious users might want to note that Git and GPG both (as of Jan 202
 
 It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. A lot of things would have to change for that to be possible, but maybe someday.
 
-### sys-net 
+## sys-net 
 
 Sometimes your laptop might have trouble reconnecting to wifi after the laptop wakes up from sleep. I'm not sure if this is a ThinkPad issue or a more general Qubes issue but I've seen it for years on multiple laptops. You can read a little about sleep-related issues [here](https://www.qubes-os.org/doc/suspend-resume-troubleshooting/).
 
@@ -303,29 +301,29 @@ To *manually* reload the wifi kernel module, which should manually fix the probl
 
 For a more permanent fix, try the following. In sys-net, create a file `/rw/config/suspend-module-blacklist` with the following contents:
 
-`
+```
 # You can list modules here that you want to be unloaded before going to sleep. This
 # file is used only if the VM has any PCI device assigned. Modules will be
 # automatically re-loaded after resume.
 iwlmvm
 iwlwifi
-`
+```
 
-For me, this prevents the issue maybe 95% of the time.
+I still find that I have to reload the module manually maybe a couple times a month. I'm not sure why that is, but luckily `sys-net` saves your command history and that's the only command I ever run there, so I can just hit `Up` and `Enter` in a new terminal instead of having to type the whole thing out every time.
 
-If you're using i3, you might find that sometimes the sys-net wifi widget in the system dock comes undocked. In particular, this might happen after you restart i3. To fix that, in dom0 open `.config/i3/config` and add the following section:
+If you're using i3, you might find that sometimes the sys-net wifi widget in the system dock comes undocked. In particular, this might happen after you restart i3. To fix this, in dom0 open `.config/i3/config` and add the following section:
 
-`
+```
 # fix network widget
 exec_always --no-startup-id "qvm-run sys-net \"pkill nm-applet; nm-applet \&\""
-`
+```
 
 This automatically restarts sys-net's NetworkManager applet whenever i3's config file is executed, i.e. whenever i3 is loaded. Now, if the widget ever disappears, you can bring it back by hitting `mod+shift+r` to restart i3 in place.
 
 
-### AEM
+## AEM
 
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></center>
 
 You may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
 
@@ -333,6 +331,8 @@ It is not a perfect protection. In particular, there is no clear path to recover
 
 In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning that if your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security.
 
-# Conclusion
+# Wrap-up
 
-That's just about it! To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact)!
+That's just about it! Final thoughts: use a password manager, take domain separation seriously, keep regular backups (maybe even on external media or a second internal drive), and do your best to leave the world better than you found it.
+
+To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact)!

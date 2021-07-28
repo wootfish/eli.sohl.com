@@ -9,7 +9,7 @@ Here's a quick overview of the main points.
 
 * ThinkPad with up-to-date firmware
 
-* Stable releases
+* Stable release
 
 * i3 window manager
 
@@ -37,21 +37,21 @@ Here's a quick overview of the main points.
 
 ## Hardware
 
-Qubes works fine on both desktops and laptops. Being usable on laptops has been a design goal of theirs from the start.
+Qubes works fine on both desktops and laptops. From the start, they've made it a goal for Qubes to be a good fit for laptops.
 
 You'll want at least 8G of RAM (I've run Qubes on boxes with 4G and it was usable, but just barely - not recommended). You'll want an SSD. If you plan on keeping backups, you'll want a big SSD. Everything else is negotiable.
 
-If you have a specific device in mind, make sure to look for it in the [Qubes Hardware Compatibility List](https://www.qubes-os.org/hcl/). That page can also serve as a buying guide.
+If you have a specific device in mind, make sure to check for it in the [Qubes Hardware Compatibility List](https://www.qubes-os.org/hcl/). That page can also serve as a buying guide.
 
-My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support, because nerds fucking love them. See if you can buy locally (for the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for cheap on Newegg and elsewhere. Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth considering buying something new off the shelf.
+My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love them. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online (I've had good luck buying through Newegg). Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth considering buying something new off the shelf.
 
-You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been.
+You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level (which some governments are known to pervasively engage in).
 
 ## Firmware
 
 First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea (especially with older ThinkPads). It'll be easiest to do this now, before you've installed AEM.
 
-Be careful here, as the usual caveats apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else you might end up in an unrecoverable fail state.
+Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else you might end up in an unrecoverable fail state.
 
 ## Getting an image
 
@@ -59,24 +59,26 @@ I'm just going to go ahead and assume you're running Linux.
 
 From a trusted device (or the closest thing you can find to one), get the latest release from
 
-https://www.qubes-os.org/downloads/
+[https://www.qubes-os.org/downloads/](https://www.qubes-os.org/downloads/)
 
-For new users or critical work, I recommend the stable release. I use the testing release -- but I also keep meticulous backups. Breaking issues in testing releases are rare but not unheard of.
+Just use the latest stable release. As of time of writing, that's `R4.0.4`.
 
-You can torrent the image or download it directly over HTTPS. I usually torrent because it goes much faster. A direct download can be carried out over Tor, though, so for some users that option may be preferable. This has more to do with hiding your use of Qubes than getting an unaltered ISO, since you'll be validating the ISO separately. Of course, if you really care about hiding your use of Qubes, you'll have to run all your updates through Tor as well, so only commit to this if you really need to.
+You can torrent the image or download it directly over HTTPS. Torrenting will be much faster. A direct download can be carried out over Tor, though, so for some users that option may be preferable. This has more to do with hiding your use of Qubes than getting an unaltered ISO, since you'll be validating the ISO separately. Of course, if you really care about hiding your use of Qubes, you'll have to run all your updates through Tor as well, so only commit to this if you really, really need to.
 
 Once your download finishes, validate it by following the steps described here:
 
-https://www.qubes-os.org/security/verifying-signatures/
+[https://www.qubes-os.org/security/verifying-signatures/](https://www.qubes-os.org/security/verifying-signatures/)
 
-You really should go through the above process. It's easier than it looks. But if you're currently rolling your eyes and thinking "we both know that's not going to happen", then at the absolute minimum you should run checksums on your local images. If you downloaded `4.0.2-rc3` then you should see the following:
+You really should go through the above process. It's easier than it looks. But if you're currently rolling your eyes and thinking "we both know that's not going to happen", then at the absolute minimum, run a checksum on your local image. If you downloaded `R4.0.4` then you should see the following:
 
 ```
-$ sha256sum Qubes-R4.0.2-x86_64.iso
-4451712940d38d1766320ec814a9029f043f46fd339ad6e9ebb7c6594982a699  Qubes-R4.0.2-x86_64.iso
+$ sha256sum Qubes-R4.0.4-x86_64.iso
+1d05dbd247d6ea5588879570b74cfb1f8df97e135dbec8714924cc03e8d137b9  Qubes-R4.0.4-x86_64.iso
 ```
 
-That value can also be found here: https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.2-x86_64.iso.DIGESTS
+That value can also be found here: [https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS](https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS)
+
+You might be thinking that all this checking is redundant: HTTPS downloads should protect download integrity, and if you download a torrent file or magnet link over HTTPS then a comparable level of trust can be placed in the torrent's integrity check. You're right. However, these extra measures provide defense in depth, and there are some convoluted scenarios in which they could actually protect you from realistic attacks. But this is not the place to go into all that.
 
 Now it's time to do the usual ISO dance. Insert your USB drive. Use `sudo dmesg` to see where it is exposed in `/dev`. It will likely be something like `/dev/sdc`. Ignore any partitions (e.g. `/dev/sdc1`).
 
@@ -95,11 +97,17 @@ You'll have to set a disk encryption passphrase. I really do encourage you to us
 Here's my passphrase advice:
 
 * Start with something that will be easy for you to remember (like, say, a quote, as long as it's not too generic)
+
 * Modify the phrasing in some way. For example:
+
   * Change some verb tenses
+
   * Swap out a word or two for less-common synonyms
+
   * Switch to a different quote partway through, or just use two full ones in series
+
 * Maybe throw in some contractions (e.g. _your_ to _yr_ - or to be extra spicy, go in the opposite direction, e.g. _yoouuur_)
+
 * Pepper in some special characters (e.g. space to underscore, _s_ to _5_, `l` to `|` or `1`)
 
 Don't go too overboard with the special characters - you do still need to remember this thing, and the more passphrases you have, the harder that'll get. Bear in mind that if you're doing character substitutions, just a few go a long way. The usual [correct horse battery staple](https://xkcd.com/936/) advice applies here -- though the entropy calculation is thrown off if you're using a phrase that might appear in, say, your chat logs or a list of famous quotes. Hence the suggestion to adjust the phrasing.
@@ -179,10 +187,15 @@ Similar tricks work for most AppVMs and DispVMs: for instance, to open my passwo
 i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
 
 * `xrandr` to list your displays and their available resolutions
+
 * `xrandr --output HDMI1 --auto` to turn on a display called HDMI1
+
 * `xrandr --output HDMI1 --auto --left-of eDP1` to turn on HDMI1 and position it to the left of eDP1
+
   * You can use any of `--left-of`, `--right-of`, `--above`, `--below` here.
+
 * `xrandr --output HDMI1 --auto --left-of eDP1 --mode 3440x1440` to do all of the above, and also set HDMI1's resolution to 3440x1440
+
 * `xrandr --output HDMI1 --off` to turn off HDMI1
 
 There's a whole lot more that xrandr can do, but frankly this is all I've ever needed.
@@ -290,22 +303,22 @@ To *manually* reload the wifi kernel module, which should manually fix the probl
 
 For a more permanent fix, try the following. In sys-net, create a file `/rw/config/suspend-module-blacklist` with the following contents:
 
-```
+`
 # You can list modules here that you want to be unloaded before going to sleep. This
 # file is used only if the VM has any PCI device assigned. Modules will be
 # automatically re-loaded after resume.
 iwlmvm
 iwlwifi
-```
+`
 
 For me, this prevents the issue maybe 95% of the time.
 
 If you're using i3, you might find that sometimes the sys-net wifi widget in the system dock comes undocked. In particular, this might happen after you restart i3. To fix that, in dom0 open `.config/i3/config` and add the following section:
 
-```
+`
 # fix network widget
 exec_always --no-startup-id "qvm-run sys-net \"pkill nm-applet; nm-applet \&\""
-```
+`
 
 This automatically restarts sys-net's NetworkManager applet whenever i3's config file is executed, i.e. whenever i3 is loaded. Now, if the widget ever disappears, you can bring it back by hitting `mod+shift+r` to restart i3 in place.
 

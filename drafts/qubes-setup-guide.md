@@ -8,17 +8,29 @@ Qubes has been my daily driver on personal laptops for the better part of a deca
 Here's a quick overview of the main points.
 
 * ThinkPad with up-to-date firmware
+
 * Stable releases
+
 * i3 window manager
+
   * Movement rebound from `jkl;` to `hjkl`
+
   * Temperature monitor in status bar
+
   * Tailor app lists for each AppVM and DispVM
+
   * Key bindings for common xrandr commands
+
 * USB input devices
+
 * Custom VM suggestions: `dev`, `vpn`, `dvm-web`
+
 * Per-VM custom browser homepages
+
 * Split GPG, `dev-gpg` VM
+
 * Bugfixes in `sys-net` (if needed)
+
 * Anti-Evil Maid protections (if needed)
 
 # Setup

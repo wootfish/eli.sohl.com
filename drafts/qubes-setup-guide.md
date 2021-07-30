@@ -35,13 +35,13 @@ Here's a quick overview of the main points.
 
 # Hardware
 
-Qubes works fine on both desktops and laptops. From the start, they've made it a goal for Qubes to be a good fit for laptops.
+Qubes works fine on both desktops and laptops. From the start, good laptop support has been one of the project's main goals.
 
 You'll want at least 8G of RAM (I've run Qubes on boxes with 4G and it was usable, but just barely - not recommended). You'll want an SSD. If you plan on keeping backups, you'll want a big SSD. Everything else is negotiable.
 
 If you have a specific device in mind, make sure to check for it in the [Qubes Hardware Compatibility List](https://www.qubes-os.org/hcl/). That page can also serve as a buying guide.
 
-My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love them. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online (I've had good luck buying through Newegg). Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth considering buying something new off the shelf.
+My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love these things. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online (I've had good luck buying through Newegg). Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth considering buying something new off the shelf.
 
 You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level (which some governments are known to pervasively engage in).
 
@@ -49,36 +49,38 @@ You'll need a USB drive to write the installer to. I like to get a new drive for
 
 First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea (especially with older ThinkPads). It'll be easiest to do this now, before you've installed AEM.
 
-Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else you might end up in an unrecoverable fail state.
+Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else your system might end up failing into an unrecoverable state.
 
 # Getting an image
 
 I'm just going to go ahead and assume you're running Linux.
 
-From a trusted device (or the closest thing you can find to one), get the latest release from
+From a trusted device (or the closest thing you can find to one), get the latest release from here:
 
 [https://www.qubes-os.org/downloads/](https://www.qubes-os.org/downloads/)
 
 Just use the latest stable release. As of time of writing, that's `R4.0.4`.
 
-You can torrent the image or download it directly over HTTPS. Torrenting will be much faster. A direct download can be carried out over Tor, though, so for some users that option may be preferable. This has more to do with hiding your use of Qubes than getting an unaltered ISO, since you'll be validating the ISO separately. Of course, if you really care about hiding your use of Qubes, you'll have to run all your updates through Tor as well, so only commit to this if you really, really need to.
+You can torrent the image or download it directly over https. Torrenting will be much faster. A web download can be carried out over Tor, though, so for some users that option may be preferable. This has more to do with hiding your use of Qubes than getting an unaltered ISO, since both options include integrity checks (and you'll be validating the download's integrity manually anyway). Of course, if you really care about hiding your use of Qubes, you'll have to run all your updates through Tor as well, so only commit to this if you really, really need to - otherwise, you'll just be adding a bunch of overhead for no reason.
 
 Once your download finishes, validate it by following the steps described here:
 
 [https://www.qubes-os.org/security/verifying-signatures/](https://www.qubes-os.org/security/verifying-signatures/)
 
-You really should go through the above process. It's easier than it looks. But if you're currently rolling your eyes and thinking "we both know that's not going to happen", then at the absolute minimum, run a checksum on your local image. If you downloaded `R4.0.4` then you should see the following:
+You really should go through the above process. It's easier than it looks. But if you're currently rolling your eyes and thinking "we both know that's not going to happen" then, at the absolute minimum, run a checksum on your local image. If you downloaded `R4.0.4`, you should see the following:
 
 ```
 $ sha256sum Qubes-R4.0.4-x86_64.iso
 1d05dbd247d6ea5588879570b74cfb1f8df97e135dbec8714924cc03e8d137b9  Qubes-R4.0.4-x86_64.iso
 ```
 
-That value can also be found here: [https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS](https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS)
+That value can also be found here:
+
+[https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS](https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS)
 
 You might be thinking that all this checking is redundant: HTTPS downloads should protect download integrity, and if you download a torrent file or magnet link over HTTPS then a comparable level of trust can be placed in the torrent's integrity check. You're right. However, these extra measures provide defense in depth, and there are some convoluted scenarios in which they could actually protect you from realistic attacks. But this is not the place to go into all that.
 
-Now it's time to do the usual ISO dance. Insert your USB drive. Use `sudo dmesg` to see where it is exposed in `/dev`. It will likely be something like `/dev/sdc`. Ignore any partitions (e.g. `/dev/sdc1`).
+Now it's time to do the usual ISO dance. Insert your USB drive. Use `sudo dmesg` to see where it showed up in `/dev`. It will likely be something like `/dev/sdc`. Ignore any partitions (e.g. `/dev/sdc1`).
 
 Write the image to the drive: something like `sudo dd if=Qubes-R4.x.x-x86_64.iso of=/dev/sdx bs=4M status=progress`, with the `x`es replaced as appropriate. Note the use of `status=progress`; it's optional, but I find it to be absolutely essential to maintaining my patience during long write jobs.
 

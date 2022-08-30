@@ -289,7 +289,7 @@ The [official guide](https://www.qubes-os.org/doc/split-gpg/) does a great job o
 
 Security-conscious users might want to note that Git and GPG both (as of Jan 2020) still make heavy use of SHA-1 in spite of it being [extremely](https://sha-mbles.github.io/) [broken](https://arstechnica.com/information-technology/2020/01/pgp-keys-software-security-and-much-more-threatened-by-new-sha1-exploit/). Now, we don't have time to unpack all that... but it still seems worth mentioning.
 
-It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. A lot of things would have to change for that to be possible, but maybe someday.
+It would be awesome to be able to swap out GPG for, say, [age](https://github.com/FiloSottile/age) here. Yes, a lot of things would have to change for that to be possible, but... maybe someday.
 
 ## sys-net 
 

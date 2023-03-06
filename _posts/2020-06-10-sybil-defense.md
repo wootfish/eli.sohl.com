@@ -111,7 +111,7 @@ Now, first, here is the "static" puzzle:[^transcription-1]
 
 There are several drawbacks to this scheme. It considers any given public key to be either valid or invalid, with the majority of public keys being invalid. Constraining the set of valid keys like this opens up some trivial theoretic attacks.[^storage-attack] Pre-existing identity keys generally can't be imported since the great majority of them will not pass validation. The scheme also requires two hash function evaluations when really only one should be necessary.
 
-[^storage-attack]: For instance, say our keypair's security level is $$2^{n}$$. Say that one in every $$x$$ keys is valid. Since not all keys are valid, an offline attack which computes and stores all valid keys would be able to recover the key with $$2^{n}$$ memory and $$2^{n / \log_2{x}}$$ work. This is not a practical attack (unless $$x$$ is _very_ large) but it still demonstrates that the scheme has failed to achieve its expected security level.
+[^storage-attack]: For instance, say our keypair's security level is $$2^{n}$$. Say that one in every $$x$$ keys is valid. Since not all keys are valid, an offline attack could compute and store all valid keys. Once this front-loaded one-time cost is complete, the memory overhead to maintain this lookup table would fall below the expected level by a factor of $$x$$. Depending on how the keys are stored, lookups could be very fast. This is not a practical attack for realistic $$n$$, but it still demonstrates that the scheme has failed to achieve its expected security level.
 
 Now, here is the second, "dynamic" puzzle:[^transcription-2]
 
@@ -142,19 +142,19 @@ A trivial mitigation would be to swap out XOR for concatenation in the dynamic p
 
 Of course, it bears mentioning that either of these would be breaking changes... but perhaps breaking backwards compatibility with a broken system is not such a bad thing.
 
-Another note: The paper does not specify that $$H$$ should be a hard function, only that it should be cryptographically secure; however, most classic cryptographic hash functions are specifically tuned for speed, making them unsuitable for use in proof-of-work constructions. Common sense dictates that a hard function should be used for $$h$$. I'd suggest a modern, x86-optimized, memory-hard password hashing function like Argon2.[^fpga]
+Another note: The paper does not specify that $$H$$ should be a hard function, only that it should be cryptographically secure; however, most classic cryptographic hash functions are specifically tuned for speed, making them unsuitable for use in proof-of-work constructions. Common sense dictates that a hard function should be used for $$H$$. I'd suggest a modern, x86-optimized, memory-hard password hashing function like Argon2.[^fpga]
 
-[^fpga]: For those who don't know, memory-hard functions are preferable over CPU-hard functions because it's harder to fit them onto dedicated hardware: FPGAs tend to have low amounts of onboard memory, and high-memory ASICs are much more expensive to manufacture. Optimizing for x86 attempts to minimize the advantage of dedicated hardware over generic consumer hardware.
+[^fpga]: For those who don't know, memory-hard functions are preferable over CPU-hard functions because it's harder to fit them onto dedicated hardware: FPGAs tend to have low amounts of onboard memory, and high-memory ASICs are much more expensive to manufacture. Optimizing for x86 attempts to minimize the advantage of dedicated hardware over generic consumer hardware. Some readers are shocked to see the word "optimized" used in reference to a high-cost operation but, of course, just because something is _optimized_ does not mean it is _cheap_.
 
-If we are using a hard function for $$H$$, then we need to pay attention to how many calls to this function we need to make to verify a remote peer's NodeID. S/Kademlia's two-puzzle construction requires three calls: one to generate the NodeID, one more to check the static puzzle, and a third one to check the dynamic puzzle. We can improve on this.
+If we are using a hard function for $$H$$, then we need to pay attention to how many calls we're making to this function in order to verify a remote peer's NodeID. S/Kademlia's two-puzzle construction requires three calls: one to generate the NodeID, one more to check the static puzzle, and a third one to check the dynamic puzzle. We can improve on this.
 
-Argon2 allows us to generate arbitrary-length hashes. Say NodeIDs are 20 bytes long (as in the Kademlia specification). We can simply parameterize $$H$$ to generate hashes of length $$20 + \lceil \frac{c_2}{8} \rceil$$, then treat the first 20 bytes as the NodeID and apply our proof-of-work test to the following $$c_2$$ bits.
+Argon2 allows us to generate arbitrary-length hashes. Say NodeIDs are 20 bytes long (as in the Kademlia specification). We can simply parameterize $$H$$ to generate hashes of byte-length $$20 + \lceil \frac{c_2}{8} \rceil$$, then treat the first 20 bytes as the NodeID and apply our proof-of-work test to the following $$c_2$$ bits.
 
 This allows us to get the strengths of both puzzles (NodeIDs determined by hash function, node generation constrained by puzzle with tunable difficulty level) while improving validation speed by a factor of three.
 
-Another improvement: Why should nodes only have one ID? If your available RAM greatly exceeds the amount of data people want to store near your node ID (as is almost certainly the case in the year 2020) then really you're letting resources go to waste by only claiming responsibility for that one neighborhood. Why not claim as many IDs as you can support?
+Another improvement: Why should nodes only have one ID? If your available RAM greatly exceeds the amount of data people want to store near your node ID (as is almost certainly the case in the year 2020) then really you're letting resources go to waste by only claiming responsibility for that one neighborhood. Why not claim as many IDs as you can reasonably support?
 
-If we're still including an arbitrary value X in the node ID generation hash, then there's no reason not to allow peers to just provide several values of X and to let them claim responsibility for all the corresponding node IDs. If Sybil peers are running multiple nodes, why not let honest peers do the same thing?[^lookup-question]
+If we're still including an arbitrary value X in the node ID generation hash, then there's no reason not to allow peers to just provide several values of X and to let them claim all the corresponding node IDs. If Sybil attackers are running multiple nodes on the network, why not let honest peers do the same thing?[^lookup-question]
 
 [^lookup-question]: An interesting aside, which will come up again later: ordinarily, Kademlia is expected to contact only $$O(\log(n))$$ nodes during a lookup in a network of size $$n$$, but does this change if we allow peers to operate multiple nodes? We'd see an increase in nodes but not in peers, and we'd also expect each peer's routing tables to be significantly more detailed. I haven't yet dug into this but it seems to be worth investigating.
 
@@ -164,13 +164,19 @@ Note also that using a hard function for $$H$$ allows us to get by with much sma
 
 This, in turn, allows us to consider doing more with X. What if X wasn't arbitrary? What if we gave it some form of significance? Increasing our success probability means we'll have to try fewer values of X to find a solution, so we can certainly get away with adding some semantic significance to X.
 
-Bear with me: what if we treat it as an expiration date? That is, we'd predefine a window of validity (say 36 hours), and we'd only accept NodeIDs if their corresponding values of X represented Unix timestamps between now and 36 hours from now.
+Bear with me: what if we treat it as an expiration date? That is, we'd predefine a window of validity (say 36 hours), and we'd only accept NodeIDs if their corresponding values of X represented Unix timestamps between now and 36 hours from now.[^ntp]
+
+[^ntp]: This does introduce complications re: clock drift; that said, call me an optimist, but personally I'm willing to assume that anyone capable of participating in the network is also capable of reaching an NTP server.
 
 This changes the cost equation for both attackers and defenders.
 
-On the defenders' side, honest peers have to solve puzzles once every couple days rather than solving only a single puzzle when they first join the network.
+On the defenders' side, honest peers have to solve puzzles once every couple days[^couple-days] rather than solving only a single puzzle when they first join the network.
 
-On the attackers' side, it is no longer to generate a huge number of Sybil NodeIDs; now, they have to generate that many every 36 hours. Instead of requiring an attacker to compute some large total number of hashes, we're now requiring them to be able to field a large, sustained _hash rate_.
+[^couple-days]: Or less, if they join the network less frequently.
+
+On the attackers' side, it is no longer to generate a huge number of Sybil NodeIDs; now, they have to generate that many every 36 hours. Instead of requiring an attacker to compute some large total number of hashes, we're now them to be able to field a large, sustained _hash rate_.[^bitcoin-comparison]
+
+[^bitcoin-comparison]: Maybe this goes without saying, but just to make it explicit: the hard problem here is similar to Bitcoin's (which we discussed earlier), namely that attackers must field an unresaonably high hash rate to launch a successful attack. This scheme diverges from Bitcoin in that unreasonable hash rates are _only_ required of attackers, not defenders.
 
 Since attackers have to solve the proof-of-work problem many more times than defenders in order to be effective, this change to the cost equation has a significantly greater impact on attackers than defenders.
 
@@ -183,7 +189,7 @@ If you thought the last sections were heavy on original research... buckle up.
 
 I arrived at the following as part of my research for the Theseus DHT project (which is currently on indefinite hiatus). I've been sitting on this result since 2018; I was waiting until that project was further along before writing this up, but it's looking like that won't happen soon, so I guess I've waited long enough.
 
-A couple years ago I did a fairly thorough literature review and was not able to find any prior art for the model I'm about to share. Now, I'm no academic, I don't happen to know any subject matter experts to consult with on this, and I haven't done any lit review since that survey a couple years ago; all that being said, to the best of my knowledge this is the first time the following model has been published. If you know of any prior art, please [send it my way](https://eli.sohl.com/contact).
+A couple years ago I did a fairly thorough literature review and was not able to find any prior art for the model I'm about to share. Now, I'm no academic, I don't happen to know any subject matter experts to consult with on this, and I haven't done any lit review since that survey a couple years ago; all that being said, to the best of my knowledge this is the first time the following work has been published. If you know of any prior art, please [send it my way](https://eli.sohl.com/contact).
 
 
 ### Definitions
@@ -194,7 +200,7 @@ Let $$L$$ denote the length of node IDs (in bits). In S/Kademlia, $$L = 160$$. S
 
 Let $$n$$ denote the number of honest nodes on the network at some moment in time.
 
-Let $$m$$ denote the number of _malicious_ nodes on the network at the same moment.
+Let $$m$$ denote the number of _malicious_ (i.e. Sybil) nodes on the network at the same moment.
 
 Let $$k$$ denote the size of our routing lookup sets.
 
@@ -574,9 +580,9 @@ S/Kademlia's authors suggest parameterizing $$8 \le k \le 16$$, noting that
 
 > _Higher values of $$d$$ and $$k$$ seem not worth the additional communication costs. Larger values for $$k$$ would also increase the probability that a large fraction of buckets are not full for a long time. This unnecessarily makes the routing table more vulnerable to Eclipse attacks._
 
-Their analysis argues for setting $$k$$ no higher than 16.[^filling-buckets] The analysis given here indicates that $$k = 16$$ is greatly preferable to $$k = 8$$. As such, I'd advocate for $$k = 16$$ as the new de facto standard value for $$k$$.
+Their analysis (which is good but not perfect[^filling-buckets]) argues for setting $$k$$ no higher than 16. The analysis given here indicates that $$k = 16$$ is greatly preferable to $$k = 8$$. As such, I'd suggest $$k = 16$$ as the new de facto standard value for $$k$$. Personally I think it would be acceptable to take $$k$$ higher, but I am not sure it is necessary to do so.
 
-[^filling-buckets]: As an aside: a security-focused DHT can partially compensate for the risk of empty buckets by proactively filling them. Just take any bucket that's (say) less than 80% full, pick a random address from its range, and look up that address. This has side benefits, too; for instance, it provides high-quality lookups for use in [DHT size estimates]({% post_url 2020-06-05-dht-size-estimation %}). I say _high-quality_ because the lack of routing info indicates that no other lookups have been performed around the target address, meaning the resulting measurements from it should be effectively independent from any others already collected.
+[^filling-buckets]: For example, they argue against large $$k$$ because of the risk of partially-empty buckets. In fact, a security-focused DHT can and should compensate for the risk of empty buckets by proactively filling them. Just take any bucket that's (say) less than 80% full (or even less than completely full), pick a random address from its range, and look up that address. Or perhaps pick several addresses, so the resulting peers are not too clustered. This has side benefits, too; for instance, it provides at least one high-quality lookup for use in [DHT size estimates]({% post_url 2020-06-05-dht-size-estimation %}). I say _high-quality_ because the lack of routing info indicates that no other lookups have been performed around the target address, meaning the resulting measurements from it should be effectively independent from any others already collected. As a _further_ note, the S/Kademlia authors observed that the probability of a given node being honest decreases depending on how many routing hops were needed to reach that node, since any of the intermediate nodes could be malicious. This seems to have implications for routing table population: rather than adding the results of the lookup, maybe we prefer adding the nodes we encounter along the way to the destination (assuming they fall into a nonempty bucket); furthermore, the more lookups we perform, the more low-hop paths to eligible nodes we are likely to find. The disjoint-path lookup strategy (loosely) described in the S/Kademlia paper is also likely preferable to naive single-path lookups here.
 
 
 # Routing
@@ -618,20 +624,20 @@ The shape of this combined distribution depends on the distribution of lookup pa
 
 The good news is that we now have a complete model for how certain DHTs fare under Sybil attacks. We also have a list of parameters we can tune to increase the network's resilience in the face of attacks, and we can quantify exactly how much of a difference any given change will make.
 
-One last defensive measure: Say you want to store data at some address $$A$$, but the network is currently under a heavy Sybil attack, and you estimate $$P \cdot \operatorname{E}[R_{L,k}] \approx 0.4$$, meaning you have a 40% chance of successfully storing data at $$A$$ and other peers have a 40% chance of successfully retrieving it. This is likely not good enough. OK then - just use some other addresses. For instance you could derive $$A_1 = \operatorname{H}(A \vert 1), A_2 = \operatorname{H}(A \vert 2)$$, etc.[^app-concerns] If the probability of either of those addresses failing is $$1-0.4 = 0.6$$, then the probability of both failing is $$0.6^2 = 0.36$$. If you use five addresses, then your chances of success are $$0.back over 90% - even while the DHT is more than halfway compromised!
+One last defensive measure: Say you want to store data at some address $$A$$, but the network is currently under a heavy Sybil attack, and you estimate $$P \cdot \operatorname{E}[R_{L,k}] \approx 0.4$$, meaning you have a 40% chance of successfully storing data at $$A$$ and other peers have a 40% chance of successfully retrieving it. This is likely not good enough. OK then - just use some other addresses. For instance you could derive $$A_1 = \operatorname{H}(A \vert 1), A_2 = \operatorname{H}(A \vert 2)$$, etc.[^app-concerns] If the probability of either of those addresses failing is $$1-0.4 = 0.6$$, then the probability of both failing is $$0.6^2 = 0.36$$. If you use five addresses, then your chances of success are back over 90% - even while the DHT is more than halfway compromised!
 
 [^app-concerns]: Note: This is a discussion of theory, so I'm defining details like fixing the details of this scheme, figuring out how many addresses to use, and sharing the necessary parameters between peers to be out of scope here. These are application concerns, though a DHT might provide built-in features to help with them.
 
-Of course, countermeasures like this rely on the assumption that the DHT is usually operating well under its carrying capacity, since going from one address to five addresses really just amounts to increasing data redundancy fivefold. In a sense, increasing $$k$$ is also a way of increasing data redundancy, since data for any address is stored on the $$k$$ closest peers to that address - though increasing $$k$$ impacts other parts of the system as well (most notably routing).
+Of course, countermeasures like this rely on the assumption that the DHT is usually operating well under its carrying capacity, since going from one address to five addresses really just amounts to increasing data redundancy fivefold. In a sense, increasing $$k$$ is also a way of increasing data redundancy, since data for any address is stored on the $$k$$ closest peers to that address - though increasing $$k$$ impacts other parts of the system as well (most notably routing). In any case, as noted above, most modern systems are operating far under their capacity limit, so there is room for experimentation here, and optimizing the allocation of these spare resources may be an interesting avenue for future research..
 
 
 # Closing Thoughts
 
-Ad-hoc, peer-to-peer distributed systems had a moment in the early 2000s. This was the era that brought us Freenet, BitTorrent, I2P, and many other systems like them. Most of these have fallen out of fashion in favor of centralized technologies, in part because centralized systems trade Sybil vulnerability for several less-obvious issues (I've written about this trend and its implications [here]({% post_url 2019-01-13-public-cyberspace %})). This shift in fashion has led most people to discount these peer-to-peer systems -- aside from BitTorrent -- as novelties at best.
+Ad-hoc, peer-to-peer distributed systems had a moment in the early 2000s. This was the era that brought us Freenet, BitTorrent, I2P, and many other systems like them. Most of these have fallen out of fashion in favor of centralized technologies, in part because centralized systems swap out Sybil vulnerability for several less-obvious issues (I've written about this trend and its implications [here]({% post_url 2019-01-13-public-cyberspace %})). This shift in fashion has led most people to discount these peer-to-peer systems -- aside from BitTorrent -- as novelties at best.
 
-I think that is a big mistake. It's easy to forget that the tech landscape was very different in the early 2000s. Memory and CPU cycles were hard to come by. The good news is, those days are over. It's only relatively recently that we've reached a point where almost _all_ machines[^phones] running DHT peers can be expected to have spare RAM on the order of gigabytes. Thus these redundancy-focused Sybil countermeasures are viable today to a degree that they never have been before.
+I think that is a big mistake. It's easy to forget that the tech landscape was very different in the early 2000s. Spare memory and CPU cycles were hard to come by. The good news is, those days are over. It's only relatively recently that we've reached a point where almost _all_ machines[^phones] running DHT peers can be expected to have spare RAM on the order of gigabytes. Thus these redundancy-focused Sybil countermeasures are viable today to a degree that they never have been before.
 
-[^phones]: Including smartphones! My old first-gen Pixel XL's average memory usage was 2.5/3.9 GB, leaving almost a gig and a half unused. More modern smartphones are even better in this regard. Smartphones also have other attractive features for peer-to-peer apps: reliable internet connections without the need to worry about NAT traversal, location-based networking features like BLE, and so on. These developments all took place after peer-to-peer systems research had fallen out of vogue, and in my opinion we have not yet begun to sense their potential impact on this space.
+[^phones]: Including smartphones! My old first-gen Pixel XL's average memory usage was 2.5/3.9 GB, leaving almost a gig and a half unused. More modern smartphones are even better in this regard. Smartphones also have other attractive features for peer-to-peer apps: reliable internet connections without the need to worry about NAT traversal, location-based networking features like BLE, and so on. These developments all took place after peer-to-peer systems research had fallen out of vogue, and in my opinion we have not yet begun to sense their potential impact on this space. This is to say nothing of modern PCs which often carry tens of gigabytes of spare memory.
 
 We can design ad-hoc peer-to-peer systems which detect and resist malicious activity without interrupting normal operation. We can make these systems performant, and we can make them reliable to within arbitrary tolerances. We can make these systems today. So what are we waiting for?
 

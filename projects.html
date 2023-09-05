@@ -4,168 +4,28 @@ layout: main
 
 
 <div class="contentbox contents">
-    <h1 class="display-1 breakword">proj<wbr>ects</h1>
-    <hr>
-    <div class="overflow-hidden" id="navlinks">
-        <span>
-            <a href="/blog.html">blog</a> | projects | <a href="/contact.html">contact</a>
-        </span>
-        {% include switcher.html %}
-    </div>
+  <h1 class="display-1 breakword">proj<wbr>ects</h1>
+  <hr>
+  <div class="overflow-hidden" id="navlinks">
+    <span>
+      <a href="/blog.html">blog</a> | projects | <a href="/contact.html">contact</a>
+    </span>
+    {% include switcher.html %}
+  </div>
 
+  {% for project in site.data.projects %}
+    {% assign slug = project.name | slugify %}
     <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#cryptopals-details');">
-        cryptopals <span>+</span>
+    <h2 class="project-row" onclick="do_toggle('#{{slug}}-details');">
+      {{project.name}} <span>+</span>
     </h2>
-    <div id="cryptopals-details" class="display-none">
-        <p>
-        These are so much fun. They're a series of cryptography challenges
-        written by some folks who really know their stuff. Sets 1 through 7 are
-        available <a href="https://cryptopals.com">here</a>, and you can check
-        out Set 8 <a href="https://toadstyle.org/cryptopals/">here</a>. They
-        start out easy enough, but the later sets have some genuinely tricky
-        problems in them.
-        </p>
-
-        <p>
-        You can check out my solutions
-        <a href="https://github.com/wootfish/cryptopals">on Github</a>.
-        I've worked through sets 1 through 7 so far, and I plan on taking on
-        set 8 soon.
-        </p>
-
-        <p>
-        Back in the day I was very into <a href="https://projecteuler.net">Project Euler</a>
-        (in fact, I'm still ranked in the 99.4th percentile> on there after
-        almost a decade of inactivity), and a lot of what makes Project Euler
-        fun can also be found in Cryptopals. Usually, programming is hard in
-        tedious ways; this stuff is hard in fun ways. The most challenging parts
-        of it are also the most interesting. And it's just so damn satisfying
-        when you finally get your solution working for the first time.
-        </p>
+    <div id="{{slug}}-details" class="display-none">
+      {% for paragraph in project.details %}
+        <p>{{paragraph}}</p>
+      {% endfor %}
     </div>
+  {% endfor %}
 
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#obsidian-details');">
-        obsidian <span>+</span>
-    </h2>
-    <div id="obsidian-details" class="display-none">
-        <p>
-        Obsidian is a constraint-based system for graphics programming. It lets
-        you define groups of shapes, specify relations between them, style them
-        in any way supported by the SVG format, and render them from that
-        information alone.
-        </p>
-
-        <p>
-        This is a new project, and it is very much a work in progress, but the
-        early results are very promising. You can read about the project
-        <a href="{% post_url 2020-04-14-obsidian %}">here</a>, and you can
-        read its source code <a href="https://github.com/wootfish/obsidian">here</a>.
-        </p>
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#visuals-details');">
-        visuals <span>+</span>
-    </h2>
-    <div id="visuals-details" class="display-none">
-        <br/>
-        <center>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ud2mIeJ_IJU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-            <p>
-            That's me on the right! The music isn't mine but the projections all are.
-            <br/>
-            <small>(for the full concert, see <a href="https://www.youtube.com/watch?v=bZUzoteuH9g">here</a>)</small>
-            </p>
-        </center>
-
-        <br/>
-
-        <p>
-        Everything you see in my visual sets is generated live. Much of it is
-        improvised on the spot.
-        </p>
-
-        <p>
-        I shape the images using some MIDI controllers and a lot of custom
-        graphics code that I've written from scratch. Last time I checked, the
-        program was up to about seven thousand lines of Processing and GLSL.
-        </p>
-
-        <p>
-        I got started on this project in January of 2019 after having a
-        transcendental experience in an unexpected place. Ask me at the right
-        time and I might tell you the rest of the story :)
-        </p>
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#book-notes-details');">
-        book notes <span>+</span>
-    </h2>
-    <div id="book-notes-details" class="display-none">
-        <p>
-        You can find a collection of these posts <a href="/tags/book-notes.html">here</a>.
-        </p>
-
-        <p>
-        I only write these for books I've really enjoyed. The form, then, is
-        less of a review (since you already know what I think) and more of an
-        exploration. It's my attempt to share some of what makes these books so
-        compelling to me.
-        </p>
-    </div>
-
-    <hr>
-
-    <h2 class="project-row" onclick="do_toggle('#theseus-details');">
-        theseus <span>+</span>
-    </h2>
-    <div id="theseus-details" class="display-none">
-        <p>
-        <i>
-        This project is currently paused; see
-        <a href="https://eli.sohl.com/2020/04/26/pressing-pause-on-theseus.html">this post</a>
-        for the whole story.
-        </i>
-        </p>
-
-        <p>
-        I've been working on this project <a href="{% post_url 2017-02-17-theseus-robust-system-for-preserving %}">since early 2017</a>.
-        The goal: to create a robust system for sharing and preserving
-        research. This was first conceived as a response to attempts by several
-        governments to censor research on climate change.
-        </p>
-
-        <p>
-        The system consists of two parts: The actual application described
-        above - <b>Theseus</b> - and a distributed hash table (DHT) on top of
-        which the application is built. In theory, a number of existing DHT
-        algorithms could be used, but I'm designing a new one with the working
-        name <b>Theseus DHT</b>. I believe this new design can greatly improve
-        on today's popular DHTs' defenses against certain categories of attack,
-        particularly Sybil attacks.
-        </p>
-
-        <p>
-        These projects' implementations are not yet complete, but the
-        theoretical results achieved so far (the best of which I'm still in the
-        process of writing up) are striking.
-        </p>
-
-        <p>
-        I've written a fair bit on this site about Theseus and Theseus DHT.
-        <a href="/tags/theseus.html">Here's a list of those posts</a> (though
-        bear in mind that not all of them are up to date).
-        </p>
-    </div>
-
-    <hr class="simple">
-    <div class="pb-3 fancy"></div>
+  <hr class="simple">
+  <div class="pb-3 fancy"></div>
 </div>

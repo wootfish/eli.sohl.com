@@ -4,49 +4,53 @@
 
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-        <!-- jquery -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
 
-        <!-- mathjax -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous" async></script>
+    <!-- mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous" async></script>
 
-        <!-- bootstrap + deps -->
-        <!-- -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <!-- -->
+    <!-- bootstrap + deps -->
+    <!-- -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- -->
 
-        <!-- custom styles -->
-        <link rel="stylesheet" href="/assets/font/font.css" type="text/css" charset="utf-8">
-        <link rel="stylesheet" href="/assets/css/main.css">
-        <link rel="icon" href="data:,">
+    <!-- custom styles -->
+    <link rel="stylesheet" href="/assets/font/font.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="icon" href="data:,">
 
-        <!-- custom helper function -->
-        <script> function do_toggle(div_id) { $(div_id).toggle({duration: 340, easing: 'linear'}); } </script>
+    <!-- custom helper function -->
+    <script> function do_toggle(div_id) { $(div_id).toggle({duration: 340, easing: 'linear'}); } </script>
 
-        {% seo %}
+    {% seo %}
 
 
-    </head>
+  </head>
 
-    <body class="nojs nofancy">
+  <body class="nojs nofancy">
 
-        <div class="fancy">
-            <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
-            <canvas id="tilecanvas"></canvas>
-        </div>
+    <div class="fancy">
+      <canvas id="glcanvas">Oh no, canvas not supported :(</canvas>
+      <canvas id="tilecanvas"></canvas>
+    </div>
 
-{{ content }}
+    <div class="contentbox contents">
+      <h1 class="display-1 breakword">{{page.header}}</h1>
+      <hr>
+      {{ content }}
+    </div>
 
-    </body>
+  </body>
 
-    <script id="2d-vertex-shader" type="notjs">{% include vertex-passthru.glsl %}</script>
-    <script id="2d-fragment-noise-shader" type="notjs">{% include frag-noise.glsl %}</script>
-    <script id="2d-fragment-render-shader" type="notjs">{% include frag-render.glsl %}</script>
-    <script src="/assets/js/gl-main.js"></script>
+  <script id="2d-vertex-shader" type="notjs">{% include vertex-passthru.glsl %}</script>
+  <script id="2d-fragment-noise-shader" type="notjs">{% include frag-noise.glsl %}</script>
+  <script id="2d-fragment-render-shader" type="notjs">{% include frag-render.glsl %}</script>
+  <script src="/assets/js/gl-main.js"></script>
 </html>

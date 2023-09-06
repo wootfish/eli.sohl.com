@@ -1,0 +1,14 @@
+{% assign pages = "blog projects recs contact" | split: " " %}
+
+
+<div class="overflow-hidden" id="navlinks">
+  <span>
+    {% assign bar_flag = true %}
+    {% for page in pages %}
+      {% if bar_flag == true %} {% assign bar_flag = false %} {% else %} | {% endif %}
+      {% if page == include.target %} {{page}}
+      {% else %} <a href="/{{page}}.html">{{page}}</a> {% endif %}
+    {% endfor %}
+  </span>
+  {% include switcher.html %}
+</div>

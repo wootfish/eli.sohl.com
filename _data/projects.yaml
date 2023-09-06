@@ -1,45 +1,60 @@
 - name: cryptopals guided tour
   details:
-    - These are so much fun. They're a series of cryptography challenges
-      written by some folks who really know their stuff. Sets 1 through 7 are
-      available <a href="https://cryptopals.com">here</a>, and you can check
-      out Set 8 <a href="https://toadstyle.org/cryptopals/">here</a>. They
-      start out easy enough, but the later sets have some genuinely tricky
-      problems in them.
+    - The Cryptopals challenges are a series of cryptography problem sets. I
+      have a high opinion of these, and <a href="https://github.com/wootfish/cryptopals">wrote a solution set</a>
+      prior to joining NCC Group's Cryptography Services team (which currently
+      maintains the challenges).
 
-    - You can check out my solutions <a
-      href="https://github.com/wootfish/cryptopals">on Github</a>. I've worked
-      through sets 1 through 7 so far, and I plan on taking on set 8 soon.
+    - I've had the privilege, while working on this team, of creating a
+      companion piece to these challenges, which I'm calling the <a href="https://www.youtube.com/playlist?list=PLWvDpnCcem1P6i8pZm2x7KHp5iaxwrK_P">Cryptopals Guided Tour</a>.
+      You can read my introduction to the series <a href="https://research.nccgroup.com/2021/12/10/announcing-ncc-groups-cryptopals-guided-tour/">here</a>.
 
-    - Back in the day I was very into <a
-      href="https://projecteuler.net">Project Euler</a> (in fact, I'm still
-      ranked in the 99.4th percentile> on there after almost a decade of
-      inactivity), and a lot of what makes Project Euler fun can also be found
-      in Cryptopals. Usually, programming is hard in tedious ways; this stuff
-      is hard in fun ways. The most challenging parts of it are also the most
-      interesting. And it's just so damn satisfying when you finally get your
-      solution working for the first time.
+    - >
+      This series was inspired by my experience helping a couple people work
+      through the challenges. As much as I enjoyed this, I realized two
+      things: first, it's really fun, and second, it's really time-consuming. To
+      save time, I tried to steer them towards answering their own questions
+      through research, but with cryptography being the esoteric field that it
+      is, often the primary sources they were looking for didn't exist or
+      weren't written to be accessible to students. Seeing this, I chose to
+      take matters into my own hands and create a series where I just sit down
+      and explain, as clearly as I can, everything I'd want to convey if I were
+      helping someone with the problem sets in person.
 
-- name: obsidian
-  details:
-    - Obsidian is a constraint-based system for graphics programming. It lets
-      you define groups of shapes, specify relations between them, style them
-      in any way supported by the SVG format, and render them from that
-      information alone.
-    - This is a new project, and it is very much a work in progress, but the
-      early results are very promising. You can read about the project <a
-      href="/2020/04/14/obsidian.html">here</a>, and you can read its source
-      code <a href="https://github.com/wootfish/obsidian">here</a>.
+    - The problems are treated as jumping-off points for discursive discussions
+      with as many tangents, connections, suggested readings, as I can pack in.
+      The goal is not just to reach the finish line as fast as possible, but to
+      take a leisurely stroll in that direction and see some sights along the
+      way. I'm hoping this will make the videos interesting even to people who
+      have already solved the problems.
 
-- name: visuals
+    - Starting with the second problem set, I've also started using <a href="https://www.manim.community/">manim</a>
+      to generate custom illustrations of the concepts at play in each
+      challenge. It's not really built for computer science, so to support this
+      project I've had to develop a custom plugin which I'm calling cranim; this will be released Soon(TM).
+
+    - >
+      Ironically, this project has itself proven to be very time-consuming; in
+      fact, it has devoured much of my free time for several years running.
+      This is in part because I've had to teach myself each step in the
+      process, some of which, like audio engineering, manually cleaning
+      recordings, video editing, and rendering animations, are nontrivial
+      (luckily, they're also fun).
+
+    - So far, the reception has been overwhelmingly positive (it spent a day in
+      the top ten on Hacker News!), and I am planning to continue the series
+      for as long as my employer continues supporting it.
+
+- name: fuzzy math visuals
   details:
     - <br/><center><iframe width="560" height="315" src="https://www.youtube.com/embed/ud2mIeJ_IJU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>That's me on the right! The music isn't mine but the projections all are. <br/> <small>(for the full concert, see <a href="https://www.youtube.com/watch?v=bZUzoteuH9g">here</a>)</small></p></center>
-    - Everything you see in my visual sets is generated live. Much of it is improvised.
-    - I shape the images using some MIDI controllers and a lot of custom
-      graphics code that I've written from scratch. Last time I checked, the
-      program was up to about seven thousand lines of Processing and GLSL.
-    - I got started on this project in January of 2019 after a transcendental
-      experience in an unexpected place.
+    - I've been collaborating with my good friends in Fuzzy Math, developing
+      visual sets for their live shows. You can see an example above.
+    - I run the lights off of a couple MIDI controllers which feed into a
+      custom graphics framework I've written from scratch in Processing and
+      GLSL.
+    - Everything you see in my visual sets is generated live. It's different
+      every time, and most of it is improvised.
 
 - name: book notes
   details:
@@ -71,3 +86,54 @@
     - I've written a fair bit on this site about Theseus and Theseus DHT. <a
       href="/tags/theseus.html">Here's a list of those posts</a> (though bear
       in mind that not all of them are up to date).
+
+- name: obsidian
+  details:
+    - Obsidian is a constraint-based system for graphics programming. Backed by
+      Z3, It lets you define groups of shapes, specify relations between them,
+      style them in any way supported by the SVG format, and render them from
+      that information alone.
+    - You can read about the project <a href="/2020/04/14/obsidian.html">here</a>,
+      and you can read its source code <a href="https://github.com/wootfish/obsidian">here</a>.
+    - To be honest, the project is currently in a half-broken state - I added
+      support for animations, and got just far enough to generate the content
+      in <a href="/2020/04/20/wangs-attack-1.html">the first part of my writeup of Wang's Attack</a>,
+      but this broke some stuff and I haven't picked up the pieces yet.
+    - I feel that this project is <i>cool</i>, and I'm proud of it, but
+      practically speaking I'm not sure it does much that I couldn't also do
+      with <a href="https://www.manim.community/">Manim</a> and the <a href="manim-mobject-svg">manim-mobject-svg</a>
+      plugin (neither of which were made by me, just to be clear - but they're
+      what I would use today, which is why I haven't felt the need to fix this
+      tool yet).
+
+- name: note server
+  details:
+    - I have an unconventional system for taking notes, and I'm a bit proud of
+      it.
+    - Most of my notes start out as voice notes on a dedicated handheld
+      recorder. This plugs into a central server over USB; whenever the
+      recorder is plugged in, recordings are automatically moved off of it.
+      This is also how the recorder recharges.
+    - Once transferred, recordings are automatically encrypted and these
+      encrypted copies are backed up to the cloud. The server, which has lots
+      of cores and lots of RAM, also runs an optimized implementation of
+      OpenAI's Whisper text-to-speech model, which automatically transcribes
+      every recording.
+    - These transcriptions are automatically fed into my text-based note taking
+      system, which is built around ssh and Vim with the vim-notes plugin.
+    - I'm planning on writing a couple blog posts, one on the TTS stuff and one
+      on the vim-notes stuff, and will update this section once they're
+      finished.
+
+- name: project euler
+  details:
+    - Project Euler is a bafflingly extensive set of problems situated in the
+      overlap of math and computer science. Back in high school I was really
+      into these, <a href="https://projecteuler.net/progress=wootfish">as you
+      can see</a>, and despite having barely touched them in the last decade
+      I'm still ranked in the 99.3rd percentile.
+    - Unlike Cryptopals, Project Euler strongly discourages people from sharing
+      their solutions, as I think they should. That said, everyone who works on
+      these problem sets in any serious way will end up building up an
+      extensive toolkit, and I don't see anything wrong with sharing those. One
+      of these days I'll get around to sharing mine; watch this space.

@@ -1,31 +1,22 @@
 ---
 layout: main
+header: proj<wbr>ects
 ---
 
+{% include navlinks.html target="projects" %}
 
-<div class="contentbox contents">
-  <h1 class="display-1 breakword">proj<wbr>ects</h1>
+{% for project in site.data.projects %}
+  {% assign slug = project.name | slugify %}
   <hr>
-  <div class="overflow-hidden" id="navlinks">
-    <span>
-      <a href="/blog.html">blog</a> | projects | <a href="/contact.html">contact</a>
-    </span>
-    {% include switcher.html %}
+  <h2 class="project-row" onclick="do_toggle('#{{slug}}-details');">
+    {{project.name}} <span>+</span>
+  </h2>
+  <div id="{{slug}}-details" class="display-none">
+    {% for paragraph in project.details %}
+    <p>{{paragraph}}</p>
+    {% endfor %}
   </div>
+{% endfor %}
 
-  {% for project in site.data.projects %}
-    {% assign slug = project.name | slugify %}
-    <hr>
-    <h2 class="project-row" onclick="do_toggle('#{{slug}}-details');">
-      {{project.name}} <span>+</span>
-    </h2>
-    <div id="{{slug}}-details" class="display-none">
-      {% for paragraph in project.details %}
-        <p>{{paragraph}}</p>
-      {% endfor %}
-    </div>
-  {% endfor %}
-
-  <hr class="simple">
-  <div class="pb-3 fancy"></div>
-</div>
+<hr class="simple">
+<div class="pb-3 fancy"></div>

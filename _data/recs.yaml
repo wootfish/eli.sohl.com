@@ -1,46 +1,324 @@
 list:
   - title: The Dispossessed
+    desc:
+      - If this book had found its way to me a decade or two earlier it would
+        have significantly changed my life for the better. Perfect gift for a
+        booky kid (or adult).
+      - The gist: It's set on an earth-like planet (Urras), and that planet's
+        moon (Anarres); the moon has been colonized by utopian anarchists who
+        have now spent a couple centuries up there. Their stance towards Urras
+        is isolationist. It's a hard but good life, but with limited
+        opportunities for academic life, and so Shevek, a brilliant Anarresti
+        physicist, decides to take the unprecedented step of leaving the moon
+        to study at the universities of Urras; chaos ensues. This narrative is
+        interleaved with flashbacks to his earlier life on Anarres.
+      - The narrative engages with themes of anarchism, personal and collective
+        freedom, capitalism, social control, colonialism, revolutionary
+        politics, sexuality, friendship, physics and metaphysics, class
+        struggle, environmentalism, and more - all of which I would say it
+        navigates maturely and clearheadedly. Somehow, it is never pretentious.
+      - Great chaos pick for any politically divided book club.
+    cf:
+      - title: Walkaway
+        desc: Walkaway substitutes the desert in place of the moon and
+          compresses the time-scale a bit, but otherwise it has a lot in common
+          with this narrative, and engages with similar themes (in some cases
+          taking them much further). Walkaway feels a bit less grounded and
+          more explicitly utopian, but if you like one of these books, you'll
+          probably like the other.
+      - title: The Conquest of Bread
+        desc: The Anarresti colonists' political philosophy comes from Odo, who
+          politically seems to be sort of a mix of Marx and Kropotkin; her
+          formalisms (and cult following) more resemble Marx, but her prose
+          style and flavor of anarchism are totally aligned with Kropotkin. So
+          if you liked her ideas, why not follow them to the source?
+      - title: A Paradise Built in Hell
+        desc: The Anarresti's resilience in the face of hardship might seem
+          unrealistic, if it weren't for all the evidence that people in
+          similar real-world situations actually do behave this way. This book
+          is a collection of such evidence: it's a series of case studies of
+          disasters, with a focus on how the people caught in them interact.
+          Absolutely fascinating and very ideologically aligned.
+
   - title: Seveneves
+    desc:
+      - Extraordinarily depressing. The Earth is doomed, we have to go to space
+        asap, but it's gonna be really hard and not everyone can make it. Once
+        we're in space, we'll have to stay there for a long, long time. The
+        survival of humanity is uncertain. The one thing we know for sure is,
+        it's gonna take a lot of hard sci-fi to get us through this.
+      - Fairly long and discursive, as Neal Stephenson tends to be. This one is
+        set over a very long time scale. It plays with a lot of ideas, though I
+        can't expand too much on that without giving away plot points. This is
+        Stephenson's take on classic sci-fi, writing about spaceships and
+        astrophysics and thruster burns and all that nerd shit. If you're into
+        that, you'll find a satisfying number of fresh ideas here. If you're
+        not into that, you'll probably get bored pretty quickly.
+    cf:
+      - title: Governing the Commons
+        desc: For most of Seveneves, no one has enough. I forget if the phrase
+          "tragedy of the commons" is ever actually invoked directly, but the
+          idea is constantly hanging in the air. Resources are scarce and hard
+          to manage. Governing the Commons is a collection of case studies of
+          how this problem has been solved in practice, in the real world. If
+          themes of scarcity are interesting to you, you might find this
+          interesting, too.
+      - title: Anathem
+        desc: Another long, discursive Stephenson novel. Stylistically, these
+          two novels have a lot in common. They're both full to the seams with
+          ideas. In both cases, Stephenson does not seem to care how long it
+          takes to work through those ideas, the plot will just have to wait
+          until he's had his fun, thank you very much. If (like me) you also
+          find that fun, give this novel a try. As a bonus, it's also a lot
+          less depressing than Seveneves.
+
   - title: The Conquest of Bread
+    desc:
+      - >
+        A very famous book. Unfortunately considered cliche to recommend to
+        people, but it's good enough that I don't care. You've probably already
+        heard of it, and probably have your own opinions about it. Just in case
+        you haven't: this book's author, Peter Kropotkin, is one of the
+        best-known historic anarchists, and this is his most famous book. It is
+        the most accessible book of anarchist political theory that I'm aware
+        of.
+      - >
+        This book is from the 1890s, but for the most part it has aged
+        extraordinarily well. Kropotkin was a revolutionary, but he does not
+        touch on that here. This book does not deal at all with
+        how-we-get-there - rather, in a move that is almost cliche, it picks up
+        immediately "after the revolution", asking a simple question: now that
+        we're finally reshaping society, what value should we place at its core?
+      - >
+        His simple answer: "well-being for all". This might sound obvious, but
+        he argues compellingly that previous revolutions have failed precisely
+        because they failed to uphold this value. In his words, they all forgot
+        to account for bread. A revolution can only sustain itself so long on
+        ideals alone; it needs to back them up with material improvements in
+        quality of life - in other words, it needs to look after well-being for
+        all.
+      - Well, ok, but what does that mean? This is the question that he spends
+        the rest of the book answering, in incredible detail, often with
+        empirical figures to back up his arguments.
+      - He argues that (using 1890s technology!) we could feed, house, clothe,
+        and entertain everyone without asking anyone to work more than five
+        hours a day. As an aside, I would <i>love</i> to see someone come up
+        with an update to this figure that accounts for modern technology. It
+        would not be an easy task, but I'm sure the figure would be striking.
+      - My favorite thing about this book is the writing style: It's a very
+        casual rhetoric, where many of the lines of argument feel like they
+        were workshopped in barroom debates. I have no idea if that's
+        historically accurate, but it's endaring - it offers the text a certain
+        unpretentious accessibility that a lot of political writing just
+        doesn't have.
+      - If you have opinions about anarchism, you probably already know this
+        book. If you don't, this is the book to read. Also, he talks about
+        trains a ton, so if you're the kind of person who likes that, you'll
+        have a great time.
+    cf:
+      - title: Occult Features of Anarchism
+        desc: Another of my favorite books on anarchist studies, though more
+          focused on history than theory. Kropotkin shows up in it at times.
+      - title: Walkaway
+        desc: Walkaway is basically Conquest of Bread fanfiction (in a good way).
+      - title: The Dispossessed
+        desc: Odo, the fictional anarchist political theorist whose ideas are
+          woven throughout Dispossessed, would agree with Kropotkin on a whole
+          lot of stuff. A very interesting, mature, even-handed exploration of
+          how those ideas play out on personal, interpersonal, and societal
+          levels.
+
   - title: White Noise
+    desc:
+      - I wrote more about this book <a href="/2017/09/12/book-notes.html">here</a>,
+        so I'll try to avoid rehashing those notes. In brief, this is DeLillo
+        in top form, dealing with themes like information overload, the way
+        horrifying realities can become trivialized under scrutiny, the ways
+        power structures impose themselves through systems of communication,
+        the way those structures become mirrored in interpersonal dynamics, the
+        implicit hazards of all of the above, and the ways these themes shape
+        our subconscious desires.
+      - If you can't tell, I'm having a hard time describing what it's about.
+        It gets into big themes. If that all sounds too high-concept for you, I
+        don't blame you, but I promise the book itself is surprisingly
+        readable. It doesn't hit you over the head with this stuff; rather, it
+        just provides an extremely rich text to dig into. DeLillo is the master
+        of suggesting this stuff without outright saying it. I admire his
+        restraint.
+      - This is one of the archetypal novels to write an overambitious college
+        paper on; if I was in grad school, I'd give it a go.
+    cf:
+      - title: Data and Goliath
+        desc: Inasmuch as White Noise is a cautionary tale, it is warning us
+          about many of the same things that Data and Goliath warns have come
+          to pass.
+      - title: Obfuscation
+        desc: I'll take any chance I can find to recommend this little book,
+          but I do think it ties in here, and in an optimistic kind of way.
+          In White Noise, reality is becoming increasingly suffused with, well,
+          noise, and it is not a good time. In Obfuscation, noise is not
+          necessarily a bad thing; rather, it can be problematic or helpful
+          depending on context, and we can benefit from knowing when and how to
+          use it to our advantage.
+
   - title: Walkaway
+    desc:
+      - This was part of a trifecta of books I read (Walkaway - A Paradise
+        Built in Hell - The Conquest of Bread) that quite literally reversed my
+        outlook on life. I was a very cynical person, and one of the things that
+        dragged me out of that particular tar pit was the experience of seeing my
+        own ideals reflected back at me through this book. Never before had I
+        read something and agreed so thoroughly with it.
+      - I've written about it at more length <a href="/2017/09/12/book-notes.html">here</a>.
+        Suffice to say I recommend it highly - I think there's something in it
+        for just about anyone, at least as long as they're mature enough to not
+        be scandalized by a handful of sex scenes.
+      - If I were somehow suddenly placed in charge of distributing a
+        billionaire's fortune, I would start a foundation dedicated to trying
+        to make every piece of sci-fi technology from Walkaway real. That would
+        be my plan. No more, no less. Can't happen soon enough.
+      - The most quietly radical aspect of this book is the argument it makes
+        in favor of having a place to fuck off <i>to</i>. There are whole parts
+        of the world that are so unpleasant as to have been abandoned in favor
+        of walled cities. This might sound bad, but it leaves room for
+        experimentation, which is something we have painfully little of today.
+    cf:
+      - title: The Conquest of Bread
+        desc: The characters of Walkaway don't realize they're anarchists. They
+          just kind of do anarchism by accident, because it makes sense at the
+          time. I love that. That said, I really wish they would please all
+          read a fucking book, and this is the book I'd give them. Then again,
+          maybe they wouldn't need it, because they pretty much live it.
+      - title: A Paradise Built in Hell
+        desc: Walkaway is the story of a utopia-within-a-dystopia. Basically,
+          modern life becomes so horrible that the war-scarred, abandoned,
+          rubble-strewn desert becomes relatively appealing by comparison. Life
+          is hard out there, but the things that make it hard are things you
+          can come together against, rather than things that divide you. This
+          narrative has so much overlap with the themes of A Paradise Built in
+          Hell. That's not a coincidence, either - I actually first heard of
+          that book when Doctorow mentioned it during a radio interview for
+          Walkaway.
+      - title: The Dispossessed
+        desc: A very similar book in a lot of ways. There are big differences,
+          but the themes they grapple with are similar, although Walkaway's
+          treatment of them feels at times less grounded and more hyperbolic.
+
   - title: Silence on the Wire
+    desc:
+      - One of the first books on security that I ever read, and, to this day,
+        one of my favorites.
+      - Ignore every synopsis of this book online. They undersell it. It seems
+        ot me like no one was quite sure how to sell this book because no one
+        was quite sure what it was or who it was for. The answer is, it's a
+        grab bag with a few cool ideas at every level of abstraction in a
+        computer system circa 2005. There are a few nominal through-lines
+        connecting these ideas, but really it's just a masterclass in
+        discursive exposition. As for who it's for, the answer is - hackers. In
+        the classic sense where a "hacker" approaches a computer with curiosity
+        and tries to do surprising things with it, this is the clearest
+        expression of a "hacker mindset" that I've ever seen.
+      - In fact, I'll go further: this book is, to me, the high water mark for
+        accessible technical writing. Many people would tell you that it's
+        possible for technical writing to be either precise or conversational
+        but not both at once. Zalewski proves those people wrong. It reminds me
+        of how some great teachers can ramble for an hour and somehow manage to
+        hit every beat in their lesson plan, while you're so drawn-in that you
+        don't even realize you're learning.
+      - If you look this book up up online, you can find a preview for the
+        first couple chapters and the table of contents. Check it out and see
+        if it hooks you. I really recommend it.
+    cf:
+      - title: Security Engineering
+        desc: Really it's hard to compare Silence on the Wire to anything else,
+          because I've never read another book like it. That said, part of its
+          appeal is how broad its range of topics is, and this is where the
+          comparison to Security Engineering comes in - this latter book, while
+          somewhat drier, is one of the only books I've seen that has the guts
+          to take on a comparably broad scope and actually deliver on it.
+
   - title: A Paradise Built in Hell
+
   - title: The Utopia of Rules
+
   - title: Anathem
+
   - title: Grow Your Own
+
   - title: "Ludwig Wittgenstein: The Duty of Genius"
+
   - title: Data and Goliath
+
   - title: The History of Western Philosophy
+
   - title: Suspended in Language
+
   - title: Fine, Fine, Fine, Fine, Fine
+
   - title: The Faraway Nearby
+
   - title: The Breakthrough to Shodan
+
   - title: "Invincible: The Games of Shusaku"
+
   - title: "Flying Saucers: A Modern Myth of Things Seen in the Skies"
+
   - title: Cryptonomicon
+
   - title: How to Solve It
+
   - title: The Art and Craft of Problem Solving
+
   - title: An Introduction to Mathematical Cryptography
+
   - title: Serious Cryptography
+
   - title: Introduction to Modern Cryptography
+
   - title: "Serious Privacy: What it Takes to Disappear"
-    desc: I loaned this to a friend of a friend, and then never saw them again. Clearly the book works.
+    desc:
+      - I loaned this to a friend of a friend, and then never saw them again. Clearly the book works.
+    cf:
+      - title: Obfuscation
+        desc: There is some overlap in subject matter here. Obfuscation is more
+          academic and less directly actionable, but worth reading nonetheless.
+
   - title: Security Engineering
+
   - title: "Bertrand Russell: The Spirit of Solitude"
+
   - title: Feng Shui for You and Your Cat
+
   - title: Governing the Commons
+
   - title: The Evolution of Cooperation
+
   - title: Obfuscation
+
   - title: Dead Souls
+
   - title: Occult Features of Anarchism
+
   - title: IBM and the Holocaust
+
   - title: Interface
+
   - title: Metamagical Themas
+
   - title: Transmetropolitan
+
   - title: Mutual Aid (Kropotkin)
+
   - title: Makers
+
   - title: Someone Comes to Town, Someone Leaves Town
-    desc: If you were ranking Cory Doctorow books, this would probably end up closer to the bottom than the top. Not a masterpiece by any means but I found it strangely compelling. The only fiction I've read of his where I'd believe that the characters came before the ideas, or where the characters feel like anything other than vehicles for ideas.
+    desc: This is a sleeper pick in Cory Doctorow's bibliography. I think most
+      people would probably rank it closer to the bottom than the top. But the
+      thing is, most of his books feel like vehicles for ideas; this is the
+      only one I've read where it felt like the characters came first.
+
   - title: "Computer Systems: A Programmer's Perspective"
+
   - title: Deaf Republic
+
+  - title: Something Like an Autobiography

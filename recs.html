@@ -20,7 +20,19 @@ that.
 {% assign reclist = site.data.recs.list | sort: 'title' %}
 
 {% for rec in reclist %}
-{{ rec.title | downcase }}<br/>
+{% assign slug = rec.title | slugify %}
+{% if rec.desc %}
+<h6 class="project-row" onclick="do_toggle('.{{slug}}-details');">
+  {{ rec.title | downcase }}
+  <span>+</span>
+</h6>
+<div class="{{slug}}-details display-none">
+  {% for paragraph in rec.desc %} <p>{{paragraph}}</p> {% endfor %}
+  {% if rec.title != reclist.last.title %} <hr> {% endif %}
+</div>
+{% else %}
+<h6>{{ rec.title | downcase }}</h6>
+{% endif %}
 {% endfor %}
 
 <hr class="simple">

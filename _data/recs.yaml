@@ -4,7 +4,8 @@ list:
       - If this book had found its way to me a decade or two earlier it would
         have significantly changed my life for the better. Perfect gift for a
         booky kid (or adult).
-      - The gist: It's set on an earth-like planet (Urras), and that planet's
+      - >
+        The gist: It's set on an earth-like planet (Urras), and that planet's
         moon (Anarres); the moon has been colonized by utopian anarchists who
         have now spent a couple centuries up there. Their stance towards Urras
         is isolationist. It's a hard but good life, but with limited
@@ -33,9 +34,10 @@ list:
           style and flavor of anarchism are totally aligned with Kropotkin. So
           if you liked her ideas, why not follow them to the source?
       - title: A Paradise Built in Hell
-        desc: The Anarresti's resilience in the face of hardship might seem
+        desc: >
+          The Anarresti's resilience in the face of hardship might seem
           unrealistic, if it weren't for all the evidence that people in
-          similar real-world situations actually do behave this way. This book
+          similar real-world situations actually do behave similarly. This book
           is a collection of such evidence: it's a series of case studies of
           disasters, with a focus on how the people caught in them interact.
           Absolutely fascinating and very ideologically aligned.
@@ -105,12 +107,13 @@ list:
         hours a day. As an aside, I would <i>love</i> to see someone come up
         with an update to this figure that accounts for modern technology. It
         would not be an easy task, but I'm sure the figure would be striking.
-      - My favorite thing about this book is the writing style: It's a very
-        casual rhetoric, where many of the lines of argument feel like they
-        were workshopped in barroom debates. I have no idea if that's
-        historically accurate, but it's endaring - it offers the text a certain
-        unpretentious accessibility that a lot of political writing just
-        doesn't have.
+      - >
+        My favorite thing about this book is the writing style: It's a very
+        casual form of rhetoric, where many of the lines of argument feel like
+        they could have been workshopped in barroom debates. I have no idea if
+        that's historically accurate, but it's endearing - it offers the text a
+        certain unpretentious accessibility that a lot of political writing
+        just doesn't have.
       - If you have opinions about anarchism, you probably already know this
         book. If you don't, this is the book to read. Also, he talks about
         trains a ton, so if you're the kind of person who likes that, you'll
@@ -145,8 +148,7 @@ list:
         just provides an extremely rich text to dig into. DeLillo is the master
         of suggesting this stuff without outright saying it. I admire his
         restraint.
-      - This is one of the archetypal novels to write an overambitious college
-        paper on; if I was in grad school, I'd give it a go.
+      - The perfect novel to write an overambitious college essay on.
     cf:
       - title: Data and Goliath
         desc: Inasmuch as White Noise is a cautionary tale, it is warning us
@@ -179,8 +181,8 @@ list:
         be my plan. No more, no less. Can't happen soon enough.
       - The most quietly radical aspect of this book is the argument it makes
         in favor of having a place to fuck off <i>to</i>. There are whole parts
-        of the world that are so unpleasant as to have been abandoned in favor
-        of walled cities. This might sound bad, but it leaves room for
+        of their world that are so unpleasant as to have been abandoned in
+        favor of walled cities. This might sound bad, but it leaves room for
         experimentation, which is something we have painfully little of today.
     cf:
       - title: The Conquest of Bread
@@ -209,16 +211,17 @@ list:
       - One of the first books on security that I ever read, and, to this day,
         one of my favorites.
       - Ignore every synopsis of this book online. They undersell it. It seems
-        ot me like no one was quite sure how to sell this book because no one
+        to me like no one was quite sure how to sell this book because no one
         was quite sure what it was or who it was for. The answer is, it's a
         grab bag with a few cool ideas at every level of abstraction in a
         computer system circa 2005. There are a few nominal through-lines
         connecting these ideas, but really it's just a masterclass in
         discursive exposition. As for who it's for, the answer is - hackers. In
-        the classic sense where a "hacker" approaches a computer with curiosity
-        and tries to do surprising things with it, this is the clearest
-        expression of a "hacker mindset" that I've ever seen.
-      - In fact, I'll go further: this book is, to me, the high water mark for
+        the classic sense, where a "hacker" approaches a computer with
+        curiosity and tries to do surprising things with it, this is the
+        clearest expression of a "hacker mindset" that I've ever seen.
+      - >
+        In fact, I'll go further: this book is, to me, the high water mark for
         accessible technical writing. Many people would tell you that it's
         possible for technical writing to be either precise or conversational
         but not both at once. Zalewski proves those people wrong. It reminds me
@@ -238,16 +241,139 @@ list:
           to take on a comparably broad scope and actually deliver on it.
 
   - title: A Paradise Built in Hell
+    desc:
+      - One for the cynics. It is broadly considered common sense, especially
+        in america, to assume that in a crisis situation people will instantly
+        be at each other's throats. Everyone thinks they'll be the one
+        level-headed person surrounded by maniacs. Some people often ask
+        themselves whether they could, if need be, act as a maniac in order to
+        survive among them.
+      - Disaster movies reinforce this narrative at every opportunity, framing
+        catastrophes as moments of rupture where subterranean resentments can
+        finally erupt to the surface, simmering conflicts instantly come to a
+        rolling boil, and well-intentioned people are the first ones to die.
+      - What's interesting is, this is the opposite of what happens in real
+        life. A Paradise Built in Hell (subtitled "the extraordinary
+        communities that arise in disaster") is a book about what happens in
+        real life.
+      - It starts with the great San Francisco earthquake and fire of 1906.
+        Next up is the Halifax munitions accident of 1917, which at the time
+        was the largest artificial explosion in history. Then we skip forward
+        to the 1985 earthquake in Mexico City. After that come Katrina and
+        9/11.
+      - >
+        This might sound like depressing fare, but what saves it is the book's
+        focus: on the people who survived, on what their lives were like at the
+        center of these moments, on what they did, who they did it with, and
+        how they looked back on the events after they were over.
+      - The common themes are of people coming together, setting aside
+        differences, uniting in a common struggle - basically all those cliche
+        utopian ideals that we want to believe in but usually reject as naive.
+        Well, here they are, writ large and told through first-person accounts.
+      - The author, Rebecca Solnit, is one of my favorite authors currently
+        working. This is sort of an outlier in her extensive bibliography, less
+        autobiographical than usual, but somehow it feels just as personal,
+        because you can see her values reflected through the stories she has
+        collected and shared here.
 
   - title: The Utopia of Rules
+    desc:
+      - A collection of essays by David Graeber on the subject of bureaucracy.
+        Sounds dry, but it isn't. He had a freakish, prodigious capacity for
+        analysis, and it's on full display here. Thought-provoking stuff.
 
   - title: Anathem
+    desc:
+      - My favorite Neal Stephenson novel. Incredibly long and discursive. Very
+        chill.
+      - There is a giant circular wall, which has stood for thousands of years.
+        Inside lives an order of monastic academics. There is a gate in the
+        wall; every year, this door to the outside world opens once. Within
+        this circle is a second wall, with a second gate; this one opens every
+        ten years. Likewise twice more, with the innermost wall's gate opening
+        only on the millenium. Aside from these openings, these scholar-monks
+        live in voluntary isolation from the outside world, eschewing advanced
+        technology and leading simple lives of thought and study.
+      - Of course, the plot demands that their isolation be interrupted;
+        however, a good portion of the book takes place before that
+        interruption. This portion just charts what life would be like inside
+        these walls. What are the dramas of their lives? What are their goals
+        and dreams? What are the big decisions they have to make? What might
+        cause these people to come together or grow apart? How do they spend a
+        lazy afternoon, or a lazy summer? This, to me, is the best part of the
+        book.
+      - That said, once the plot gets properly underway, it is very engaging
+        and interesting.
+      - This is the only book I've ever read where an
+        important plot point hinged on the question of whether or not Platonic
+        metaphysics is empirically verifiable.
 
   - title: Grow Your Own
+    desc:
+      - One of the many books that someone bought for me as a joke, but that I
+        have enjoyed in earnest. I don't (have enough space to) grow weed, but
+        if I did, this book would be my bible. It also contains a lot of
+        interesting information that is useful to the more casual enjoyer.
 
   - title: "Ludwig Wittgenstein: The Duty of Genius"
+    desc:
+      - Ray Monk is an incredible biographer and he <i>might</i> have had a
+        history-crush on Wittgenstein. I don't want to make any assumptions,
+        but, having read this book, I can't rule it out.
+      - This book is exactly what a biography should be. It's fun, engaging,
+        full of anecdotes and details, but it does not compromise on its
+        technical content at all. The author is a full-on decorated professor
+        of philosophy who is more than capable of explaining every stage of
+        Wittgenstein's thought. The framing device of biography allows him to
+        do so "in real time", so to speak, explaining the ideas as they occur
+        to Wittgenstein, and contextualizing them against his life at the time.
+        This is especially valuable because he was unusually prone to arguing
+        against his own earlier ideas, and charting the development of these
+        arguments historically makes his self-dialogue much more approachable.
+      - >
+        What emerges is a compelling portrait of someone who wanted, more than
+        anything else, to do something remarkable. This book's subtitle, "The
+        Duty of Genius", might feel a bit, oh, pretentious, or extravagant, but
+        it's an accurate description of how Wittgenstein seems to have
+        understood his own life: he was brilliant, he had incredible potential,
+        and he felt that it was his duty to live up to that. (The fact that he
+        spent his formative years in the shadow of his incredibly precocious
+        older siblings probably did not help with this.)
+      - But at the same time, he was a fucking nerd - he picked out doorknobs
+        and chandeliers for his sister's house and then put "architect" on his
+        letterhead for a full decade afterwards. He was crazy - in one of the
+        book's funnier anecdotes, he enlists in the army after deciding he
+        hasn't experienced enough hardship (really!), but due to his family's
+        influence he's assigned a desk job, so he goes to request reassignment,
+        confusing the officer on duty who takes a while to realize he wants to
+        go <i>to</i> the front lines! And he was maybe-very-probably gay -
+        though we don't have conclusive evidence afaik, it's like, come on. The
+        guy did some of his best work while sharing a two-person rowboat with
+        his guy friend who happened to come visit him in the mountains for a
+        few months. There is a neverending series of scenes like this, each
+        more rife with subtext than the last. If it were fiction it would be
+        blatant queerbaiting.
+      - Wittgenstein has a reputation as one of the more difficult, if not
+        impossible, of the modern philosophers - undeniably brilliant, but hard
+        to read even on a good day. If you're interested, this might be the
+        most approachable introduction to his work (and life!) that you'll
+        find.
 
   - title: Data and Goliath
+    desc:
+      - Schneier's best book (in my opinion). And yes, I'm including the books
+        on cryptography, which were epochal for their time but are showing
+        their age. This book is encyclopedic. I wrote about in more detail
+        <a href="2017/09/12/book-notes.html">here</a>, though I might have laid
+        the praise on a little heavy (it's amazing what six years of
+        perspective can do).
+      - Basically, this is <i>the</i> book on big data and surveillance circa
+        2015. It is comprehensive and packed to the seams with details. One of
+        the most information-dense books I've ever read. I was amazed by how
+        many of the projects described in it were unfamiliar to me, even though
+        I do my best to keep up with the news in this space.
+      - This book is almost a decade old at this point, and I'd love to see an
+        updated edition, but it is still worth reading.
 
   - title: The History of Western Philosophy
 
@@ -277,7 +403,7 @@ list:
 
   - title: "Serious Privacy: What it Takes to Disappear"
     desc:
-      - I loaned this to a friend of a friend, and then never saw them again. Clearly the book works.
+      - I loaned this to a friend of a friend, then never saw them again. Clearly the book works.
     cf:
       - title: Obfuscation
         desc: There is some overlap in subject matter here. Obfuscation is more
@@ -312,10 +438,10 @@ list:
   - title: Makers
 
   - title: Someone Comes to Town, Someone Leaves Town
-    desc: This is a sleeper pick in Cory Doctorow's bibliography. I think most
-      people would probably rank it closer to the bottom than the top. But the
-      thing is, most of his books feel like vehicles for ideas; this is the
-      only one I've read where it felt like the characters came first.
+    desc: This is a sleeper pick in the Cory Doctorow bibliography. It probably
+      wouldn't be in most people's top 3. That said, I liked it. The thing is,
+      most of his books feel like vehicles for ideas; this is the only one I've
+      read where it felt like the characters came first.
 
   - title: "Computer Systems: A Programmer's Perspective"
 

@@ -21,9 +21,11 @@ Here's a quick overview of the main points.
 
   * Key bindings for common xrandr commands
 
+* Automatic shutdown for idle qubes
+
 * USB input devices
 
-* Custom VM suggestions: `dev`, `vpn`, `dvm-web`
+* Custom VM suggestions: `dev`, `vpn`, `dvm-web`, ...
 
 * Per-VM custom browser homepages
 
@@ -170,7 +172,7 @@ You may need to adjust the innermost set of commands here depending on what `sen
 
 Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost block and include the result to the final echo: `echo ",[$cputemp$qubes$disk$bat$load$time]"`. Then restart i3 and check the bottom of the screen to see if it worked.
 
-### Starting apps
+### Starting Apps
 
 Note that you can now start dom0 applications by name from dmenu (e.g. `mod+d Qube Manager`), and you can start AppVM applications by prefixing the VM name (e.g. "mod-d personal: Firefox"). If you open a terminal on a blank workspace, it will be a dom0 terminal; if any window is focused, the terminal is opened in the same VM where that window is running.
 
@@ -209,6 +211,22 @@ bindsym $mod+c exec xrandr --output HDMI1 --off
 ```
 
 With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
+
+
+## Idle Qube Shutdown
+
+You can set VMs to automatically shut down if they haven't opened a window or touched the network in a while. If you have a lot of AppVMs but only ever use a few at a time, this saves you from having to remember to shut them down.
+
+This arguably improves your security posture somewhat: lots of VM-to-VM attacks require both VMs to be running concurrently, so it makes sense to shut down VMs as soon as they're not needed. If you ever forget to shut a qube down right as you're done with it, auto-shutdown will cover for you. It's opt-in and is configured on a per-VM basis.
+
+In dom0:
+
+```
+sudo qubes-dom0-update qubes-app-shutdown-idle
+qvm-features vault service.shutdown-idle 1
+```
+
+To enable the feature for the `vault` VM. I'm not sure what the units of time are here - it often feels like it takes VMs longer than 1 minute to shut down - but this works well enough.
 
 
 ## USB Keyboard and Mouse

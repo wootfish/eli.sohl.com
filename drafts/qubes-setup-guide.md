@@ -3,7 +3,7 @@ layout: post
 title: How to Install Qubes and Get It Set Up Just Right
 ---
 
-Qubes has been my daily driver on personal laptops for the better part of a decade. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
+Qubes has been my daily driver OS on personal laptops since 2015. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
 
 Here's a quick overview of the main points.
 
@@ -17,13 +17,13 @@ Here's a quick overview of the main points.
 
   * Temperature monitor in status bar
 
-  * Tailor app lists for each AppVM and DispVM
+  * Tailored app lists for each AppVM and DispVM
 
-  * Key bindings for common xrandr commands
+  * Shortcuts for common xrandr commands
 
 * Automatic shutdown for idle qubes
 
-* USB input devices
+* USB keyboard support
 
 * Custom VM suggestions: `dev`, `vpn`, `dvm-web`, ...
 
@@ -37,25 +37,25 @@ Here's a quick overview of the main points.
 
 # Hardware
 
-Qubes works fine on both desktops and laptops. From the start, good laptop support has been one of the project's main goals.
+Qubes works well on both desktops and laptops. Good laptop support has always been one of their main goals.
 
-You'll want at least 8G of RAM (I've run Qubes on boxes with 4G and it was usable, but just barely - not recommended). You'll want an SSD. If you plan on keeping backups, you'll want a big SSD. Everything else is negotiable.
+You'll want at least 8G of RAM (I've run Qubes on boxes with 4G and it was usable, but just barely - not recommended). You'll want an SSD. If you plan on keeping on-device backups, you'll want a big SSD. Everything else is negotiable.
 
 If you have a specific device in mind, make sure to check for it in the [Qubes Hardware Compatibility List](https://www.qubes-os.org/hcl/). That page can also serve as a buying guide.
 
-My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love these things. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online (I've had good luck buying through Newegg). Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth considering buying something new off the shelf.
+My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love these things. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online. Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth buying something new off-the-shelf.
 
-You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level (which some governments are known to pervasively engage in).
+You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level, which is an established practice for certain threat actors.
 
 # Firmware
 
-First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea (especially with older ThinkPads). It'll be easiest to do this now, before you've installed AEM.
+First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea, especially with older ThinkPads. It'll be easiest to do this now, before you've installed AEM.
 
 Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else your system might end up failing into an unrecoverable state.
 
 # Getting an image
 
-I'm just going to go ahead and assume you're running Linux.
+I'm going to go ahead and assume you're running Linux.
 
 From a trusted device (or the closest thing you can find to one), get the latest release from here:
 
@@ -80,9 +80,9 @@ That value can also be found here:
 
 [https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS](https://mirrors.edge.kernel.org/qubes/iso/Qubes-R4.0.4-x86_64.iso.DIGESTS)
 
-You might be thinking that all this checking is redundant: HTTPS downloads should protect download integrity, and if you download a torrent file or magnet link over HTTPS then a comparable level of trust can be placed in the torrent's integrity check. You're right. However, these extra measures provide defense in depth, and there are some convoluted scenarios in which they could actually protect you from realistic attacks. But this is not the place to go into all that.
+You might be thinking that all this checking is redundant: HTTPS downloads should protect download integrity, and if you download a torrent file or magnet link over HTTPS then a comparable level of trust can be placed in the torrent's integrity check. You're right. However, these extra measures provide defense in depth, and there are some convoluted scenarios where they could actually come in handy - but this is not the place to go into that.
 
-Now it's time to do the usual ISO dance. Insert your USB drive. Use `sudo dmesg` to see where it showed up in `/dev`. It will likely be something like `/dev/sdc`. Ignore any partitions (e.g. `/dev/sdc1`).
+Now it's time to do the usual ISO dance. Insert your USB drive. Use something like `sudo dmesg` or `lsblk` to see what name the drive showed up under in `/dev`. It will likely be something like `/dev/sdc`. Ignore any partitions (e.g. `/dev/sdc1`).
 
 Write the image to the drive: something like `sudo dd if=Qubes-R4.x.x-x86_64.iso of=/dev/sdx bs=4M status=progress`, with the `x`es replaced as appropriate. Note the use of `status=progress`; it's optional, but I find it to be absolutely essential to maintaining my patience during long write jobs.
 
@@ -90,11 +90,11 @@ When `dd` completes, you can pull the drive, plug it into the box you're putting
 
 # Installation
 
-The installer does a great job of guiding you through this process. There's not much you need to do.
+The installer does a fine job of guiding you through this process. There's not much you need to do.
 
-You don't _need_ to set a time zone, but you probably want to. They have a nice big map for you to click on. It's neat.
+You don't _need_ to set a time zone, but you probably want to. They have a big map for you to click on. It's fun.
 
-You'll have to set a disk encryption passphrase. I really do encourage you to use a pass-_phrase_ - The longer the better. AEM and a good disk passphrase are your first lines of defense against many realistic attacks. I would never take a laptop through an airport, across a border, to a conference, etc, without first making sure both of these protections are in place.
+You'll have to set a disk encryption passphrase. I really do encourage you to use a pass-_phrase_ - The longer the better. AEM and a good disk passphrase are your first lines of defense against some realistic attacks. I would never take a laptop into even a mildly risky environment without first making sure both of these protections are in place.
 
 Here's my passphrase advice:
 
@@ -112,21 +112,23 @@ Here's my passphrase advice:
 
 * Pepper in some special characters (e.g. space to underscore, _s_ to _5_, `l` to `|` or `1`)
 
-Don't go too overboard with the special characters - you do still need to remember this thing, and the more passphrases you have, the harder that'll get. Bear in mind that if you're doing character substitutions, just a few go a long way. The usual [correct horse battery staple](https://xkcd.com/936/) advice applies here -- though the entropy calculation is thrown off if you're using a phrase that might appear in, say, your chat logs or a list of famous quotes. Hence the suggestion to adjust the phrasing.
+Don't go too overboard with the special characters - you do still need to remember this, and the more passphrases you have, the harder that'll get. Bear in mind that if you're doing character substitutions, just a few go a long way. The usual [correct horse battery staple](https://xkcd.com/936/) advice applies -- though the overall entropy will be lower if you're using a phrase that might appear in, say, your chat logs or a list of famous quotes (hence the suggestion to adjust the phrasing).
 
-Once you've picked a passphrase, practice typing it in. There are two password boxes, so you can switch between typing it into the first and second box over and over, and it'll tell you if you got it right each time. Practice typing it in correctly ten times in a row, then get up, get some water, check Twitter, come back in five or ten minutes, and practice it again. I cannot tell you how many times I've come up with a brilliant passphrase and completely blanked on it the next day; you want to make extra sure this won't happen.
+Once you've picked a passphrase, practice typing it in many times. There are two password boxes, so you can switch between typing it into the first and second box over and over, and it'll tell you if you got it right each time. Practice typing it in correctly ten times in a row, then get up, get some water, check some blogs, come back in five or ten minutes, and practice it again. I cannot tell you how many times I've come up with a brilliant passphrase and completely blanked on it the next day; you want to make sure this doesn't happen to you.
 
-Once you kick off the install process, it'll also ask you to choose a username and password for your root user. This is mostly just a physical security measure; even so, I encourage you to use a strong password or passphrase here.
+Once you kick off the install process, it'll also ask you to choose a username and password for your root user. This is mostly just a physical security measure, since (due to Qubes's [passwordless sudo](https://www.qubes-os.org/doc/vm-sudo/)) the user password is mostly just used for logging in or unlocking the screen; even so, I encourage you to use a strong passphrase here.
 
-Bear in mind that at some point in the lifespan of this laptop you will be typing in your login password much more often than your disk encryption password, meaning the former is much more likely to eventually be caught by surveillance; for this and other reasons, I encourage you not to reuse either password/passphrase, and not to use the same one for both of these uses. On the subject of cameras: I've made a habit of tilting my laptop screen forward to partially cover my fingers as I type in passwords; I encourage you to do the same. This is only really important for disk, user, and password manager passphrases, of course: once you're logged in, you can just enter everything else using your password manager.
+Something to bear in mind: You will be typing in your login passphrase much more often than your disk encryption passphrase, and you are more likely to have to type the login passphrase in public. Of the two, the login passphrase is much more likely to eventually be caught by surveillance. For these and other reasons, I encourage you not to reuse passphrases. It's not so hard to come up with three distinct ones, and that's all you really need: one each for disk encryption, user login, and your password manager. The password manager can take care of remembering everything else for you.
 
-After installation finishes, the installer will prompt you to reboot. After reboot you'll be prompted for post-install configuration. The defaults are fine here. In particular, you really want a USB qube. If you opt for updates over Tor, bear in mind that they will go much slower. They also (as mentioned above) aren't really necessary unless trying to hide the fact that you're using Qubes from your ISP and their associates.
+Also, on the subject of passphrases and cameras: When I type in passwords, I've made a habit of tilting my laptop screen forward to partially cover my fingers as I type; I encourage you to do the same. This is not a bulletproof solution (it turns out a lot can be inferred [from shoulder movement alone](https://arxiv.org/pdf/2010.12078.pdf)) but it raises the attack's difficulty level non-negligibly.
+
+After installation finishes, the installer will prompt you to reboot. After reboot you'll be prompted for post-install configuration. The default settings are fine here. In particular, you really want a USB qube. If you opt for updates over Tor, bear in mind that they will be slow. They also (as mentioned above) aren't really necessary unless trying to hide the fact that you're using Qubes from your ISP and their associates, but don't mind them seeing you regularly connect to Tor.
 
 # First Backups
 
-After login, before doing anything else, make a full system backup. You can do this through the Qube Manager. Next, update all your Qubes (including those with "no known available updates"). Then make another backup.
+After login, before doing anything else, update all your Qubes templates, including those with "no known available updates". Then reboot (since you probably updated dom0) and try to update again.
 
-If you ever want to "factory reset" a qube (e.g. after plugging in a dubious USB device), these backups will let you do that.
+Once you're sure everything's up to date, make a full system backup. If you ever want to "factory reset" a qube (e.g. after plugging in a dubious USB device), these backups will let you do that.
 
 # Configuration
 
@@ -136,13 +138,13 @@ Now we're getting to the good stuff. The base Qubes install is usable, but over 
 
 Once you get used to a tiling window manager, you'll never want to go back. I've tried a few and, to me, i3 is easily the standout.
 
-Install in dom0 with `sudo qubes-dom0-update i3 i3-settings-qubes`. The second package there is a custom configuration suite. It makes a whole lot of useful little adjustments. You want it.
+Install in dom0 with `sudo qubes-dom0-update i3 i3-settings-qubes`. That second package sets a bunch of nice, Qubes-specific default settings for i3. You want it.
 
-Once i3 is installed, log out, then log in with i3. This will prompt you to create a config; follow the configuration wizard and you'll be set. You probably want to use Win as your modifier key since other apps generally leave Win chords for the window manager, whereas lots of apps have custom Alt chords.
+Once i3 is installed, log out, then log in with i3. This will prompt you to create a config, which mostly involves picking a modifier key. You probably want to use Win rather than Alt: lots of apps have their own Alt chords, but they tend to leave Win chords to the window manager.
 
 ### Key bindings
 
-i3 _almost_ comes with Vim keybindings, but they do something weird: they wanted to use `h` to mean "horizontal split", so they moved the movement keys from `hjkl` to `jkl;`. I do not like this, to put it mildly. I suggest shifting all five of these keys back over to the left: first, map horizontal split to `g` instead of `h`, then shift the movement keys back to where they belong.
+i3 _almost_ comes with Vim keybindings, but they do something weird: they wanted to use `h` to mean "horizontal split", so they moved the movement keys from `hjkl` to `jkl;`. I do not like this. I suggest shifting all five of these keys back over to the left: first, map horizontal split to `g` instead of `h`, then shift the movement keys back to where they belong.
 
 To do this, open dom0's `~/.config/i3/config` file. Here are the sections you'll want to make changes in:
 
@@ -151,30 +153,35 @@ To do this, open dom0's `~/.config/i3/config` file. Here are the sections you'll
 * "# split in horizontal orientation"
 * "# resize window"
 
+<!--
+TKTK THIS NO LONGER APPLIES IN LATEST i3config (how is locking handled now?)
 This is also where you can change how fast the screen locks. In the `# Use a screen locker` section, change `-time 3` from `3` to however many minutes you want to wait before locking. Bear in mind that you can always lock your screen manually with `i3lock`, and the less often your screen auto-locks while the laptop is in use, the less often you have to type in (and potentially be seen typing in) your user password, so I think it's reasonable to set this value fairly high as long as you're diligent about manual screen-locking.
+-->
 
 After making these changes and saving the config, restart i3 in-place with `mod+shift+r`.
 
 ### Temperature
 
-I like to add a CPU temperature readout to the bar at the bottom. This works a little differently than it would in stock i3, because of Qubes' custom config. Here's what you have to do.
+I like to add a CPU temperature readout to the bar at the bottom. This works a little differently than it would in stock i3, because of Qubes' custom config.
 
-In a dom0 terminal, open `/usr/bin/qubes-i3status` as root. Add a new function, `status_cputemp()`, that looks something like this:
+In a dom0 terminal, run `sensors` and play with piping and cutting the output until it gives you a single value like `+49∘C`. Your final command might look something like `sensors | grep CPU | cut -d' ' -f11`.
+
+Now, in a dom0 terminal, open `/usr/bin/qubes-i3status` as root. Add a new function, `status_cputemp()`, that looks something like this:
 
 ```
 status_cputemp() {
-    local cputemp=$(sensors | grep 'Package id 0:' | cut -d' ' -f5)
+    local cputemp=$(sensors | grep 'CPU' | cut -d' ' -f11)
     json cputemp "T:$cputemp"
 }
 ```
 
-You may need to adjust the innermost set of commands here depending on what `sensors` returns on your system. Try it out on the command line before saving your changes.
+You may need to adjust the inner commands depending on what `sensors` returns on your system. Try it out on the command line before saving your changes.
 
 Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost block and include the result to the final echo: `echo ",[$cputemp$qubes$disk$bat$load$time]"`. Then restart i3 and check the bottom of the screen to see if it worked.
 
 ### Starting Apps
 
-Note that you can now start dom0 applications by name from dmenu (e.g. `mod+d Qube Manager`), and you can start AppVM applications by prefixing the VM name (e.g. "mod-d personal: Firefox"). If you open a terminal on a blank workspace, it will be a dom0 terminal; if any window is focused, the terminal is opened in the same VM where that window is running.
+Note that you can now start dom0 applications by name from dmenu (e.g. `mod+d Qube Manager`), and you can start AppVM applications by prefixing the VM name (e.g. "mod+d personal: Firefox"). If you open a terminal on a blank workspace, it will be a dom0 terminal; if any window is focused, the terminal is opened in the same VM where that window is running.
 
 Qubes' native xfce environment is fine, and it does a better job of surfacing the OS's features for new users. You can still switch back to xfce any time you want. But once you know what you're doing, you might find, as I do, that i3 is a much more comfortable place to work.
 
@@ -182,11 +189,11 @@ In fact, with a little adjustment, you can make it at least as ergonomic as a no
 
 You could do something similar with an AppVM for social media accounts, say, or online stores. Separating those domains might seem like overkill, but I take a certain spiteful pleasure in knowing I'm making it that much harder for the bastards to track my browsing.
 
-Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-33-dvm: Firefox` (note that this matches on the middle of the name, which is perfectly legal).
+Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-37-dvm: Firefox` (note that this matches on the middle of the name).
 
 ### Multi-Monitor Setups
 
-i3 expects you to manage your displays with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
+i3 expects you to manage your displays with xrandr, or with something that wraps xrandr. Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
 
 * `xrandr` to list your displays and their available resolutions
 
@@ -200,7 +207,7 @@ i3 expects you to manage your displays with xrandr (or with something that wraps
 
 * `xrandr --output HDMI1 --off` to turn off HDMI1
 
-There's a whole lot more that xrandr can do, but frankly this is all I've ever needed.
+There's a whole lot more that xrandr can do, but this is all I've ever needed.
 
 These commands do get a little tedious to type in; you can save some time by setting up keybindings for them. For example, in my dom0's `.config/i3/config` file I have the following lines:
 
@@ -212,28 +219,30 @@ bindsym $mod+c exec xrandr --output HDMI1 --off
 
 With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
 
+You can also consider putting your `xrandr` command(s) into a script in your PATH.
+
 
 ## Idle Qube Shutdown
 
-You can set VMs to automatically shut down if they haven't opened a window or touched the network in a while. If you have a lot of AppVMs but only ever use a few at a time, this saves you from having to remember to shut them down.
+You can set VMs to automatically shut down if they haven't opened a window or touched the network in a while. I really like this as a sort of failsafe measure for when I forget to shut a qube down.
 
-This arguably improves your security posture somewhat: lots of VM-to-VM attacks require both VMs to be running concurrently, so it makes sense to shut down VMs as soon as they're not needed. If you ever forget to shut a qube down right as you're done with it, auto-shutdown will cover for you. It's opt-in and is configured on a per-VM basis.
+On top of the RAM this saves you, it arguably also improves your security posture a bit: lots of VM-to-VM attacks require both VMs to be running concurrently, so it makes sense to shut down VMs as soon as they're not needed. If you ever forget to shut a qube down right as you're done with it, auto-shutdown will cover for you. It's opt-in and is configured on a per-VM basis.
 
 In dom0:
 
 ```
-sudo qubes-dom0-update qubes-app-shutdown-idle
-qvm-features vault service.shutdown-idle 1
+$ sudo qubes-dom0-update qubes-app-shutdown-idle
+$ qvm-features vault service.shutdown-idle 1
 ```
 
-To enable the feature for the `vault` VM. I'm not sure what the units of time are here - it often feels like it takes VMs longer than 1 minute to shut down - but this works well enough.
+To enable the feature for the `vault` VM. I'm honestly not sure what the units of time are here, but this works well enough.
 
 
-## USB Keyboard and Mouse
+## USB Keyboard
 
 If you don't plan on using a USB keyboard, skip this step. Doing so will marginally reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
 
-That said, some of us can't resist the siren song of the mechanical keyboard. We need our clicky keys. Here's how to make that work.
+That said, some of us can't resist the siren song of the mechanical keyboard. Here's how to make that work.
 
 In dom0:
 
@@ -265,9 +274,9 @@ You can configure the default Fedora disposable VM to use `sys-whonix` as its Ne
 
 If you have a VPN client you like to use, you can set up a VPN NetVM. When set up correctly, connecting an AppVM to this VPN NetVM gives you an ironclad guarantee that all traffic sent from your AppVM will either be wrapped in the VPN or dropped. If you torrent, you may want to do this. The guide is [here](https://www.qubes-os.org/doc/vpn/).
 
-Call me crazy, but I feel a little uncomfortable using Tor Browser. It's great, but software monoculture makes exploit targeting easy. Of course, there's a $1m bounty for Tor Browser 0-days, and people run honeypot browser sessions looking for that payout. So it's reasonable not to worry too much about 0-day Tor browser exploits. I probably shouldn't worry, but I do, because that's just how my brain is wired.
+Call me crazy, but I feel a little uncomfortable using Tor Browser. It's great, but software monoculture makes exploit targeting easy. Of course, there's a $1m bounty for Tor Browser 0-days, and people run honeypot browser sessions looking for that payout. So it's reasonable to feel safe using Tor Browser. I probably shouldn't worry, but I do; that's just how my brain is wired.
 
-If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. [Here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole schtick, his suggestions here are simple and solid. In particular, I strongly encourage disabling JavaScript by default (if you have the patience for that). That alone will eliminate the vast majority of your browser's attack surface. It'll also break a lot of sites, but you can always selectively re-enable JS as needed.
+If you're in the same boat, here's my advice: take a modern browser and load it out with the proper extensions. [Here are some good suggestions](https://gist.github.com/grugq/353b6fc9b094d5700c70#web-browser). Whatever you think of the grugq's whole thing, these suggestions are simple and solid. In particular, I strongly encourage disabling JavaScript by default (as long as you have the patience for that). That alone eliminates most of your browser's attack surface. It'll also break a lot of sites, but mostly ones you didn't really want to use anyway (and you can always selectively re-enable JS as needed).
 
 You can set this all up in `whonix-ws-15-dvm` or you can create a new VM; if you choose the latter, I'd suggest naming it something like `dvm-web` and setting your browser as its only application in the Qubes Settings menu. This ensures that you can get what you want by just typing "dvm" into dmenu and hitting Enter.
 

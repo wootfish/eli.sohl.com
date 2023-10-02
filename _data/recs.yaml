@@ -573,9 +573,13 @@ list:
         I have had a couple people ask me, either personally or on behalf of
         friends, whether there's a path for math grad students to get into
         cryptography. My answer: yes, and it starts with this book.
-      - It is technically part of the "graduate texts in mathematics" series,
-        but I'm not a grad student and I still found it completely
-        approachable. YMMV depending on how much you like math.
+      - >
+        It is part of the "undergraduate texts in mathematics" series, but
+        don't let that fool you: some of the math it discusses is fairly heavy-duty.
+        That said, it does a good job of building up to the advanced stuff, so
+        if you come in with a basic undergraduate knowledge of concepts like
+        modular arithmetic, it can get you the rest of the way there. Even so,
+        YMMV depending on how much you like math.
 
   - title: Serious Cryptography
     desc:
@@ -624,8 +628,8 @@ list:
 
   - title: "Bertrand Russell: The Spirit of Solitude"
     desc:
-      - Is it possible for a biography to also be a hit piece? In this book,
-        you get to find out.
+      - Can a factual biography also be a hit piece? No one was asking this
+        question, but nevertheless, here we have the answer.
       - This was written by Ray Monk, who also did the extraordinarily good
         biography of Wittgenstein that I've mentioned elsewhere on this page.
         Wittgenstein and Russell's lives intersected many times, and they
@@ -662,9 +666,9 @@ list:
       - The most compelling - and most painful - parts of the book come from
         Russell's interactions with background characters, like the prison
         guard (while Russell was jailed for protesting) who was unexpectedly
-        and unnecessarily nice to Russell, but who was the target of almost
-        unlimited scorn in the latter's letters after his release, in a series
-        of passages that just reek of classic britsh classism writ large.
+        nice to Russell, but who was the target of almost unlimited scorn in
+        the latter's letters after his release in a series of passages that
+        reek of british classism exacerbated by a total lack of self-awareness.
       - >
         I still respect Russell's writings (I have his History of Western
         Philosophy on this list, and I've read and enjoyed some of his other

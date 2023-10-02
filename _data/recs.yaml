@@ -430,9 +430,10 @@ list:
   - title: Fine, Fine, Fine, Fine, Fine
     desc:
       - Diane Williams is a treasure. These are tiny stories, and this will be
-        a tiny review. The book is good, and very approachable. I've written
-        about it before. It's from McSweeney's, which as a publishing house
-        tends to be terminally twee, but they really scored big on this one.
+        a tiny review. The book is good, easy to read, and rewarding to dwell
+        on. I've written about it before. It's from McSweeney's, which as a
+        publishing house tends to be terminally twee, but they really scored
+        big on this one.
 
   - title: The Faraway Nearby
     desc:
@@ -440,20 +441,23 @@ list:
         combination of memoir, literary analysis, biography, and more. It
         defies description and feels almost like stunt-writing, like something
         that shouldn't work but does, like she picked five or ten topics from a
-        hat and decided to write about all of them at once, just to see if she
-        could - and it turns out she can, finding unexpected threads that
-        combine them and weave them together into a coherent whole. You almost
-        can't believe your eyes as you're reading it. She is so good at this. A
-        delight to read, like always.
+        hat and committed to writing about all of them at once, just to see if
+        she could - and it turns out she can, The book is a nonstop series of
+        unexpected threads that combine and weave these topics together into a
+        coherent whole. You almost can't believe your eyes as you're reading
+        it. She is so good at this. A delight to read, as always.
       - I have more detailed notes that I'll dig up and put here eventually,
         but for now this will have to do.
 
   - title: The Breakthrough to Shodan
     desc:
-      - I've read many books on Go. This is the one I recommend. It is not an
-        introductory book, but once you've reached single-digit kyu strength,
-        this is what you should read. One pro player has joked that the book
-        should be titled "The Breakthrough to Professional Shodan".
+      - >
+        I've read many books on Go. This is the one I recommend. It is not an
+        introductory book (for that, Kaoru Iwamoto's book would be a good
+        choice), but once you've reached single-digit kyu strength, this is
+        what you should read. One pro player has joked that the book should be
+        titled "The Breakthrough to Professional Shodan" (i.e. approximately 9
+        Dan).
       - >
         A point of disambiguation: "Shodan" is an overloaded word. In Go, it
         refers to the changeover point where a former Kyu-ranked player earns
@@ -461,7 +465,8 @@ list:
         belt in some martial arts (which, in fact, seem to have borrowed the
         kyu/dan system from Go). For most amateur players, achieving a dan
         rating is their ultimate goal. It certainly is mine.
-      - [I'm currently rated around 3 kyu on OGS](https://online-go.com/player/95926/)
+      - >
+        [I'm currently rated around 3 Kyu on OGS](https://online-go.com/player/95926/)
         (feel free to send me a challenge if you play, by the way!), so I can't
         say the book has worked for me yet, but that's my own fault. I can say
         with confidence that it has measurably improved my game.
@@ -564,7 +569,8 @@ list:
       - >
         This gives you a full view of half of a field. It's a bit lopsided, but
         the stuff it covers, it covers very well.
-      - I have had a couple people ask me, either personally or on behalf of
+      - >
+        I have had a couple people ask me, either personally or on behalf of
         friends, whether there's a path for math grad students to get into
         cryptography. My answer: yes, and it starts with this book.
       - It is technically part of the "graduate texts in mathematics" series,
@@ -610,7 +616,7 @@ list:
       - I often describe books as having broad scopes, but this time I really
         mean it. Look up the table of contents and see for yourself. No,
         really.
-      - \
+      - >
         If you want to get started as a security consultant, you should read
         two books: one for whatever speciality you want to develop, and one to
         get you conversant in the rest of the field. This book fills that

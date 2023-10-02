@@ -466,7 +466,7 @@ list:
         kyu/dan system from Go). For most amateur players, achieving a dan
         rating is their ultimate goal. It certainly is mine.
       - >
-        [I'm currently rated around 3 Kyu on OGS](https://online-go.com/player/95926/)
+        <a href="https://online-go.com/player/95926/">I'm currently rated around 3 Kyu on OGS</a>
         (feel free to send me a challenge if you play, by the way!), so I can't
         say the book has worked for me yet, but that's my own fault. I can say
         with confidence that it has measurably improved my game.
@@ -520,11 +520,11 @@ list:
         computer. Two characters - one of whom might secretly be immortal - are
         imprisoned in adjoining cells, and pass encrypted messages using a
         cipher that is calculated using a deck of playing cards
-        ([and which was invented for the novel by Bruce Schneier](https://en.wikipedia.org/wiki/Solitaire_(cipher))).
+        (<a href="https://en.wikipedia.org/wiki/Solitaire_(cipher)">and which was invented for the novel by Bruce Schneier</a>).
         A commando and his civilian lover hook up under increasingly surreal
         circumstances. Several characters collaborate to build an offshore data
         haven and invent Bitcoin (this book was published in 1999!) A character's
-        computer gets [Van Eck phreaked](https://en.wikipedia.org/wiki/Van_Eck_phreaking).
+        computer gets <a href="https://en.wikipedia.org/wiki/Van_Eck_phreaking">Van Eck phreaked</a>.
         And that's not even half of the crazy stuff that happens in here.
       - I can barely keep up with Stephenson's new stuff, but when I finally
         get caught up I'm going back to this one. It's not his only masterpiece -
@@ -596,7 +596,7 @@ list:
     desc:
       - My holy book. Very thorough in scope. Detailed but readable. Includes
         lots of trivia (like - no pun intended - a discussion of the freakishly
-        simple-yet-unbroken stream cipher [Trivium](https://en.wikipedia.org/wiki/Trivium_(cipher))
+        simple-yet-unbroken stream cipher <a href="https://en.wikipedia.org/wiki/Trivium_(cipher)">Trivium</a>
         as a companion to the discussion of LFSRs).
       - If you want to get serious about cryptography, you might not read this
         book first, but you must read it at some point. For a while, Schneier's
@@ -796,7 +796,7 @@ list:
       - The book goes into much more detail, and it's nearly impossible to
         summarize. Douglas Hofstadter tried, and you can read his take on it in
         Metamagical Themas, or in
-        [this PDF excerpt here](https://www2.econ.iastate.edu/tesfatsi/AxelrodComputerTournaments.ExcerptsFromHofstadterSciAmArticle.1983.pdf),
+        <a href="https://www2.econ.iastate.edu/tesfatsi/AxelrodComputerTournaments.ExcerptsFromHofstadterSciAmArticle.1983.pdf">this PDF excerpt here</a>,
         which comes with my highest recommendations.
 
   - title: Obfuscation

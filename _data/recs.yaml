@@ -311,10 +311,10 @@ list:
 
   - title: Grow Your Own
     desc:
-      - One of the many books that someone bought for me as a joke, but that I
-        have enjoyed in earnest. I don't (have enough space to) grow weed, but
-        if I did, this book would be my bible. It also contains a lot of
-        interesting information that is useful to the more casual enjoyer.
+      - Another of the many books that someone bought for me as a joke, but
+        that I have enjoyed in earnest. I don't (have enough space to) grow
+        weed, but if I did, this book would be my bible. It also contains a lot
+        of interesting information that is useful for the more casual enjoyer.
 
   - title: "Ludwig Wittgenstein: The Duty of Genius"
     desc:
@@ -500,9 +500,9 @@ list:
         flying saucers, and there's probably a case to be made there, but that
         doesn't invalidate Jung's point, which is that even if this myth did
         previously exist, it died out for a long time before suddenly appearing
-        again out of nowhere and spreading like wildfire. The rate of spread
-        was extremely unusual pre-internet, and its staying power remains
-        exceptional even today.
+        again out of nowhere and exploding. The rate of spread was extremely
+        unusual pre-internet, and its staying power remains exceptional even
+        today.
       - The meat of the book is in a series of dream analyses where patients
         describe their dreams of flying saucers, which he analyzes in terms of
         motifs and archetypes. To be honest, the analysis mostly went over my
@@ -523,7 +523,7 @@ list:
         (<a href="https://en.wikipedia.org/wiki/Solitaire_(cipher)">and which was invented for the novel by Bruce Schneier</a>).
         A commando and his civilian lover hook up under increasingly surreal
         circumstances. Several characters collaborate to build an offshore data
-        haven and invent Bitcoin (this book was published in 1999!) A character's
+        haven and, in passing, invent Bitcoin (this book was published in 1999!) A character's
         computer gets <a href="https://en.wikipedia.org/wiki/Van_Eck_phreaking">Van Eck phreaked</a>.
         And that's not even half of the crazy stuff that happens in here.
       - I can barely keep up with Stephenson's new stuff, but when I finally
@@ -537,7 +537,7 @@ list:
 
   - title: How to Solve It
     desc:
-      - A famous book written by the even more famous George Pólya. This book
+      - A famous book written by a famous mathematician, George Pólya. This book
         is to mathematicians what The Breakthrough to Shodan is to Go players.
         It's a series of short chapters, each of which describes a
         problem-solving strategy - or in some cases a meta-strategy or
@@ -551,6 +551,10 @@ list:
       - Computer scientists don't need to think this hard nearly as often as
         mathematicians do, but if you practice this stuff, you'll be way ahead
         of most of the pack. And besides, it's just a fun read.
+      - Many well-known mathematicians have named this as their favorite book.
+        I would love to see a follow-up stat on how many of them have only read
+        one book, but that's just me being catty. If you had to pick one book
+        to read, you could do worse than this one.
 
   - title: The Art and Craft of Problem Solving
     desc:
@@ -583,7 +587,7 @@ list:
 
   - title: Serious Cryptography
     desc:
-      - If you're a developer who doesn't want to _do_ cryptography, but does
+      - If you're a developer who doesn't want to <i>do</i> cryptography, but does
         want to have an idea of what it involves, this is the book for you. If
         you've been tasked with doing something crypto-related, this is the
         book to read first (and then once you're done, I very strongly
@@ -637,13 +641,13 @@ list:
         finished his Wittgenstein book, he realized he was already halfway to a
         book on Russell and he figured, what the hell, let's finish it off.
       - >
-        The catch: He _really does not like Bertrand Russell._ And when you
+        The catch: He <i>really does not like Bertrand Russell.</i> And when you
         read this book, you will understand why. It's important to emphasize
-        that Monk is not _unfair_ to the man, but he is absolutely merciless in
+        that Monk is not <i>unfair</i> to the man, but he is absolutely merciless in
         his choice of (for example) extended block quotes from Russell's
         absolutely mortifyingly cringeworthy unrequited love letters.
       - It might sound unfair to pull from those, but it's important to
-        understand that Russell wrote a _lot_ of letters, and a lot of these
+        understand that Russell wrote a <i>lot</i> of letters, and a lot of these
         were love letters. My man was writing letters at the rate most of us
         send texts, and that is not an exaggeration.
       - >
@@ -705,9 +709,9 @@ list:
 
   - title: Governing the Commons
     desc:
-      - Elinor Ostrom's book on how the Tragedy of the Commons is made-up
-        bullshit that's not real, and on how commons can be managed in real
-        life.
+      - Elinor Ostrom's book on how the Tragedy of the Commons is some made-up
+        bullshit that's not real (my words, not hers, unfortunately), and on
+        how commons can be managed in real life. 
       - >
         The book takes a ton of case studies of shared resources: pastures,
         fisheries, water supplies, etc - the exact places where conventional
@@ -728,16 +732,16 @@ list:
         Nobel Prize in Economics in 2009.
       - >
         If you need any more reasons to like her and her work, try these quotes from Wikipedia:
-      - Since the 60s, Ostrom was involved in resource management policy and
+      - "Since the 60s, Ostrom was involved in resource management policy and
         created a research center, which attracted scientists from different
         disciplines from around the world. Working and teaching at her center
         was created on the principle of a workshop, rather than a university
-        with lectures and a strict hierarchy.
-      - Ostrom studied the interaction of people and ecosystems for many years
+        with lectures and a strict hierarchy."
+      - "Ostrom studied the interaction of people and ecosystems for many years
         and showed that the use of exhaustible resources by groups of people
         (communities, cooperatives, trusts, trade unions) can be rational and
         prevent depletion of the resource without either state intervention or
-        markets with private property.
+        markets with private property."
 
   - title: The Evolution of Cooperation
     desc:
@@ -773,7 +777,7 @@ list:
         the IPD. They would implement their strategies and send them in to him.
         He would then take these and hold a round-robin tournament between them.
       - The results were incredible. The so-called "conventional wisdom"
-        strategy of "always-defect" was in fact one of the _worst-performing_
+        strategy of "always-defect" was in fact one of the <i>worst-performing</i>
         strategies sent in. The winner was "tit-for-tat", a strategy which
         simply starts out by trying to cooperate, then proceeds to do whatever
         the other player did on their last round. It cooperates as much as

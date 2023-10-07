@@ -1,14 +1,11 @@
 ---
 layout: post
 title: How to Install Qubes and Get It Set Up Just Right
-toc: true
 ---
 
 Qubes has been my daily driver OS on personal laptops since 2015. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
 
 Here's a quick overview of the main points.
-
-{% toc_only %}
 
 * ThinkPad with up-to-date firmware
 
@@ -196,7 +193,18 @@ Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost bl
 
 ### Unicode on the Status Bar
 
+You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here are some symbols to try:
 
+* 📆 U0001f6c6
+* ⌚u231a
+* 💻 U0001f4bb
+* 🐏 U0001f40f
+* ⚡ u26a1
+* 📡 U0001f4e1
+* 🌡 U0001f321
+* 🥵 U0001f975
+
+In a default Qubes install, the status bar's font (which, confusingly, is set in `~/.config/i3/status` rather than in `i3status`'s config) is `font pango:monospace 8`. If you're having trouble with unicode support in the status bar, changing the font might help. You might consider `font pango:DejaVu Sans mono 9` or (my current favorite, but more of an acquired taste) `font pango:Terminus 9`, although this also requires the `terminus-fonts-legacy-x11` package in dom0.
 
 ### Starting Apps
 

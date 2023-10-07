@@ -381,13 +381,13 @@ This automatically restarts sys-net's NetworkManager applet whenever i3's config
 
 ## AEM
 
-<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></center>
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> </center>
 
 You may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
 
 It is not a perfect protection. In particular, there is no clear path to recovery from compromise - but then again, isn't that always the case? You can read more about the security trade-offs and installation instructions on Qubes' [Anti-Evil Maid](https://www.qubes-os.org/doc/anti-evil-maid/) page.
 
-In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning that if your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security.
+In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning 1) your system needs to support those, and 2) if your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security.
 
 # Wrap-up
 

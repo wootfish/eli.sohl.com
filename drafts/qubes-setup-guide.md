@@ -3,7 +3,7 @@ layout: post
 title: How to Install Qubes and Get It Set Up Just Right
 ---
 
-Qubes has been my daily driver OS on personal laptops since 2015. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
+Qubes has been my daily driver OS on personal laptops since 2015. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help. I've also thrown in some quick notes whenever something worth discussing comes up.
 
 Here's a quick overview of the main points.
 
@@ -161,14 +161,14 @@ This is also where you can change how fast the screen locks. In the `# Use a scr
 You can also add a key binding for locking the screen, which will save you a lot of time. Add a line like this in the config file's top-level scope:
 
 ```
-bindsym Ctrl+Shift+l exec i3lock -f -c 420420
+bindsym Ctrl+Shift+L exec i3lock -f -c 420420
 ```
 
 `-f` is optional and shows failed login attempts.
 
-`-c` specifies color. Of course, you can specify any color you want - you'll find that `420420` is a dark, pleasing shade of maroon or burgundy. You can also provide e.g. `AAAAAA` for a gray background, if you prefer a more drab aesthetic.
+`-c` specifies color and is also optional (the default color is blinding white). Of course, you can specify any color you want - you'll find that `420420` is a dark, pleasing shade of maroon or burgundy. You can also provide e.g. `AAAAAA` for a gray background, if you prefer a more drab aesthetic.
 
-However, this is not just an aesthetic consideration: if you have multiple laptops with i3 on them, you should set their lock screens to different colors; this will make it easier to avoid accidentally typing your credentials into the wrong system. This especially applies if the devices look similar (e.g. if you followed my advice regarding ThinkPads).
+However, color is not just an aesthetic consideration: if you have multiple laptops with i3 on them, you should set their lock screens to different colors; this will make it easier to avoid accidentally typing your credentials into the wrong system. This especially applies if the devices look similar (e.g. if you followed my advice regarding ThinkPads). If you're doing this, make sure to update the other instance of i3lock (near the top of the config) to use the same color.
 
 After making these changes and saving the config, restart i3 in-place with `mod+shift+r`.
 
@@ -193,7 +193,7 @@ Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost bl
 
 ### Unicode on the Status Bar
 
-You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here are some symbols to try:
+You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here's a quick reference for some useful symbols:
 
 * 📆 U0001f6c6
 * ⌚ u231a
@@ -201,10 +201,13 @@ You can free up space on your status bar by replacing text with unicode glyphs. 
 * 🐏 U0001f40f
 * ⚡ u26a1
 * 📡 U0001f4e1
+* ⚒ u2692
 * 🌡 U0001f321
 * 🥵 U0001f975
 
-In a default Qubes install, the status bar's font (which, confusingly, is set in `~/.config/i3/status` rather than in `i3status`'s config) is `font pango:monospace 8`. If you're having trouble with unicode support in the status bar, changing the font might help. You might consider `font pango:DejaVu Sans mono 9` or (my current favorite, but more of an acquired taste) `font pango:Terminus 9`, although this also requires the `terminus-fonts-legacy-x11` package in dom0.
+In a default Qubes install, the status bar's font (which, confusingly, is set in `~/.config/i3/status` rather than in `i3status`'s config) is `font pango:monospace 8`. If you're having trouble with unicode support, changing the font might help. You might consider `font pango:DejaVu Sans mono 9` or (my current favorite, but more of an acquired taste) `font pango:Terminus 9`, although this also requires the `terminus-fonts-legacy-x11` package in dom0.
+
+When you're in VMs, you might find it more convenient to enter unicode symbols by searching for them and copy-pasting, but dom0 is not a valid target for pasting from the shared clipboard ([nor should it be](https://www.qubes-os.org/doc/how-to-copy-from-dom0/#copying-to-dom0)), so in dom0 the path of least resistance is to type these characters in explicitly.
 
 ### Starting Apps
 
@@ -214,15 +217,15 @@ Qubes' native xfce environment is fine, and it does a better job of surfacing th
 
 In fact, with a little adjustment, you can make it at least as ergonomic as a normal Linux install. Most Qubes AppVMs and DispVMs will only ever be started up to run one or two specific applications. For instance, I have an `email` AppVM that will only ever be used to open a web browser and check my web mail accounts. So, I run `email: Qube Settings`, go to the Applications tab, and deselect everything except my browser. Now, when I begin to type `mod+d email`, very quickly it will autocomplete to `email: Firefox`, which is what I want. In fact, I literally only have to type `e` for this suggestion to come up.
 
-You could do something similar with an AppVM for social media accounts, say, or online stores. Separating those domains might seem like overkill, but I take a certain spiteful pleasure in knowing I'm making it that much harder for the bastards to track my browsing.
+You could do something similar with an AppVM for social media accounts, say, or online stores. Separating those domains might seem like overkill, but it gives me peace of mind knowing I've done everything I can to separate these domains.
 
 Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-37-dvm: Firefox` (note that this matches on the middle of the name).
 
-Qubes has a reputation for inconvenience, compared to a traditional Linux system; it's not hard to see where this comes from, but once i3 is set up right, Qubes' interface will be so similar to a traditional i3 environment that you might even forget there's a difference.
+Compared to traditional Linux setups, Qubes has a reputation for inconvenience; this is understandable, but once you get i3 set up right, Qubes' interface will be so similar to traditional i3 that you might even forget there's a difference.
 
 ### Multi-Monitor Setups
 
-i3 expects you to manage your displays with xrandr, or with something that wraps xrandr. Honestly, this isn't so bad - you'd be surprised how easy it is to learn:
+i3 expects you to manage your own displays - probably with xrandr (or with something that wraps xrandr). Honestly, this isn't so bad. You'd be surprised how easy it is to learn:
 
 * `xrandr` to list your displays and their available resolutions
 
@@ -236,26 +239,28 @@ i3 expects you to manage your displays with xrandr, or with something that wraps
 
 * `xrandr --output HDMI1 --off` to turn off HDMI1
 
-There's a whole lot more that xrandr can do, but this is all I've ever needed.
+There's a *lot* more that xrandr can do, but this is all I've ever needed.
 
 These commands do get a little tedious to type in; you can save some time by setting up keybindings for them. For example, in my dom0's `.config/i3/config` file I have the following lines:
 
 ```
 # hotkeys for multi monitor setup
-bindsym $mod+x exec xrandr --output HDMI1 --auto --mode 3440x1440 --left-of eDP1
-bindsym $mod+c exec xrandr --output HDMI1 --off
+bindsym $mod+x exec xrandr --output DP-2 --auto --mode 3840x2160 --right-of eDP-1
+bindsym $mod+c exec xrandr --output DP-2 --off
 ```
 
 With something like this, you just plug in your monitor and press mod+x to turn it on and mod+c to turn it off.
 
-You can also consider putting your `xrandr` command(s) into a script in your PATH.
+You can also consider putting your `xrandr` command(s) into a script in your PATH. And, of course, if you do this then your hotkeys can just invoke your script rather than giving explicit `xrandr` commands.
 
 
 ## Idle Qube Shutdown
 
 You can set VMs to automatically shut down if they haven't opened a window or touched the network in a while. I really like this as a sort of failsafe measure for when I forget to shut a qube down.
 
-On top of the RAM this saves you, it arguably also improves your security posture a bit: lots of VM-to-VM attacks require both VMs to be running concurrently, so it makes sense to shut down VMs as soon as they're not needed. If you ever forget to shut a qube down right as you're done with it, auto-shutdown will cover for you. It's opt-in and is configured on a per-VM basis.
+This is nice. I recommend it unconditionally for TemplateVMs, which you want to shut down as soon as you're done making changes to them (both for security and for performance reasons). To be honest, I personally make a point of enabling this on *every* VM, but that comes down to personal preference.
+
+On top of the RAM this saves you, it arguably also improves your security posture a bit: most VM-to-VM attacks require both VMs to be running concurrently, so it makes sense to shut VMs down as soon as they're not needed. You still should probably do this manually, but if you ever forget, auto-shutdown will cover for you. It's opt-in and is configured on a per-VM basis.
 
 In dom0:
 
@@ -381,16 +386,16 @@ This automatically restarts sys-net's NetworkManager applet whenever i3's config
 
 ## AEM
 
-<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> </center>
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote></center>
 
-You may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
+Name aside, you may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
 
 It is not a perfect protection. In particular, there is no clear path to recovery from compromise - but then again, isn't that always the case? You can read more about the security trade-offs and installation instructions on Qubes' [Anti-Evil Maid](https://www.qubes-os.org/doc/anti-evil-maid/) page.
 
-In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning 1) your system needs to support those, and 2) if your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security.
+In addition to the concerns noted on that page, bear in mind that AEM depends on TPM and TXT, meaning 1) your system needs to support these features, and 2) you need to trust them. If your threat model includes adversaries who might be able to compromise a TPM unit then AEM is not quite a bulletproof guarantee of boot security; it still may be (and likely is) worthwhile as a defense-in-depth measure, but consider adjusting your level of trust in it accordingly.
 
 # Wrap-up
 
 That's just about it! Final thoughts: use a password manager, take domain separation seriously, keep regular backups (maybe even on external media or a second internal drive), and do your best to leave the world better than you found it.
 
-To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact)!
+To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact).

@@ -4,3 +4,4 @@ sass:
     style: compressed
 plugins:
   - jekyll-seo-tag
+  - jekyll-toc

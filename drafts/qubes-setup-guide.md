@@ -1,11 +1,14 @@
 ---
 layout: post
 title: How to Install Qubes and Get It Set Up Just Right
+toc: true
 ---
 
 Qubes has been my daily driver OS on personal laptops since 2015. In that time, I've found some nice little tricks and customizations. This post is, from start to finish, what I do to install Qubes from scratch and get it set up just how I like it. If you're thinking of giving Qubes and i3 a try, maybe this will help.
 
 Here's a quick overview of the main points.
+
+{% toc %}
 
 * ThinkPad with up-to-date firmware
 
@@ -158,6 +161,18 @@ TKTK THIS NO LONGER APPLIES IN LATEST i3config (how is locking handled now?)
 This is also where you can change how fast the screen locks. In the `# Use a screen locker` section, change `-time 3` from `3` to however many minutes you want to wait before locking. Bear in mind that you can always lock your screen manually with `i3lock`, and the less often your screen auto-locks while the laptop is in use, the less often you have to type in (and potentially be seen typing in) your user password, so I think it's reasonable to set this value fairly high as long as you're diligent about manual screen-locking.
 -->
 
+You can also add a key binding for locking the screen, which will save you a lot of time. Add a line like this in the config file's top-level scope:
+
+```
+bindsym Ctrl+Shift+l exec i3lock -f -c 420420
+```
+
+`-f` is optional and shows failed login attempts.
+
+`-c` specifies color. Of course, you can specify any color you want - you'll find that `420420` is a dark, pleasing shade of maroon or burgundy. You can also provide e.g. `AAAAAA` for a gray background, if you prefer a more drab aesthetic.
+
+However, this is not just an aesthetic consideration: if you have multiple laptops with i3 on them, you should set their lock screens to different colors; this will make it easier to avoid accidentally typing your credentials into the wrong system. This especially applies if the devices look similar (e.g. if you followed my advice regarding ThinkPads).
+
 After making these changes and saving the config, restart i3 in-place with `mod+shift+r`.
 
 ### Temperature
@@ -179,17 +194,23 @@ You may need to adjust the inner commands depending on what `sensors` returns on
 
 Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost block and include the result to the final echo: `echo ",[$cputemp$qubes$disk$bat$load$time]"`. Then restart i3 and check the bottom of the screen to see if it worked.
 
+### Unicode on the Status Bar
+
+
+
 ### Starting Apps
 
 Note that you can now start dom0 applications by name from dmenu (e.g. `mod+d Qube Manager`), and you can start AppVM applications by prefixing the VM name (e.g. "mod+d personal: Firefox"). If you open a terminal on a blank workspace, it will be a dom0 terminal; if any window is focused, the terminal is opened in the same VM where that window is running.
 
-Qubes' native xfce environment is fine, and it does a better job of surfacing the OS's features for new users. You can still switch back to xfce any time you want. But once you know what you're doing, you might find, as I do, that i3 is a much more comfortable place to work.
+Qubes' native xfce environment is fine, and it does a better job of surfacing the OS's features for new users. You can still switch back to xfce any time you want, and as a new user, you might want to do this from time to time. But once you know what you're doing, you might find, as I do, that i3 is a much more comfortable place to work.
 
 In fact, with a little adjustment, you can make it at least as ergonomic as a normal Linux install. Most Qubes AppVMs and DispVMs will only ever be started up to run one or two specific applications. For instance, I have an `email` AppVM that will only ever be used to open a web browser and check my web mail accounts. So, I run `email: Qube Settings`, go to the Applications tab, and deselect everything except my browser. Now, when I begin to type `mod+d email`, very quickly it will autocomplete to `email: Firefox`, which is what I want. In fact, I literally only have to type `e` for this suggestion to come up.
 
 You could do something similar with an AppVM for social media accounts, say, or online stores. Separating those domains might seem like overkill, but I take a certain spiteful pleasure in knowing I'm making it that much harder for the bastards to track my browsing.
 
 Similar tricks work for most AppVMs and DispVMs: for instance, to open my password manager, I can just type `mod+d v <enter>`, which autocompletes to `vault: KeePassXC`. Opening a browser in a disposable VM is just `mod+d dv <enter>`, which autocompletes to `fedora-37-dvm: Firefox` (note that this matches on the middle of the name).
+
+Qubes has a reputation for inconvenience, compared to a traditional Linux system; it's not hard to see where this comes from, but once i3 is set up right, Qubes' interface will be so similar to a traditional i3 environment that you might even forget there's a difference.
 
 ### Multi-Monitor Setups
 

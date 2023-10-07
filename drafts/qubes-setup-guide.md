@@ -166,7 +166,7 @@ bindsym Ctrl+Shift+L exec i3lock -f -c 420420
 
 `-f` is optional and shows failed login attempts.
 
-`-c` specifies color and is also optional (the default color is blinding white). Of course, you can specify any color you want - you'll find that `420420` is a dark, pleasing shade of maroon or burgundy. You can also provide e.g. `AAAAAA` for a gray background, if you prefer a more drab aesthetic.
+`-c` specifies color and is also optional (the default color is blinding white). Of course, you can specify any color you want - depending on your monitor's color balance, you'll find that `420420` is a dark, pleasing, shade of maroon, burgundy, or plum. You can also provide e.g. `AAAAAA` for a gray background, if you are more serious and prefer a more drab aesthetic.
 
 However, color is not just an aesthetic consideration: if you have multiple laptops with i3 on them, you should set their lock screens to different colors; this will make it easier to avoid accidentally typing your credentials into the wrong system. This especially applies if the devices look similar (e.g. if you followed my advice regarding ThinkPads). If you're doing this, make sure to update the other instance of i3lock (near the top of the config) to use the same color.
 

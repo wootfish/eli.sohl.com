@@ -8,7 +8,7 @@ Qubes has been my daily driver OS on personal laptops since 2015. In that time, 
 
 Here's a quick overview of the main points.
 
-{% toc %}
+{% toc_only %}
 
 * ThinkPad with up-to-date firmware
 

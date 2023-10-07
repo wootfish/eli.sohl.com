@@ -196,7 +196,7 @@ Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost bl
 You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here are some symbols to try:
 
 * 📆 U0001f6c6
-* ⌚u231a
+* ⌚ u231a
 * 💻 U0001f4bb
 * 🐏 U0001f40f
 * ⚡ u26a1
@@ -381,7 +381,8 @@ This automatically restarts sys-net's NetworkManager applet whenever i3's config
 
 ## AEM
 
-<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</p>&mdash; ypad 🍃 (@ypad) <a href="https://twitter.com/ypad/status/1415365746071379974?ref_src=twsrc%5Etfw">July 14, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></center>
+> <center>its telling that infosec calls it the “evil maid” attack instead of the much more realistic “jealous boyfriend” attack</center>
+> <center>- someone on Twitter, ages ago</center>
 
 You may want to consider "Anti-Evil Maid" protections. This is in some ways similar to Secure Boot, though it works differently: Rather than Secure Boot's "only run trusted code" model, AEM allows you to essentially specify a trusted startup state, and then on future boots determine whether you've ended up in that same state - the implication being that if you haven't, then something has gone wrong (or you've updated your firmware/bootloader).
 

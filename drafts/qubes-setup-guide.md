@@ -193,7 +193,7 @@ Next, add a line like `local cputemp=$(status_cputemp)` in `main`'s innermost bl
 
 ### Unicode on the Status Bar
 
-You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here's a quick reference for some useful symbols:
+You can free up space on your status bar by replacing text with unicode glyphs. This is totally a matter of personal taste, but I like how it looks. In Vim, when you're in insert mode, you can type in Unicode characters easily: Ctrl-V, then u or U (for a 4- or 8-digit code), then the symbol's hex code. Here are some that I've used.
 
 * 📆 U0001f6c6
 * ⌚ u231a
@@ -399,3 +399,5 @@ In addition to the concerns noted on that page, bear in mind that AEM depends on
 That's just about it! Final thoughts: use a password manager, take domain separation seriously, keep regular backups (maybe even on external media or a second internal drive), and do your best to leave the world better than you found it.
 
 To be honest, this is as much a note-to-self as it is a blog post; all the same, I hope you find it useful. If you do, or if you have any additions to suggest, feel free to [get in touch](https://eli.sohl.com/contact).
+
+When you run into questions that aren't answered here, your next stops should be the [official Qubes documentation](https://www.qubes-os.org/doc/), the [Qubes community documentation](https://github.com/Qubes-Community/Contents), and the [Qubes Forum](https://forum.qubes-os.org/).

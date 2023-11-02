@@ -15,7 +15,7 @@ Here's a quick overview of the main points.
 
   * Movement rebound from `jkl;` to `hjkl`
 
-  * Temperature monitor in status bar
+  * Status bar customizations, incl. temperature monitor
 
   * Tailored app lists for each AppVM and DispVM
 
@@ -23,7 +23,7 @@ Here's a quick overview of the main points.
 
 * Automatic shutdown for idle qubes
 
-* USB keyboard support
+* USB keyboard and mouse support
 
 * Custom VM suggestions: `dev`, `vpn`, `dvm-web`, ...
 
@@ -43,13 +43,13 @@ You'll want at least 8G of RAM (I've run Qubes on boxes with 4G and it was usabl
 
 If you have a specific device in mind, make sure to check for it in the [Qubes Hardware Compatibility List](https://www.qubes-os.org/hcl/). That page can also serve as a buying guide.
 
-My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love these things. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online. Of course, used hardware may be less attractive depending on your threat model; in that case, maybe it's worth buying something new off-the-shelf.
+My personal preference is for used or refurbished ThinkPads. The prices are great, the laptops are tough, and you almost never need to worry about Linux support because nerds fucking love these things. See if you can buy locally (if you're in the Seattle area, [InterConnection](https://interconnection.org/) is great); you can also find refurb hardware for good prices online. Of course, used hardware may be less attractive depending on your threat model, in which case it might be worth buying something new off-the-shelf.
 
 You'll need a USB drive to write the installer to. I like to get a new drive for each install, just so I know where it has(n't) been. Of course, buying new hardware is not a guarantee against tampering at the factory level, which is an established practice for certain threat actors.
 
 # Firmware
 
-First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea, especially with older ThinkPads. It'll be easiest to do this now, before you've installed AEM.
+First off, make sure your laptop's firmware is up to date. This isn't strictly _necessary_, but it is a good idea, especially with older ThinkPads. It'll be easiest to do this now, before you've set up AEM.
 
 Be careful here. The usual warnings apply: make sure your laptop has a full charge and stays plugged in from start to finish. You do not want anything to go wrong here, or else your system might end up failing into an unrecoverable state.
 
@@ -138,9 +138,9 @@ Now we're getting to the good stuff. The base Qubes install is usable, but over 
 
 Once you get used to a tiling window manager, you'll never want to go back. I've tried a few and, to me, i3 is easily the standout.
 
-Install in dom0 with `sudo qubes-dom0-update i3 i3-settings-qubes`. That second package sets a bunch of nice, Qubes-specific default settings for i3. You want it.
+Install in dom0 with `sudo qubes-dom0-update i3 i3-settings-qubes`. That second package sets a bunch of nice, Qubes-specific default settings for i3. You want it if you want i3.
 
-Once i3 is installed, log out, then log in with i3. This will prompt you to create a config, which mostly involves picking a modifier key. You probably want to use Win rather than Alt: lots of apps have their own Alt chords, but they tend to leave Win chords to the window manager.
+Once i3 is installed, log out, then log in with i3. This will prompt you to create a config, which really just means picking a modifier key. You probably want to use Win rather than Alt: lots of apps have their own Alt chords, but they tend to leave Win chords to the window manager.
 
 ### Key bindings
 
@@ -269,12 +269,14 @@ $ sudo qubes-dom0-update qubes-app-shutdown-idle
 $ qvm-features vault service.shutdown-idle 1
 ```
 
-To enable the feature for the `vault` VM. I'm honestly not sure what the units of time are here, but this works well enough.
+To enable the feature for the `vault` VM. I'm honestly not sure what the units of time are here - it feels longer than 1 minute but shorter than 1 hour - but this works well enough.
+
+Note that this shutdown service runs within each qube, rather than in dom0. This is fine for trusted Qubes, but if you want to auto-shutdown potentially compromised Qubes, you should shut them down from dom0 instead; to automate this, there is something called [qidle](https://github.com/3hhh/qidle). I haven't tried it but it might be worth considering.
 
 
-## USB Keyboard
+## USB Keyboard and Mouse
 
-If you don't plan on using a USB keyboard, skip this step. Doing so will marginally reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
+If you don't plan on using a USB keyboard or mouse, skip this step. Doing so will marginally reduce your attack surface. You can read the Qubes team's notes on that subject [here](https://www.qubes-os.org/doc/device-handling-security/#security-warning-on-usb-input-devices).
 
 That said, some of us can't resist the siren song of the mechanical keyboard. Here's how to make that work.
 
@@ -291,11 +293,9 @@ Per the [Qubes docs](https://www.qubes-os.org/doc/usb-qubes/#automatic-setup):
 
 As suggested, I leave my USB keyboard and mouse unplugged until after I log in. This allows me to ensure that the USB keyboard is only ever directly exposed to sys-usb, not dom0.
 
-You can enable 
+USB mice are simpler to set up. If you want to suppress the approval dialogues, follow the guidance on this section: https://www.qubes-os.org/doc/usb-qubes/#usb-mice
 
-https://www.qubes-os.org/doc/usb-qubes/
-
-Note that as of this writing (and probably forever), combined USB keyboard/mouse devices are _not_ supported: it'll let you identify an input device as a keyboard or a mouse, but not as both. I really wish they could relax that constraint, because I'd love to use my USB ThinkPad TrackPoint keyboard with Qubes, but I don't see that happening any time soon.
+Note that as of this writing, USB keybords and mice are supported, but they have to be separate devices; combined USB keyboard/mouse peripherals are _not_ supported. Qubes will let you identify an input device as a keyboard or a mouse, but not as both. I really wish they could relax that constraint, because I'd love to use my [USB ThinkPad TrackPoint keyboard](https://www.lenovo.com/us/en/p/accessories-and-software/keyboards-and-mice/keyboards/0b47190) with Qubes, but I don't see that happening any time soon.
 
 
 ## VMs

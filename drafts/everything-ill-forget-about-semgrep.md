@@ -2,9 +2,9 @@
 
 # Ten-Second Primer
 
-Semgrep is a static code analysis tool. It works on [any language it can parse](TKTK ADD LINKS). Compilation is not required. Rules are terse and flexible. There is limited support for data flow analysis. There is a paid version. The free version works well, but has limitations; most notably it can't track patterns across files. Semgrep can run completely offline, however it does not do so by default.
+Semgrep is a static code analysis tool. It works on [any language it can parse](https://semgrep.dev/docs/supported-languages/), though levels of support vary. Compilation is not required. Rules are terse and flexible. There is some support for data flow analysis. There is a paid version. The free version works well, but has limitations; most notably it can't track patterns across files (it can only analyze files in isolation). Semgrep can run completely offline (though it does not do so by default).
 
-Semgrep is installed with `python3 -m pip install semgrep` and is invoked as follows.
+Semgrep is installed with `python3 -m pip install semgrep`, and is invoked as follows.
 
 # Invocation
 
@@ -12,7 +12,7 @@ For quick searches, Semgrep rules can be provided ad-hoc on the command line:
 
 $ semgrep -e "Crypto.Cipher.AES" -l py
 
-This will locate uses of the `Crypto.Cipher` library's AES object, even if it is used under a different name. This sort of ad-hoc query can be useful for navigating unfamiliar codebases.
+This will locate uses of the `Crypto.Cipher` library's AES object, even if it is used under a different name. This sort of ad-hoc query is useful as a sort of supercharged grep, and is similarly useful for mapping out unfamiliar codebases at the start of code review.
 
 The `-l` or `--lang` argument is required, but `generic` is a valid option; that said, it's best to be specific so semgrep can use the best available parser.
 
@@ -188,8 +188,25 @@ rules:
   severity: WARNING
 ```
 
+## Structural matching
 
-## TKTK structural matching
+In addition to matching individual statements, you can match on combinations of statements, nested statements, and other nontrivial structure. Here's an example from the semgrep docs.
+
+```yaml
+pattern: |
+  def $FUNC(..., $ARG={}, ...):
+      ...
+```
+
+This looks for a common Python bug pattern where a function is defined with a default mutable argument. This could be improved by matching lists as well as dicts, e.g. by adding a second pattern for `$ARG=[]` and composing the patterns with `pattern-or`. Note the use of `|` to define a multiline string. YAML has annoyingly many syntaxes for multiline strings (one StackOverflow answer puts the total at a staggering 63 options; read all about it [here](https://stackoverflow.com/a/21699210)), but this syntax works well for Semgrep; so far, it's all I've needed to remember.
+
+You can write larger patterns. Here's one that looks for timing side-channels in HMAC validation. This particular signature is tuned to C and OpenSSL. TKTK TODO
+
+```yaml
+TKTK
+```
+
+
 
 # Flow analysis
 
@@ -214,36 +231,33 @@ TKTK are there any templating type features? eg suppose we want a generic rule f
 
 # CWE reference
 
-Security-related rules in the Semgrep Registry require a CWE category. Again, the full list of CWEs, along with some specialized views, can be found [at MITRE's web site](https://cwe.mitre.org/data/index.html). For convenience, I've included the following list of the 25 most common CWEs in Semgrep's community rule collection, in descending order:
+Security-related rules in the Semgrep Registry require a CWE category. Again, the full list of CWEs, along with some specialized views, can be found [at MITRE's web site](https://cwe.mitre.org/data/index.html). However, for those of us who have not committed the CWE categories to memory, I've included the following convenient list of the 25 most common CWEs in Semgrep's community rule collection, in descending order:
 
-https://cwe.mitre.org/data/definitions/79.html
-
-
- * [CWE-798](https://cwe.mitre.org/data/definitions/798.html): Use of Hard-coded Credentials
- * [CWE-79](https://cwe.mitre.org/data/definitions/79.html): Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
- * [CWE-284](https://cwe.mitre.org/data/definitions/284.html): Improper Access Control
- * [CWE-89](https://cwe.mitre.org/data/definitions/89.html): Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
- * [CWE-319](https://cwe.mitre.org/data/definitions/319.html): Cleartext Transmission of Sensitive Information
- * [CWE-94](https://cwe.mitre.org/data/definitions/94.html): Improper Control of Generation of Code ('Code Injection')
- * [CWE-327](https://cwe.mitre.org/data/definitions/327.html): Use of a Broken or Risky Cryptographic Algorithm
- * [CWE-78](https://cwe.mitre.org/data/definitions/78.html): Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
- * [CWE-918](https://cwe.mitre.org/data/definitions/918.html): Server-Side Request Forgery (SSRF)
- * [CWE-320](https://cwe.mitre.org/data/definitions/320.html): CWE CATEGORY: Key Management Errors
- * [CWE-502](https://cwe.mitre.org/data/definitions/502.html): Deserialization of Untrusted Data
- * [CWE-326](https://cwe.mitre.org/data/definitions/326.html): Inadequate Encryption Strength
- * [CWE-611](https://cwe.mitre.org/data/definitions/611.html): Improper Restriction of XML External Entity Reference
- * [CWE-95](https://cwe.mitre.org/data/definitions/95.html): Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')
- * [CWE-22](https://cwe.mitre.org/data/definitions/22.html): Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')
- * [CWE-522](https://cwe.mitre.org/data/definitions/522.html): Insufficiently Protected Credentials
- * [CWE-311](https://cwe.mitre.org/data/definitions/311.html): Missing Encryption of Sensitive Data
- * [CWE-706](https://cwe.mitre.org/data/definitions/706.html): Use of Incorrectly-Resolved Name or Reference
- * [CWE-200](https://cwe.mitre.org/data/definitions/200.html): Exposure of Sensitive Information to an Unauthorized Actor
- * [CWE-352](https://cwe.mitre.org/data/definitions/352.html): Cross-Site Request Forgery (CSRF)
- * [CWE-601](https://cwe.mitre.org/data/definitions/601.html): URL Redirection to Untrusted Site ('Open Redirect')
- * [CWE-915](https://cwe.mitre.org/data/definitions/915.html): Improperly Controlled Modification of Dynamically-Determined Object Attributes
- * [CWE-732](https://cwe.mitre.org/data/definitions/732.html): Incorrect Permission Assignment for Critical Resource
- * [CWE-250](https://cwe.mitre.org/data/definitions/250.html): Execution with Unnecessary Privileges
- * [CWE-614](https://cwe.mitre.org/data/definitions/614.html): Sensitive Cookie in HTTPS Session Without 'Secure' Attribute
+ * [CWE-798](https://cwe.mitre.org/data/definitions/798.html): Use of Hard-coded Credentials (235 rules)
+ * [CWE-79](https://cwe.mitre.org/data/definitions/79.html): Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (147 rules)
+ * [CWE-284](https://cwe.mitre.org/data/definitions/284.html): Improper Access Control (123 rules)
+ * [CWE-89](https://cwe.mitre.org/data/definitions/89.html): Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') (81 rules)
+ * [CWE-319](https://cwe.mitre.org/data/definitions/319.html): Cleartext Transmission of Sensitive Information (76 rules)
+ * [CWE-327](https://cwe.mitre.org/data/definitions/327.html): Use of a Broken or Risky Cryptographic Algorithm (66 rules)
+ * [CWE-78](https://cwe.mitre.org/data/definitions/78.html): Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (65 rules)
+ * [CWE-94](https://cwe.mitre.org/data/definitions/94.html): Improper Control of Generation of Code ('Code Injection') (65 rules)
+ * [CWE-918](https://cwe.mitre.org/data/definitions/918.html): Server-Side Request Forgery (SSRF) (53 rules)
+ * [CWE-320](https://cwe.mitre.org/data/definitions/320.html): CWE CATEGORY: Key Management Errors (52 rules)
+ * [CWE-502](https://cwe.mitre.org/data/definitions/502.html): Deserialization of Untrusted Data (48 rules)
+ * [CWE-326](https://cwe.mitre.org/data/definitions/326.html): Inadequate Encryption Strength (47 rules)
+ * [CWE-611](https://cwe.mitre.org/data/definitions/611.html): Improper Restriction of XML External Entity Reference (44 rules)
+ * [CWE-95](https://cwe.mitre.org/data/definitions/95.html): Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') (36 rules)
+ * [CWE-22](https://cwe.mitre.org/data/definitions/22.html): Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') (33 rules)
+ * [CWE-522](https://cwe.mitre.org/data/definitions/522.html): Insufficiently Protected Credentials (31 rules)
+ * [CWE-706](https://cwe.mitre.org/data/definitions/706.html): Use of Incorrectly-Resolved Name or Reference (23 rules)
+ * [CWE-200](https://cwe.mitre.org/data/definitions/200.html): Exposure of Sensitive Information to an Unauthorized Actor (23 rules)
+ * [CWE-311](https://cwe.mitre.org/data/definitions/311.html): Missing Encryption of Sensitive Data (22 rules)
+ * [CWE-352](https://cwe.mitre.org/data/definitions/352.html): Cross-Site Request Forgery (CSRF) (19 rules)
+ * [CWE-601](https://cwe.mitre.org/data/definitions/601.html): URL Redirection to Untrusted Site ('Open Redirect') (18 rules)
+ * [CWE-915](https://cwe.mitre.org/data/definitions/915.html): Improperly Controlled Modification of Dynamically-Determined Object Attributes (17 rules)
+ * [CWE-732](https://cwe.mitre.org/data/definitions/732.html): Incorrect Permission Assignment for Critical Resource (15 rules)
+ * [CWE-250](https://cwe.mitre.org/data/definitions/250.html): Execution with Unnecessary Privileges (14 rules)
+ * [CWE-614](https://cwe.mitre.org/data/definitions/614.html): Sensitive Cookie in HTTPS Session Without 'Secure' Attribute (13 rules)
 
  While CWEs are required, the rules around them do not appear to be too strict, as evidenced by the presence of "CWE-320: CWE CATEGORY: Key Management Errors" in the #10 spot despite MITRE's guidance that, as a category, "this CWE ID must not be used to map to real-world vulnerabilities".
 

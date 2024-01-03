@@ -37,7 +37,7 @@ $ semgrep -c p/semgrep-rule-lints
 
 Trivial rules resemble this skeleton:
 
-```
+```yaml
 rules:
 - id: kebab-case-name
   message: Don't do this. Do something else.
@@ -59,7 +59,7 @@ These fields are enough to get Semgrep to run. If we want to share our rules on 
 
 The following is a minimal example of a rule that meets all the `security`-level criteria.
 
-```
+```yaml
 rules:
 - id: kebab-case-name
   metadata:
@@ -109,8 +109,8 @@ rules:
   - id: pycryptodome-aes-usage
     languages:
       - python
-    otions:
-      - symbolic_propagation: true
+    options:
+      symbolic_propagation: true
     pattern: Crypto.Cipher.AES.new(...)
     message: An AES cipher is instantiated here.
     severity: INFO
@@ -124,6 +124,7 @@ The `symbolic_propagation` option is nonobvious but recommended. Without it, thi
 
 A rule can use a single pattern, or it can be multiple patterns. Patterns can be positive (e.g. `pattern`) or negative (e.g. `pattern-not`, `pattern-not-inside`). Each positive pattern will produce possible matches; each negative pattern will filter out unwanted matches. By chaining them, you can create expressive rules. For example, here's a pattern for checking Windows kernel code; this signature checks for zeroization of buffers which have been used to store decrypted plaintexts.
 
+```yaml
 rules:
   - id: bcrypt-no-zeroize-pt-block
     languages:
@@ -135,6 +136,7 @@ rules:
         SecureZeroMemory($PBOUTPUT, sizeof($PBOUTPUT));
     message: $PBOUTPUT may be sensitive and does not appear to be zeroized after use.
     severity: INFO
+```
 
 This rule starts by matching on _every_ invocation of `BCryptDecrypt` (documented [here](https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt)). Then, for each match, it checks whether that match is contained within the second pattern, which looks for a call to SecureZeroMemory (documented [here](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa366877(v=vs.85))).
 Metavariables, once defined, can be used in subsequent patterns; their values will persist. For example, `$PBOUTPUT`, defined in the first pattern, is referenced in the second pattern.
@@ -220,6 +222,8 @@ TKTK note alternative to flow analysis as in eg ./community/contrib/nodejsscan/c
 # Pattern design
 
 TKTK Don't give too much commentary above; save it for here. Move stuff here as needed.
+
+discuss symbolic_propagation
 
 Catch-all rules vs specialized cases (I prefer catch-all).
 

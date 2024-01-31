@@ -589,15 +589,32 @@ list:
 
   - title: Introduction to Modern Cryptography
     desc:
-      - My holy book. Very thorough in scope. Detailed but readable. Includes
-        lots of trivia (like - no pun intended - a discussion of the freakishly
+      - One of my favorite books on cryptography. Outstanding. Very thorough.
+        Detailed but readable. Includes lots of trivia (like - no pun intended - a discussion of the freakishly
         simple-yet-unbroken stream cipher <a href="https://en.wikipedia.org/wiki/Trivium_(cipher)">Trivium</a>
         as a companion to the discussion of LFSRs).
-      - If you want to get serious about cryptography, you might not read this
-        book first, but you must read it at some point. For a while, Schneier's
-        "Applied Cryptography" held that title, but no longer; Introduction to
-        Modern Cryptography has taken the title and I doubt it'll give it up
-        any time soon.
+      - >
+        Do note that it is an introduction, rather than a treatment of the full
+        field. The topics covered are covered thoroughly, but there are some
+        notable omissions: elliptic curves are one, <s>and post-quantum algorithms
+        are another</s> <i>(in fact, the third edition seems to have added 20
+        pages on PQC, but I have not yet read them)</i>. The latter omission is
+        understandable given the pace of research; the former is, in my
+        opinion, a weakness. It is however in keeping with the theme of the
+        book, which is more interested in concepts than implementation details.
+        ECC has a lot of important implementation details, but it also is just
+        flat-out important: These days, almost all serious cryptographic
+        engineering involves elliptic curves.
+      - >
+        Consequently, a lot of the topics discussed feel interesting in the
+        same way classical cryptanalysis is interesting: you don't need to know
+        all of it, but it provides an accessible example of the <i>types</i> of
+        ideas and reasoning you'll need to be comfortable with, and in that
+        sense there still is real value in teaching it before moving on to the
+        harder but more practically relevant stuff.
+      - Would be an excellent textbook for an introductory class on
+        cryptography. I'd be comfortable putting it in front of anyone from
+        grad students to (motivated, non-math-averse) high schoolers.
 
   - title: "Serious Privacy: What it Takes to Disappear"
     desc:

@@ -13,7 +13,7 @@ Here's a quick overview of the main points.
 
 * i3 window manager
 
-  * Movement rebound from `jkl;` to `hjkl`
+  * i3 movement rebound from `jkl;` to `hjkl`
 
   * Status bar customizations, incl. temperature monitor
 
@@ -33,7 +33,9 @@ Here's a quick overview of the main points.
 
 * Bugfixes in `sys-net` (if needed)
 
-* Anti-Evil Maid protections (if needed)
+* Multi-monitor bugfix (if needed)
+
+* AEM (if needed)
 
 # Hardware
 
@@ -382,6 +384,19 @@ exec_always --no-startup-id "qvm-run sys-net \"pkill nm-applet; nm-applet \&\""
 ```
 
 This automatically restarts sys-net's NetworkManager applet whenever i3's config file is executed, i.e. whenever i3 is loaded. Now, if the widget ever disappears, you can bring it back by hitting `mod+shift+r` to restart i3 in place.
+
+
+## Multi-monitor troubleshooting
+
+There's an annoying bug where if you plugg in multiple external monitors (or a single large monitor) while app qubes are running, it can create "dead regions" on the screen where those qubes' apps are unclickable.
+
+The issue and root cause are discussed here: [https://www.qubes-os.org/doc/gui-troubleshooting/#cant-click-on-anything-after-connecting-4k-external-display](https://www.qubes-os.org/doc/gui-troubleshooting/#cant-click-on-anything-after-connecting-4k-external-display)
+
+> When a qube starts, a fixed amount of RAM is allocated to the graphics buffer called video RAM. This buffer needs to be at least as big as the whole desktop, accounting for all displays that are or will be connected to the machine. By default, it is as much as needed for the current display and an additional full HD (FHD) display (1920×1080 8 bit/channel RGBA).
+
+The solution is given here: [https://www.qubes-os.org/doc/gui-configuration/#video-ram-adjustment-for-high-resolution-displays](https://www.qubes-os.org/doc/gui-configuration/#video-ram-adjustment-for-high-resolution-displays)
+
+That second page gives a nice one-liner: `qvm-features dom0 gui-videoram-min $(xrandr --verbose | grep "Screen 0" | sed -e 's/.*current //' -e 's/\,.*//' | awk '{print $1*$3*4/1024}')`
 
 
 ## AEM

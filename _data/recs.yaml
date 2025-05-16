@@ -168,39 +168,40 @@ list:
     desc:
       - This was part of a trifecta of books I read (Walkaway - A Paradise
         Built in Hell - The Conquest of Bread) that quite literally reversed my
-        outlook on life. I was a very cynical person, and one of the things that
-        dragged me out of that particular tar pit was the experience of seeing my
-        own ideals reflected back at me through this book. Never before had I
-        read something and agreed so thoroughly with it.
-      - I've written about it at more length <a href="/2017/09/12/book-notes.html">here</a>.
+        outlook on life. For most of my teens and 20s I was a very cynical
+        person, and one of the things that dragged me out of that particular
+        tar pit was the experience of seeing my own ideals reflected back at me
+        through this book. Never before had I read something and agreed so
+        thoroughly with it.
+      - I've written about this book at more length <a href="/2017/09/12/book-notes.html">here</a>.
         Suffice to say I recommend it highly - I think there's something in it
         for just about anyone, at least as long as they're mature enough to not
-        be scandalized by a handful of sex scenes.
+        be scandalized by a handful of brief, steamy encounters.
       - If I were somehow suddenly placed in charge of distributing a
         billionaire's fortune, I would start a foundation dedicated to trying
         to make every piece of sci-fi technology from Walkaway real. That would
         be my plan. No more, no less. Can't happen soon enough.
-      - The most quietly radical aspect of this book is the argument it makes
+      - Perhaps the most quietly radical aspect of this book is the argument it makes
         in favor of having a place to fuck off <i>to</i>. There are whole parts
-        of their world that are so unpleasant as to have been abandoned in
-        favor of walled cities. This might sound bad, but it leaves room for
+        of this book's world that are so unpleasant as to have been abandoned
+        in favor of walled cities. This might sound bad, but it leaves room for
         experimentation, which is something we have painfully little of today.
     cf:
       - title: The Conquest of Bread
         desc: The characters of Walkaway don't realize they're anarchists. They
-          just kind of do anarchism by accident, because it makes sense at the
-          time. I love that. That said, I really wish they would please all
-          read a fucking book, and this is the book I'd give them. Then again,
-          maybe they wouldn't need it, because they pretty much live it.
+          just kind of do anarchism by accident, because it makes sense to them
+          at the time. I love that. That said, I really wish they would please
+          all read a fucking book, and this is the book I'd give them. Then
+          again, maybe they wouldn't need it, because they pretty much live it.
       - title: A Paradise Built in Hell
-        desc: Walkaway is the story of a utopia-within-a-dystopia. Basically,
+        desc: Walkaway is a story of a utopia-within-a-dystopia. Basically,
           modern life becomes so horrible that the war-scarred, abandoned,
-          rubble-strewn desert becomes relatively appealing by comparison. Life
-          is hard out there, but the things that make it hard are things you
-          can come together against, rather than things that divide you. This
-          narrative has so much overlap with the themes of A Paradise Built in
-          Hell. That's not a coincidence, either - I actually first heard of
-          that book when Doctorow mentioned it during a radio interview for
+          rubble-strewn desert starts looking good by comparison. Life is hard
+          out there, but the things that make it hard are things you can come
+          together against, rather than things that divide you. This narrative
+          has so much overlap with the themes of A Paradise Built in Hell.
+          That's not a coincidence, either - I actually first heard of that
+          book when Doctorow mentioned it during a radio interview for
           Walkaway.
       - title: The Dispossessed
         desc: A very similar book in a lot of ways. There are big differences,
@@ -211,24 +212,25 @@ list:
     desc:
       - One of the first books on security that I ever read, and, to this day,
         one of my favorites.
-      - Ignore every synopsis of this book online. They undersell it. It seems
-        to me like no one was quite sure how to sell this book because no one
-        was quite sure what it was or who it was for. The answer is, it's a
-        grab bag with a few cool ideas at every level of abstraction in a
-        computer system circa 2005. There are a few nominal through-lines
-        connecting these ideas, but really it's just a masterclass in
-        discursive exposition. As for who it's for, the answer is - hackers. In
-        the classic sense, where a "hacker" approaches a computer with
-        curiosity and tries to do surprising things with it, this is the
-        clearest expression of a "hacker mindset" that I've ever seen.
+      - Ignore every synopsis of this book online. They don't get it, and they
+        undersell it. It seems to me like no one was quite sure how to sell
+        this book because no one was quite sure what it was or who it was for.
+        The answer is, it's a grab bag with a few cool ideas at every level of
+        abstraction in a computer system circa 2005. There are a few nominal
+        through-lines connecting these ideas, but really it's just a
+        masterclass in discursive exposition. As for who it's for, the answer
+        is - hackers. In the classic sense, where a "hacker" approaches a
+        computer with curiosity and tries to do surprising things with it, this
+        is the clearest expression of a "hacker mindset" that I've ever seen.
       - >
         In fact, I'll go further: this book is, to me, the high water mark for
-        accessible technical writing. Many people would tell you that it's
-        possible for technical writing to be either precise or conversational
-        but not both at once. Zalewski proves those people wrong. It reminds me
-        of how some great teachers can ramble for an hour and somehow manage to
-        hit every beat in their lesson plan, while you're so drawn-in that you
-        don't even realize you're learning.
+        accessible technical writing <i>(ed. note, 2025 - Knuth now shares this honor. They're tied for first place)</i>.
+        Many people would tell you that it's possible for technical writing to
+        be either precise or conversational but not both at once. Zalewski
+        proves those people wrong. It reminds me of how some great teachers can
+        ramble for an hour and somehow manage to hit every beat in their lesson
+        plan, while you're so drawn-in that you don't even realize you're
+        learning.
       - If you look this book up up online, you can find a preview for the
         first couple chapters and the table of contents. Check it out and see
         if it hooks you. I really recommend it.
@@ -374,12 +376,12 @@ list:
       - Bertrand Russell's greatest skill was repackaging others' ideas for a
         lay audience. That sounds like an insult; I haven't made up my mind
         on whether I mean it as one. But the fact is, this is a useful skill
-        and it makes him the ideal author for this type of book. - The book's
-        scope is startlingly broad. It starts in pre-Socratic Greece, and just
-        continues forward from there, recounting the views and ideas of
-        everyone who Russell thought to be worth including. He limits the scope
-        to western philosophers, which is unfortunate but not surprising, and
-        still leaves him with plenty of good material.
+        and it makes him the ideal author for this type of book.
+      - The book's scope is startlingly broad. It starts in pre-Socratic
+        Greece, and just continues forward from there, recounting the views and
+        ideas of everyone who Russell thought to be worth including. He limits
+        the scope to western philosophers, which is unfortunate but not
+        surprising, and still leaves him with plenty of good material.
       - In particular, he never fails to point out what he perceives to be the
         flaws in other philosophers' works. Sometimes I agree with him and
         sometimes I think he is arguing against strawmen; that said, either
@@ -431,11 +433,12 @@ list:
         combination of memoir, literary analysis, biography, and more. It
         defies description and feels almost like stunt-writing, like something
         that shouldn't work but does, like she picked five or ten topics from a
-        hat and committed to writing about all of them at once, just to see if
-        she could - and it turns out that she can! The book is a nonstop series
-        of unexpected threads that combine and weave these topics together into
-        a coherent whole. You almost can't believe your eyes as you're reading
-        it. She is so good at this. A delight to read, as always.
+        hat and committed to writing about all of them at once and weaving them
+        together, just to see if she could - and it turns out that she can! The
+        book is a nonstop series of unexpected threads that combine and merge
+        together into a complex, coherent whole. You almost can't believe your
+        eyes as you're reading it. Solnit is so good at this. A delight to read,
+        as always.
       - I have more detailed notes that I'll dig up and put here eventually,
         but for now this will have to do.
 
@@ -582,8 +585,7 @@ list:
         want to have an idea of what it involves, this is the book for you. If
         you've been tasked with doing something crypto-related, this is the
         book to read first (and then once you're done, I very strongly
-        recommend hiring a consultancy to check your work - like, for example,
-        my employer - but I digress).
+        recommend hiring a consultancy to check your work - but I digress).
       - I've written more about this book previously, so I'll cut this note off
         here. It's a good book.
 
@@ -629,14 +631,22 @@ list:
       - This book has the most boring title imaginable, and the writing style
         is a little dry, but the actual subject matter could not be more
         interesting.
-      - I often describe books as having broad scopes, but this time I really
-        mean it. Look up the table of contents and see for yourself. No,
-        really.
       - >
         If you want to get started as a security consultant, you should read
         two books: one for whatever speciality you want to develop, and one to
         get you conversant in the rest of the field. This book fills that
         second role better than any other book I know of.
+      - I often describe books as having broad scopes, but this time I really
+        mean it. Look up the table of contents and see for yourself. No,
+        really.
+      - In fact, on that topic, the book is available in full
+        <a href="https://www.cl.cam.ac.uk/archive/rja14/book.html">for free online</a>
+        direct from the author (who sadly recently passed away). That site also
+        has links to a series of fifteen teaching videos he made covering much
+        of the book's material, which you can also find
+        <a href="https://www.cl.cam.ac.uk/archive/rja14/book.html">on YouTube</a>.
+        I've watched some of them and they are very good. The target audience
+        is undergrads and masters students, but the content is mostly quite accessible.
 
   - title: "Bertrand Russell: The Spirit of Solitude"
     desc:
